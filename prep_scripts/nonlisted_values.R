@@ -8,14 +8,14 @@ library(openxlsx)
 library(tidyverse)
 
 this.dir <- getwd()
-dir <- 'C:/Users/CLam/Desktop/travel-study-stories/shiny'
+dir <- "path/to/travel-study-stories/shiny"
 setwd(dir)
 
-variables.lu <- read.xlsx('variables.xlsx') %>% as.data.table
-values.lu <- read.xlsx('variables_values.xlsx') %>% as.data.table
+variables.lu <- read.xlsx("variables.xlsx") %>% as.data.table()
+values.lu <- read.xlsx("variables_values.xlsx") %>% as.data.table()
 
-fields.with.values <- values.lu[, .(Label), by = Label][['Label']]
-fields <- variables.lu[['Variables']]
+fields.with.values <- values.lu[, .(Label), by = Label][["Label"]]
+fields <- variables.lu[["Variables"]]
 
 nonlisted <- sort(setdiff(fields, fields.with.values))
 

@@ -14,17 +14,20 @@ library(DBI)
 
 
 # local
-# wrkdir <- "C:/Users/clam/Desktop/travel-study-stories/shiny"
-#wrkdir <- "C:/Users/SChildress/Documents/GitHub/travel-study-stories/shiny"
+# wrkdir <- "path/to/travel-study-stories/shiny"
+# wrkdir <- "path/to/travel-study-stories/shiny"
 
 # shiny server
 # wrkdir <- "/home/shiny/apps/testing-travel-study-stories/shiny"
 wrkdir <- "/home/shiny/apps/travel-study-stories/shiny"
 
-source(file.path(wrkdir, 'travel_crosstab.R'))
-source(file.path(wrkdir, 'functions_plot.R'))
+source(file.path(wrkdir, "travel_crosstab.R"))
+source(file.path(wrkdir, "functions_plot.R"))
 
-missing_codes <- c('Missing: Technical Error', 'Missing: Non-response', 'Missing: Skip logic', 'Children or missing')
+missing_codes <- c("Missing: Technical Error",
+                   "Missing: Non-response",
+                   "Missing: Skip logic",
+                   "Children or missing")
 
 dbtable.household <- "HHSurvey.v_households_2017_2019"
 dbtable.day <- "HHSurvey.v_day_2017_2019"
@@ -36,16 +39,23 @@ dbtable.trip <- "HHSurvey.v_trips_2017_2019"
 dbtable.variables <- "HHSurvey.data_explorer_variables_w_reasons_for_moving" # temp structure
 dbtable.values <- "HHSurvey.v_data_explorer_values_2019_w_reasons_for_moving" # temp structure
 
-hh_weight_name <- 'hh_wt_combined'
-hh_day_weight_name <-'hh_day_wt_combined'
-trip_weight_name <- 'trip_wt_combined'
-hh_move_weight_name <- 'hh_wt_2019' # temp structure
+hh_weight_name <- "hh_wt_combined"
+hh_day_weight_name <- "hh_day_wt_combined"
+trip_weight_name <- "trip_wt_combined"
+hh_move_weight_name <- "hh_wt_2019" # temp structure
 
-table_names <- list("Household" = list("weight_name" = hh_weight_name, "table_name" = dbtable.household),
-                    "Day" = list("weight_name" = hh_day_weight_name , "table_name" = dbtable.day),
-                    "Vehicle" = list("weight_name" = hh_weight_name, "table_name" =dbtable.vehicle),
-                    "Person" = list("weight_name" = hh_weight_name , "table_name" = dbtable.person), 
-                    "Trip" = list("weight_name" = trip_weight_name, "table_name" = dbtable.trip))
+table_names <- list(
+  "Household" = list("weight_name" = hh_weight_name,
+                     "table_name" = dbtable.household),
+  "Day"       = list("weight_name" = hh_day_weight_name,
+                     "table_name" = dbtable.day),
+  "Vehicle"   = list("weight_name" = hh_weight_name,
+                     "table_name" = dbtable.vehicle),
+  "Person"    = list("weight_name" = hh_weight_name,
+                     "table_name" = dbtable.person),
+  "Trip"      = list("weight_name" = trip_weight_name,
+                     "table_name" = dbtable.trip)
+)
 
 z <- 1.645 # 90% CI
 
@@ -63,9 +73,10 @@ db.connect <- function() {
   )
 }
 
-read.dt <- function(astring, type =c('table_name', 'sqlquery')) {
+read.dt <- function(astring, type = c("table_name",
+                                      "sqlquery")) {
   elmer_connection <- db.connect()
-  if (type == 'table_name') {
+  if (type == "table_name") {
     dtelm <- dbReadTable(elmer_connection, SQL(astring))
   } else {
     dtelm <- dbGetQuery(elmer_connection, SQL(astring))
@@ -74,35 +85,38 @@ read.dt <- function(astring, type =c('table_name', 'sqlquery')) {
   setDT(dtelm)
 }
 
-variables.lu <- read.dt(dbtable.variables, 'table_name')
+variables.lu <- read.dt(dbtable.variables, "table_name")
 variables.lu <- na.omit(variables.lu)
 variables.lu <- variables.lu[survey_year < 2021, ][order(category_order, variable_name)]
-values.lu <- read.dt(dbtable.values, 'table_name')
-values.lu<- values.lu[order(value_order)]
+values.lu <- read.dt(dbtable.values, "table_name")
+values.lu <- values.lu[order(value_order)]
 
-readme.dt <- read.xlsx(file.path(wrkdir, 'readme.xlsx'), colNames = T, skipEmptyRows = F)
+readme.dt <- read.xlsx(file.path(wrkdir, "readme.xlsx"), colNames = T, skipEmptyRows = F)
 
 vars.cat <- unique(variables.lu$category)
 
 # master list
-dtype.choice <- c("Share" ="share",
-                  "Total" = "estimate",
-                  "Margin of Error (Total)" = "estMOE",
-                  "Total with Margin of Error" = "estimate_with_MOE",
-                  "Number of Households" = "N_HH",
-                  "Share with Margin of Error" = "share_with_MOE",
-                  "Margin of Error (Share)" = "MOE",
-                  "Sample Count" = "sample_count",
-                  "Mean" = "mean",
-                  "Mean with Margin of Error" = "mean_with_MOE")
+dtype.choice <- c(
+  "Share" = "share",
+  "Total" = "estimate",
+  "Margin of Error (Total)" = "estMOE",
+  "Total with Margin of Error" = "estimate_with_MOE",
+  "Number of Households" = "N_HH",
+  "Share with Margin of Error" = "share_with_MOE",
+  "Margin of Error (Share)" = "MOE",
+  "Sample Count" = "sample_count",
+  "Mean" = "mean",
+  "Mean with Margin of Error" = "mean_with_MOE"
+)
 
 # xtab sublist: dimensions
 dtype.choice.xtab <- dtype.choice[c(1:2, 6, 4, 8)]
-col.headers <- c("sample_count", "estimate", "estMOE", "share", "MOE", "N_HH")
+col.headers <- c("sample_count", "estimate", "estMOE",
+                 "share", "MOE", "N_HH")
 
 # xtab sublist: facts
 dtype.choice.xtab.facts <- dtype.choice[c(9, 10, 8)]
-col.headers.facts <-  c("mean", "MOE", "sample_count", "N_HH")
+col.headers.facts <- c("mean", "MOE", "sample_count", "N_HH")
 
 # we assume a 50% probability to maximize the MOE
 p_MOE <- 0.5
@@ -112,14 +126,19 @@ dtype.choice.stab.vis <- dtype.choice[c(1:2, 6, 4, 8)]
 
 min_float <- 0
 max_float <- 200
-hist_breaks<- c(0,1,3,5,10,20,30,45,60,180)
-hist_breaks_labels<-c('0 to 1', '1 to 3', '3 to 5', '5 to 10', '10 to 20', '20 to 30', '30 to 45', '45 to 60', '60 to 180')
-hist_breaks_num_trips<-c(-.01,0,2,4,6,8,10,12,14,16,18,20,100)
-hist_breaks_num_trips_labels<-c('0', '1-2', '3-4', '5-6', '7-8', '9-10', '11-12', '13-14', '14-16', '17-18', '19-20', '20-100')
+hist_breaks <- c(0, 1, 3, 5, 10, 20, 30, 45, 60, 180)
+hist_breaks_labels <- c("0 to 1", "1 to 3", "3 to 5",
+                        "5 to 10", "10 to 20", "20 to 30",
+                        "30 to 45", "45 to 60", "60 to 180")
+hist_breaks_num_trips <- c(-.01, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 100)
+hist_breaks_num_trips_labels <- c("0", "1-2",
+                                  "3-4", "5-6", "7-8",
+                                  "9-10", "11-12", "13-14",
+                                  "14-16", "17-18", "19-20",
+                                  "20-100")
 
 # load shapefile(s)
 # dsn <- "../shapes"
 # layer.puma <- "reg10puma_WGS84"
 # puma.shape <- readOGR(dsn=dsn,layer=layer.puma)
 # puma.shape <-spTransform(readOGR(dsn=dsn,layer=layer.puma), CRS("+proj=longlat +datum=WGS84"))
-
