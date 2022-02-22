@@ -4,7 +4,7 @@ function(input, output, session) {
 
   # Functions ---------------------------------------------------------------
 
-  # Column Subset Crosstab Generator
+  # DONE Column Subset Crosstab Generator
   xtab.col.subset <- function(table, colstring = col.headers) {
     cols <- c(varsXAlias(), str_subset(colnames(table), paste0("^", colstring)))
     table[, ..cols]
@@ -158,6 +158,7 @@ function(input, output, session) {
   # Crosstab Generator Selection --------------------------------------------
 
   # show/hide vars definition
+  # implemented with JS
   observe({
     onclick(
       "xtabXtoggleAdvanced",
