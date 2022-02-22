@@ -1,0 +1,28 @@
+Package: travel.survey.explorer
+Title: Travel Survey Explorer
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Metropolitan Council", role = "cph"),
+    person("Liz", "Roten", , "liz.roten@metc.state.mn.us", role = c("cre", "aut"),
+           comment = c(ORCID = "0000-0002-5346-3549")),
+    person("Ashley", "Asmus", , "ashley.asmus@metc.state.mn.us", role = "aut",
+           comment = c(ORCID = "0000-0001-5505-1372"))
+  )
+Description: Interactive data visualization for the Metropolitan Council
+    Travel Behavior Inventory
+License: MIT + file LICENSE
+Imports: 
+    config (>= 0.3.1),
+    data.table (>= 1.14.2),
+    golem (>= 0.3.1),
+    magrittr (>= 2.0.2),
+    shiny (>= 1.7.1)
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Website: https://github.com/Metropolitan-Council/travel-study-stories
+
