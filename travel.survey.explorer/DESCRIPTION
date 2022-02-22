@@ -19,7 +19,8 @@ Imports:
     magrittr (>= 2.0.2),
     processx (>= 3.5.2),
     shinipsum (>= 0.1.0),
-    shiny (>= 1.7.1)
+    shiny (>= 1.7.1),
+    stringr (>= 1.4.0)
 Suggests: 
     spelling (>= 2.2),
     testthat (>= 3.0.0)
