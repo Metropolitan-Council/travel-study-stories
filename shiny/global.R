@@ -24,7 +24,10 @@ wrkdir <- "/home/shiny/apps/travel-study-stories/shiny"
 source(file.path(wrkdir, "travel_crosstab.R"))
 source(file.path(wrkdir, "functions_plot.R"))
 
-missing_codes <- c("Missing: Technical Error", "Missing: Non-response", "Missing: Skip logic", "Children or missing")
+missing_codes <- c("Missing: Technical Error",
+                   "Missing: Non-response",
+                   "Missing: Skip logic",
+                   "Children or missing")
 
 dbtable.household <- "HHSurvey.v_households_2017_2019"
 dbtable.day <- "HHSurvey.v_day_2017_2019"
@@ -42,11 +45,16 @@ trip_weight_name <- "trip_wt_combined"
 hh_move_weight_name <- "hh_wt_2019" # temp structure
 
 table_names <- list(
-  "Household" = list("weight_name" = hh_weight_name, "table_name" = dbtable.household),
-  "Day" = list("weight_name" = hh_day_weight_name, "table_name" = dbtable.day),
-  "Vehicle" = list("weight_name" = hh_weight_name, "table_name" = dbtable.vehicle),
-  "Person" = list("weight_name" = hh_weight_name, "table_name" = dbtable.person),
-  "Trip" = list("weight_name" = trip_weight_name, "table_name" = dbtable.trip)
+  "Household" = list("weight_name" = hh_weight_name,
+                     "table_name" = dbtable.household),
+  "Day"       = list("weight_name" = hh_day_weight_name,
+                     "table_name" = dbtable.day),
+  "Vehicle"   = list("weight_name" = hh_weight_name,
+                     "table_name" = dbtable.vehicle),
+  "Person"    = list("weight_name" = hh_weight_name,
+                     "table_name" = dbtable.person),
+  "Trip"      = list("weight_name" = trip_weight_name,
+                     "table_name" = dbtable.trip)
 )
 
 z <- 1.645 # 90% CI
@@ -56,16 +64,17 @@ z <- 1.645 # 90% CI
 
 db.connect <- function() {
   elmer_connection <- dbConnect(odbc(),
-    Driver = "SQL Server",
-    Server = "AWS-PROD-SQL\\SOCKEYE",
-    Database = "Elmer",
-    # Trusted_Connection = "yes"
-    UID = Sys.getenv("userid"),
-    PWD = Sys.getenv("pwd")
+                                Driver = "SQL Server",
+                                Server = "AWS-PROD-SQL\\SOCKEYE",
+                                Database = "Elmer",
+                                # Trusted_Connection = "yes"
+                                UID = Sys.getenv("userid"),
+                                PWD = Sys.getenv("pwd")
   )
 }
 
-read.dt <- function(astring, type = c("table_name", "sqlquery")) {
+read.dt <- function(astring, type = c("table_name",
+                                      "sqlquery")) {
   elmer_connection <- db.connect()
   if (type == "table_name") {
     dtelm <- dbReadTable(elmer_connection, SQL(astring))
@@ -102,7 +111,8 @@ dtype.choice <- c(
 
 # xtab sublist: dimensions
 dtype.choice.xtab <- dtype.choice[c(1:2, 6, 4, 8)]
-col.headers <- c("sample_count", "estimate", "estMOE", "share", "MOE", "N_HH")
+col.headers <- c("sample_count", "estimate", "estMOE",
+                 "share", "MOE", "N_HH")
 
 # xtab sublist: facts
 dtype.choice.xtab.facts <- dtype.choice[c(9, 10, 8)]
@@ -117,9 +127,15 @@ dtype.choice.stab.vis <- dtype.choice[c(1:2, 6, 4, 8)]
 min_float <- 0
 max_float <- 200
 hist_breaks <- c(0, 1, 3, 5, 10, 20, 30, 45, 60, 180)
-hist_breaks_labels <- c("0 to 1", "1 to 3", "3 to 5", "5 to 10", "10 to 20", "20 to 30", "30 to 45", "45 to 60", "60 to 180")
+hist_breaks_labels <- c("0 to 1", "1 to 3", "3 to 5",
+                        "5 to 10", "10 to 20", "20 to 30",
+                        "30 to 45", "45 to 60", "60 to 180")
 hist_breaks_num_trips <- c(-.01, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 100)
-hist_breaks_num_trips_labels <- c("0", "1-2", "3-4", "5-6", "7-8", "9-10", "11-12", "13-14", "14-16", "17-18", "19-20", "20-100")
+hist_breaks_num_trips_labels <- c("0", "1-2",
+                                  "3-4", "5-6", "7-8",
+                                  "9-10", "11-12", "13-14",
+                                  "14-16", "17-18", "19-20",
+                                  "20-100")
 
 # load shapefile(s)
 # dsn <- "../shapes"
