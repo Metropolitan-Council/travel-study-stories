@@ -17,7 +17,7 @@ Sys.setenv(TZ = "America/Chicago")
 Sys.setenv(ORA_SDTZ = "America/Chicago")
 
 # read connection string (git-ignored)
-source('connect_string.R')
+source("connect_string.R")
 
 ## connect to database ------------
 tbidb <- ROracle::dbConnect(
@@ -38,7 +38,10 @@ day <- ROracle::dbReadTable(tbidb, "TBI19_DAY_RAW") %>% as.data.table()
 
 ## Translate tables using dictionary -----------
 dictionary <-
-  ROracle::dbReadTable(tbidb, "TBI19_DICTIONARY") %>% select(-table) %>% unique() %>% as.data.table()
+  ROracle::dbReadTable(tbidb, "TBI19_DICTIONARY") %>%
+  select(-table) %>%
+  unique() %>%
+  as.data.table()
 
 # note: this part uses data.table syntax and functions.
 translate_using_dictionary <- function(dat, dictionary) {
@@ -61,8 +64,8 @@ translate_using_dictionary <- function(dat, dictionary) {
     )
 
   # convert var/value pairs to character, for both dictionary and data:
-  dat_long[, c('variable', 'value') := list(as.character(variable), as.character(value))]
-  dictionary[, c('variable', 'value') := list(as.character(variable), as.character(value))]
+  dat_long[, c("variable", "value") := list(as.character(variable), as.character(value))]
+  dictionary[, c("variable", "value") := list(as.character(variable), as.character(value))]
 
   # merge data to dictionary:
   dat_long <- merge(
@@ -79,7 +82,7 @@ translate_using_dictionary <- function(dat, dictionary) {
   dat_cast_formula <-
     as.formula(paste(paste(dat_id_vars, collapse = " + "), "~ variable"))
   newdat <-
-    dcast(dat_long, dat_cast_formula, value.var = 'value_label')
+    dcast(dat_long, dat_cast_formula, value.var = "value_label")
 
   # fix factor variables - relevel according to the order in the codebook (to start)
   namevec <- names(newdat)
@@ -102,27 +105,30 @@ trip <- translate_using_dictionary(trip, dictionary)
 # Replace missing with NA -----------
 # all the numeric codes for missing:
 all_missing_codes <-
-  dictionary[grep("Missing", value_label), 'value', with = F]
+  dictionary[grep("Missing", value_label), "value", with = F]
 all_missing_codes <- unique(all_missing_codes$value)
 
 # all the value labels that include missing:
 all_missing_labels <-
-  dictionary[grep("Missing", value_label), 'value_label', with = F]
+  dictionary[grep("Missing", value_label), "value_label", with = F]
 # both as character:
 all_missing_character <- unique(rbind(all_missing_codes, all_missing_labels, use.names = F))
 all_missing_character <- all_missing_character$x
 
 # function to repalce missing values with NA:
-replace_survey_missing <- function(dat){
+replace_survey_missing <- function(dat) {
   na_dat <- dat %>%
-    mutate(across(where(is.numeric),
-                  ~ ifelse(. %in% all_missing_codes, NA, .))) %>%
+    mutate(across(
+      where(is.numeric),
+      ~ ifelse(. %in% all_missing_codes, NA, .)
+    )) %>%
     # replace factor entries with NA:
-    mutate(across(where(is.factor),
-                  ~ factor(., exclude = all_missing_character)))
+    mutate(across(
+      where(is.factor),
+      ~ factor(., exclude = all_missing_character)
+    ))
 
   return(na_dat)
-
 }
 
 day <- replace_survey_missing(day)
@@ -136,29 +142,35 @@ rm(all_missing, all_missing_labels, dictionary, all_missing_character, all_missi
 # Set IDs as Integer64 -----------
 hh[, hh_id := as.integer64(hh_id)]
 veh[, hh_id := as.integer64(hh_id)]
-day[, c('hh_id', 'person_id') := lapply(.SD, as.integer64),
-    .SDcols = c('hh_id', 'person_id')]
-trip[, c('hh_id', 'person_id', 'trip_id') := lapply(.SD, as.integer64),
-     .SDcols = c('hh_id', 'person_id', 'trip_id')]
-per[, c('hh_id', 'person_id') := lapply(.SD, as.integer64),
-    .SDcols = c('hh_id', 'person_id')]
+day[, c("hh_id", "person_id") := lapply(.SD, as.integer64),
+  .SDcols = c("hh_id", "person_id")
+]
+trip[, c("hh_id", "person_id", "trip_id") := lapply(.SD, as.integer64),
+  .SDcols = c("hh_id", "person_id", "trip_id")
+]
+per[, c("hh_id", "person_id") := lapply(.SD, as.integer64),
+  .SDcols = c("hh_id", "person_id")
+]
 
 # Simplify answers to select-all questions -----------
 ## Race -----------
 per_race <-
   per %>%
-  select(person_id, starts_with('ethnicity')) %>%
-  pivot_longer(cols = starts_with('ethnicity'), names_prefix = 'ethnicity_') %>%
+  select(person_id, starts_with("ethnicity")) %>%
+  pivot_longer(cols = starts_with("ethnicity"), names_prefix = "ethnicity_") %>%
   filter(value == "Yes") %>%
   select(-value) %>%
   group_by(person_id) %>%
   add_tally(name = "num_races") %>%
-  mutate(race = recode(name, 'afam' = 'African-American',
-                       'asian' = 'Asian',
-                       'aiak' = 'Indigenous',
-                       'hisp' = 'Hispanic/Latino',
-                       'mideast' = 'Middle-Eastern',
-                       'hapi' = 'Hawaiian/Pacific Islander')) %>%
+  mutate(race = recode(name,
+    "afam" = "Black or African-American",
+    "white" = "White",
+    "asian" = "Asian",
+    "aiak" = " American Indian or Alaska Native",
+    "hisp" = "Hispanic, Latino, or Spanish origin",
+    "mideast" = "Middle-Eastern",
+    "hapi" = "Native Hawaiian or other Pacific Islander"
+  )) %>%
   mutate(race = ifelse(num_races >= 2, "2 or more races", race)) %>%
   select(-num_races, -name) %>%
   unique()
@@ -170,7 +182,7 @@ rm(per_race)
 
 # Connect to ancillary Data -----------
 ## Vehicle efficiency (EPA) -----------
-veh_epa <- read.csv('Data/veh_epa.csv') %>%
+veh_epa <- read.csv("Data/veh_epa.csv") %>%
   mutate(make = toupper(make), model = toupper(model))
 
 veh <- veh %>%
@@ -178,17 +190,22 @@ veh <- veh %>%
 ## Vehicle weight (DPS) -----------
 # Load Car Weight Data
 Vehicle_wtsDPS <- read_csv("Vehicle_wtsDPS.CSV",
-                           col_types = cols(X1 = col_skip()))
+  col_types = cols(X1 = col_skip())
+)
 
 veh <- veh %>%
   mutate(make = toupper(make), model = toupper(model)) %>%
   left_join(Vehicle_wtsDPS) %>%
-  mutate(wt_cat = case_when(median_wt <= 6000 ~ "6,000 lbs or less",
-                            median_wt < 8500 ~ "6,001 - 8,500 lbs",
-                            median_wt < 10000 ~ "8,501 - 10,000 lbs")) %>%
-  mutate(wt_cat = factor(wt_cat, levels = c("6,000 lbs or less",
-                                            "6,001 - 8,500 lbs",
-                                            "8,501 - 10,000 lbs")))
+  mutate(wt_cat = case_when(
+    median_wt <= 6000 ~ "6,000 lbs or less",
+    median_wt < 8500 ~ "6,001 - 8,500 lbs",
+    median_wt < 10000 ~ "8,501 - 10,000 lbs"
+  )) %>%
+  mutate(wt_cat = factor(wt_cat, levels = c(
+    "6,000 lbs or less",
+    "6,001 - 8,500 lbs",
+    "8,501 - 10,000 lbs"
+  )))
 
 rm(Vehicle_wtsDPS)
 ## Geospatial Data -----------
@@ -198,13 +215,13 @@ rm(Vehicle_wtsDPS)
 
 # Custom temporal categories -----------
 ### Seasons -----------
-getSeason <- function(input.date){
-  numeric.date <- 100*month(input.date)+day(input.date)
+getSeason <- function(input.date) {
+  numeric.date <- 100 * month(input.date) + day(input.date)
   ## input Seasons upper limits in the form MMDD in the "break =" option:
   # This is set to meterological seasons https://www.timeanddate.com/calendar/aboutseasons.html
-  cuts <- base::cut(numeric.date, breaks = c(0,301,0531,0831,1130,1231))
+  cuts <- base::cut(numeric.date, breaks = c(0, 301, 0531, 0831, 1130, 1231))
   # rename the resulting groups (could've been done within cut(...levels=) if "Winter" wasn't double
-  levels(cuts) <- c("Winter","Spring","Summer","Fall","Winter")
+  levels(cuts) <- c("Winter", "Spring", "Summer", "Fall", "Winter")
   return(cuts)
 }
 
