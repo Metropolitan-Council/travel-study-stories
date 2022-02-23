@@ -1,22 +1,18 @@
 # all reactives ( NOT eventReactives
 
-# variables aand aliases -----
-# variable X alias list
-REACT_varsListX <- reactive({
-  t <- variables.lu[category %in% input$stab_xcat, ]
-  vars.raw <- as.list(unique(t$variable))
-  vars.list <- setNames(vars.raw, as.list(unique(t$variable_name)))
-})
+# variables and aliases -----
 
 
-# variable X alias list
+# fetch variables available given the category (xtab_cat)
 REACT_varsListX <- reactive({
   t <- variables.lu[category %in% input$xtab_xcat & dtype != "fact", ]
   vars.raw <- as.list(unique(t$variable))
   vars.list <- setNames(vars.raw, as.list(unique(t$variable_name)))
+  return(vars.list)
 })
 
 # variable Y alias list
+# ! ONLY USED ONCE
 REACT_varsListY <- reactive({
   t <- variables.lu[category %in% input$xtab_ycat, ]
   vars.raw <- as.list(unique(t$variable))
@@ -27,7 +23,7 @@ REACT_varsListY <- reactive({
 # table cleaning -----
 # clean xtabTable()
 REACT_xtabTableClean <- reactive({
-  dt.list <- EV_REACT_xtabTable()
+  dt.list <- EV_REACT_xtabTable() # list of data.tables
   # yv <- EV_REACT_xtabYValues()
   xa <- EV_REACT_varsXAlias()
   # col.headers <- lapply(col.headers, function(x) paste0(x, "_")) %>% unlist
@@ -42,11 +38,13 @@ REACT_xtabTableClean <- reactive({
     for (i in 1:length(dt.list)) {
       dt.list[[i]] <- dt.list[[i]][!(get(eval(xa)) %in% "")]
 
-      new.colnames <- str_extract(colnames(dt.list[[i]])[2:length(colnames(dt.list[[i]]))], paste0("(?<=", regex, ").+")) # includes blank
+      new.colnames <- str_extract(colnames(dt.list[[i]])[
+        2:length(colnames(dt.list[[i]]))], paste0("(?<=", regex, ").+")) # includes blank
 
       if (any(is.na(new.colnames))) { # if contains any NA columns
         nonna.new.colnames <- str_subset(new.colnames, ".")
-        setnames(dt.list[[i]], colnames(dt.list[[i]]), c(xa, new.colnames)) # blank becomes NA
+        setnames(dt.list[[i]], colnames(dt.list[[i]]),
+                 c(xa, new.colnames)) # blank becomes NA
         keep.cols <- colnames(dt.list[[i]])[!is.na(colnames(dt.list[[i]]))]
         dt.list[[i]] <- dt.list[[i]][, ..keep.cols]
 
@@ -63,7 +61,9 @@ REACT_xtabTableClean <- reactive({
       }
     }
   } else if (EV_REACT_xtabTableType()$Type == "fact") {
-    new.colnames.fact <- c("Mean" = "mean", "Sample Count" = "sample_count", "Number of Households" = "N_HH")
+    new.colnames.fact <- c("Mean" = "mean",
+                           "Sample Count" = "sample_count",
+                           "Number of Households" = "N_HH")
     for (i in 1:length(dt.list)) {
       # set colnames for mean, sample count, number of households field
       if (names(dt.list[i]) %in% new.colnames.fact) {
@@ -256,23 +256,41 @@ REACT_xtabDownloadOutput <- reactive({
 
 
 # clean Margin of Error column and column reorder
-REACT_EV_REACT_stabTable.DT <- reactive({
-  xa <- EV_REACT_stab.varsXAlias()
-  dt <- copy(EV_REACT_stabTable())
+REACT_stabTable.DT <- reactive({
 
+  #
+  xa <- EV_REACT_stab.varsXAlias() # variable NAME
+  dt <- data.table::copy(EV_REACT_stabTable()) # fetch table with values given inputs
+
+
+  # lookup value name based on abbreviation
   col <- names(dtype.choice[dtype.choice %in% "MOE"])
   col2 <- names(dtype.choice[dtype.choice %in% "estMOE"])
-  dt[, (col) := lapply(.SD, function(x) round(x * 100, 1)), .SDcols = col][, (col2) := lapply(.SD, function(x) prettyNum(round(x, 0), big.mark = ",", preserve.width = "none")), .SDcols = col2]
-  dt[, (col) := lapply(.SD, function(x) paste0("+/-", as.character(x), "%")), .SDcols = col][, (col2) := lapply(.SD, function(x) paste0("+/-", as.character(x))), .SDcols = col2]
+
+  dt[, (col) := lapply(.SD, function(x) round(x * 100, 1)), .SDcols = col][ # for all MOE columns, round
+    , (col2) := lapply(.SD, function(x) prettyNum(round(x, 0), # for all estMOE columns, prettyNum
+                                                  big.mark = ",", preserve.width = "none")),
+    .SDcols = col2]
+
+  # add +/- text for MOE and estMOE
+  dt[,
+     (col) := lapply(.SD, function(x) paste0("+/-", as.character(x), "%")), .SDcols = col][
+       , (col2) := lapply(.SD, function(x) paste0("+/-", as.character(x))), .SDcols = col2]
+
+
   new.colorder <- c(
-    xa,
-    names(dtype.choice[dtype.choice %in% c("share")]),
-    col,
-    names(dtype.choice[dtype.choice %in% c("estimate")]),
-    col2,
-    names(dtype.choice[dtype.choice %in% c("sample_count")])
+    xa, # variable name
+    names(dtype.choice[dtype.choice %in% c("share")]), # "Share"
+    col, # MOE
+    names(dtype.choice[dtype.choice %in% c("estimate")]), # "Total"
+    col2, # estMOE
+    names(dtype.choice[dtype.choice %in% c("sample_count")]) # "Sample Count"
   )
+
   setcolorder(dt, new.colorder)
+
+  # dt will have columns for
+  # variable name, share, MOE, Total, estMOE, and Sample Count
   return(dt)
 })
 
