@@ -4,6 +4,231 @@ function(input, output, session) {
   # one way table == stab
   # two way table == xtab
 
+# One-way Table ------------------------------------------------------------
+
+  # fancy show/hide variable definition
+  observe({
+    onclick(
+      "stabXtoggleAdvanced",
+      toggle(id = "stabXAdvanced", anim = TRUE)
+    )
+  })
+
+  output$stab_xcol_det <- renderText({
+    # fetch "detail" column given stab_xcol
+    xvar.det <- variables.lu[variable %in% input$stab_xcol, .(detail)]
+    # return unique text
+    return(unique(xvar.det$detail))
+  })
+
+
+  # use REACT_varsListX to keep stab_xcol up to date
+  # with stab_xcat
+  output$ui_stab_xcol <- renderUI({
+    selectInput(
+      inputId = "stab_xcol",
+      label = "Variable",
+      choices = REACT_varsListX()
+    )
+  })
+
+
+  output$ui_stab_res_type_title <- renderUI({
+    # heading noting whether Seattle or Regional
+    h4(EV_REACT_stabCaption())
+  })
+
+
+
+  # render simple table
+  output$stab_tbl <- DT::renderDataTable({
+    colors <- list(ltgrey = "#bdbdc3", dkgrey = "#343439")
+
+
+    dt <- REACT_stabTable.DT()
+
+    fmt.per <- names(dtype.choice[dtype.choice %in% c("share")])
+    fmt.num <- names(dtype.choice[dtype.choice %in% c("estimate", "sample_count")])
+    DT::datatable(dt,
+                  options = list(
+                    bFilter = 0,
+                    # pageLength = 10,
+                    autoWidth = FALSE,
+                    columnDefs = list(list(className = "dt-center", width = "100px", targets = c(2:ncol(dt))))
+                  )
+    ) %>%
+      formatPercentage(fmt.per, 1) %>%
+      formatRound(fmt.num, 0) %>%
+      formatStyle(
+        columns = 2:ncol(dt),
+        valueColumns = ncol(dt),
+        color = styleInterval(c(30), c(colors$ltgrey, colors$dkgrey))
+      )
+  })
+
+
+  # render simple table plotly
+  output$stab_vis <- renderPlotly({
+    xlabel <- EV_REACT_stab.varsXAlias() # first dim
+    dttype <- input$stab_dtype_rbtns
+    selection <- names(dtype.choice[dtype.choice %in% dttype])
+    geog.caption <- EV_REACT_stabCaption()
+
+    if (dttype %in% col.headers) {
+      dt <- REACT_stabVisTable()[type %in% selection, ]
+    } else {
+      if (dttype == "share_with_MOE") {
+        dt <- REACT_stabVisTable.shareMOE()
+      }
+      if (dttype == "estimate_with_MOE") {
+        dt <- REACT_stabVisTable.estMOE()
+      }
+    }
+
+    l <- length(stabXValues()$ValueText)
+    if (l == 0) {
+      l <- length(unique(dt$value))
+    } # evaluate if values are not in lookup (length 0)
+
+    if (dttype == "share") {
+      if (l < 10) {
+        p <- stab.plot.bar(
+          table = dt,
+          format = "percent",
+          xlabel = xlabel,
+          geog.caption = geog.caption
+        )
+      } else {
+        p <- stab.plot.bar2(
+          table = dt,
+          format = "percent",
+          xlabel = xlabel,
+          geog.caption = geog.caption
+        )
+      }
+      return(p)
+    } else if (dttype %in% c("estimate", "sample_count", "N_HH")) {
+      if (l < 10) {
+        p <- stab.plot.bar(
+          table = dt,
+          format = "nominal",
+          xlabel = xlabel,
+          geog.caption = geog.caption
+        )
+      } else {
+        p <- stab.plot.bar2(
+          table = dt,
+          format = "nominal",
+          xlabel = xlabel,
+          geog.caption = geog.caption
+        )
+      }
+      return(p)
+    } else if (dttype == "share_with_MOE") {
+      if (l < 10) {
+        p <- stab.plot.bar.moe(
+          table = dt,
+          format = "percent",
+          xlabel = xlabel,
+          geog.caption = geog.caption
+        )
+      } else {
+        p <- stab.plot.bar2.moe(
+          table = dt,
+          format = "percent",
+          xlabel = xlabel,
+          geog.caption = geog.caption
+        )
+      }
+      return(p)
+    } else if (dttype == "estimate_with_MOE") {
+      if (l < 10) {
+        p <- stab.plot.bar.moe(
+          table = dt,
+          format = "nominal",
+          xlabel = xlabel,
+          geog.caption = geog.caption
+        )
+      } else {
+        p <- stab.plot.bar2.moe(
+          table = dt,
+          format = "nominal",
+          xlabel = xlabel,
+          geog.caption = geog.caption
+        )
+      }
+      return(p)
+    } else {
+      return(NULL)
+    }
+  })
+
+  output$ui_stab_tbl <- renderUI({
+    # if (EV_REACT_stabTableType()$Type == 'dimension') {
+    div(DT::dataTableOutput("stab_tbl"),
+        style = "font-size: 95%; width: 85%"
+    )
+    # } #else {
+    #   #div(p('Tabular results not available. This functionality is in progress.'),
+    #    style = 'display: flex; justify-content: center; align-items: center; margin-top: 5em;')
+    #  }
+  })
+
+
+
+  # return values associated with category selected
+  output$ui_xtab_ycol <- renderUI({
+    selectInput("xtab_ycol",
+                "Variable",
+                REACT_varsListY(),
+                selected = REACT_varsListY()[[2]]
+    )
+  })
+
+  output$ui_stab_vis <- renderUI({
+    plotlyOutput("stab_vis", width = "85%")
+  })
+
+
+
+  # Enable/Disable Download button
+  vs <- reactiveValues(
+    stabxcol = NULL,
+    stabgo = 0,
+    stabfltrsea = F
+  )
+
+  observeEvent(input$stab_go, {
+    vs$stabxcol <- input$stab_xcol
+    vs$stabgo <- vs$stabgo + 1
+    vs$stabfltrsea <- input$stab_fltr_sea
+  })
+
+  observe({
+    if (vs$stabgo == 0 || (vs$stabxcol != input$stab_xcol) ||
+        (vs$stabfltrsea != input$stab_fltr_sea)) {
+      disable("stab_download")
+    } else if (vs$stabgo > 0) {
+      enable("stab_download")
+    }
+  })
+
+
+  output$stab_download <- downloadHandler(
+    filename = function() {
+      paste0(
+        "HHSurvey2017_19_",
+        EV_REACT_stab.varsXAlias(), "_",
+        EV_REACT_stabCaption(), ".xlsx"
+      )
+    },
+    content = function(file) {
+      # write.xlsx(EV_REACT_stabTable(), file)
+      write.xlsx(REACT_stabDownloadOutput(), file)
+    }
+  )
+
+
 
   # 2-way table -----
 
@@ -63,9 +288,9 @@ function(input, output, session) {
     }
 
     updateSelectInput(session, "xtab_ycat",
-      label = "Category",
-      selected = y,
-      choices = y.choices
+                      label = "Category",
+                      selected = y,
+                      choices = y.choices
     )
   })
 
@@ -93,9 +318,9 @@ function(input, output, session) {
     }
 
     updateSelectInput(session, "xtab_xcat",
-      label = "Category",
-      selected = x,
-      choices = x.choices
+                      label = "Category",
+                      selected = x,
+                      choices = x.choices
     )
   })
 
@@ -107,7 +332,7 @@ function(input, output, session) {
   })
 
 
-# xtab plot
+  # xtab plot
   output$xtab_vis <- renderPlotly({
     xlabel <- EV_REACT_varsXAlias() # x axis variable first dim
     ylabel <- EV_REACT_varsYAlias() # y axis variable second dim
@@ -453,10 +678,10 @@ function(input, output, session) {
   })
 
 
-# xtab table..?
+  # xtab table..?
   output$ui_xtab_tbl <- renderUI({
     div(DT::dataTableOutput("xtab_tbl"),
-      style = "font-size: 95%; width: 85%", class = "visual-display",
+        style = "font-size: 95%; width: 85%", class = "visual-display",
     )
   })
 
@@ -488,7 +713,7 @@ function(input, output, session) {
 
   observe({
     if (v$xtabgo == 0 || (v$xtabycol != input$xtab_ycol) ||
-      (v$xtabxcol != input$xtab_xcol) || (v$xtabfltrsea != input$xtab_fltr_sea)) {
+        (v$xtabxcol != input$xtab_xcol) || (v$xtabfltrsea != input$xtab_fltr_sea)) {
       disable("xtab_download")
     } else if (v$xtabgo > 0) {
       enable("xtab_download")
@@ -508,233 +733,14 @@ function(input, output, session) {
     }
   )
 
-
-  # return values associated with category selected
+  # use REACT_varsListX to keep xtab_xcol up to date
+  # with xtab_xcat
   output$ui_xtab_xcol <- renderUI({
     selectInput(
-      "xtab_xcol",
-      "Variable",
-      REACT_varsListX()
+      inputId = "xtab_xcol",
+      label = "Variable",
+      choices = REACT_varsListX()
     )
   })
 
-  # Simple Table ------------------------------------------------------------
-
-  # show/hide vars definition
-  observe({
-    onclick(
-      "stabXtoggleAdvanced",
-      toggle(id = "stabXAdvanced", anim = TRUE)
-    )
-  })
-
-  output$stab_xcol_det <- renderText({
-    xvar.det <- variables.lu[variable %in% input$stab_xcol, .(detail)]
-    unique(xvar.det$detail)
-  })
-
-  # variable X alias
-
-
-  output$ui_stab_xcol <- renderUI({
-    selectInput(
-      "stab_xcol",
-      "Variable",
-      REACT_varsListX()
-    )
-  })
-
-
-
-  output$ui_stab_res_type_title <- renderUI({
-    h4(EV_REACT_stabCaption())
-  })
-
-
-
-  # render simple table
-  output$stab_tbl <- DT::renderDataTable({
-    colors <- list(ltgrey = "#bdbdc3", dkgrey = "#343439")
-    dt <- REACT_EV_REACT_stabTable.DT()
-
-    fmt.per <- names(dtype.choice[dtype.choice %in% c("share")])
-    fmt.num <- names(dtype.choice[dtype.choice %in% c("estimate", "sample_count")])
-    DT::datatable(dt,
-      options = list(
-        bFilter = 0,
-        # pageLength = 10,
-        autoWidth = FALSE,
-        columnDefs = list(list(className = "dt-center", width = "100px", targets = c(2:ncol(dt))))
-      )
-    ) %>%
-      formatPercentage(fmt.per, 1) %>%
-      formatRound(fmt.num, 0) %>%
-      formatStyle(
-        columns = 2:ncol(dt),
-        valueColumns = ncol(dt),
-        color = styleInterval(c(30), c(colors$ltgrey, colors$dkgrey))
-      )
-  })
-
-
-# render simple table plotly
-  output$stab_vis <- renderPlotly({
-    xlabel <- EV_REACT_stab.varsXAlias() # first dim
-    dttype <- input$stab_dtype_rbtns
-    selection <- names(dtype.choice[dtype.choice %in% dttype])
-    geog.caption <- EV_REACT_stabCaption()
-
-    if (dttype %in% col.headers) {
-      dt <- REACT_stabVisTable()[type %in% selection, ]
-    } else {
-      if (dttype == "share_with_MOE") {
-        dt <- REACT_stabVisTable.shareMOE()
-      }
-      if (dttype == "estimate_with_MOE") {
-        dt <- REACT_stabVisTable.estMOE()
-      }
-    }
-
-    l <- length(stabXValues()$ValueText)
-    if (l == 0) {
-      l <- length(unique(dt$value))
-    } # evaluate if values are not in lookup (length 0)
-
-    if (dttype == "share") {
-      if (l < 10) {
-        p <- stab.plot.bar(
-          table = dt,
-          format = "percent",
-          xlabel = xlabel,
-          geog.caption = geog.caption
-        )
-      } else {
-        p <- stab.plot.bar2(
-          table = dt,
-          format = "percent",
-          xlabel = xlabel,
-          geog.caption = geog.caption
-        )
-      }
-      return(p)
-    } else if (dttype %in% c("estimate", "sample_count", "N_HH")) {
-      if (l < 10) {
-        p <- stab.plot.bar(
-          table = dt,
-          format = "nominal",
-          xlabel = xlabel,
-          geog.caption = geog.caption
-        )
-      } else {
-        p <- stab.plot.bar2(
-          table = dt,
-          format = "nominal",
-          xlabel = xlabel,
-          geog.caption = geog.caption
-        )
-      }
-      return(p)
-    } else if (dttype == "share_with_MOE") {
-      if (l < 10) {
-        p <- stab.plot.bar.moe(
-          table = dt,
-          format = "percent",
-          xlabel = xlabel,
-          geog.caption = geog.caption
-        )
-      } else {
-        p <- stab.plot.bar2.moe(
-          table = dt,
-          format = "percent",
-          xlabel = xlabel,
-          geog.caption = geog.caption
-        )
-      }
-      return(p)
-    } else if (dttype == "estimate_with_MOE") {
-      if (l < 10) {
-        p <- stab.plot.bar.moe(
-          table = dt,
-          format = "nominal",
-          xlabel = xlabel,
-          geog.caption = geog.caption
-        )
-      } else {
-        p <- stab.plot.bar2.moe(
-          table = dt,
-          format = "nominal",
-          xlabel = xlabel,
-          geog.caption = geog.caption
-        )
-      }
-      return(p)
-    } else {
-      return(NULL)
-    }
-  })
-
-  output$ui_stab_tbl <- renderUI({
-    # if (EV_REACT_stabTableType()$Type == 'dimension') {
-    div(DT::dataTableOutput("stab_tbl"),
-      style = "font-size: 95%; width: 85%"
-    )
-    # } #else {
-    #   #div(p('Tabular results not available. This functionality is in progress.'),
-    #    style = 'display: flex; justify-content: center; align-items: center; margin-top: 5em;')
-    #  }
-  })
-
-
-
-  # return values associated with category selected
-  output$ui_xtab_ycol <- renderUI({
-    selectInput("xtab_ycol",
-      "Variable",
-      REACT_varsListY(),
-      selected = REACT_varsListY()[[2]]
-    )
-  })
-
-  output$ui_stab_vis <- renderUI({
-    plotlyOutput("stab_vis", width = "85%")
-  })
-
-
-
-  # Enable/Disable Download button
-  vs <- reactiveValues(
-    stabxcol = NULL,
-    stabgo = 0,
-    stabfltrsea = F
-  )
-
-  observeEvent(input$stab_go, {
-    vs$stabxcol <- input$stab_xcol
-    vs$stabgo <- vs$stabgo + 1
-    vs$stabfltrsea <- input$stab_fltr_sea
-  })
-
-  observe({
-    if (vs$stabgo == 0 || (vs$stabxcol != input$stab_xcol) ||
-      (vs$stabfltrsea != input$stab_fltr_sea)) {
-      disable("stab_download")
-    } else if (vs$stabgo > 0) {
-      enable("stab_download")
-    }
-  })
-
-
-  output$stab_download <- downloadHandler(
-    filename = function() {
-      paste0(
-        "HHSurvey2017_19_",
-        EV_REACT_stab.varsXAlias(), "_",
-        EV_REACT_stabCaption(), ".xlsx"
-      )
-    },
-    content = function(file) {
-      # write.xlsx(EV_REACT_stabTable(), file)
-      write.xlsx(REACT_stabDownloadOutput(), file)
-    }
-  )
 }
