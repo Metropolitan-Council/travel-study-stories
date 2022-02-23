@@ -19,7 +19,39 @@ EV_REACT_varsYAlias <- eventReactive(input$xtab_go, { # on two-way go
   return(unique(yvar.alias$variable_name))
 })
 
+# fetch relevant variable NAME based on variable input (stab_xcol)
+EV_REACT_stab.varsXAlias <- eventReactive(input$stab_go, { # on one-way go
+  # select only variable name
+  xvar.alias <- variables.lu[variable %in% input$stab_xcol, .(variable_name)]
+  # return character
+  return(unique(xvar.alias$variable_name))
+})
 
+
+# fetch relevant variable table based on variable input (stab_xcol)
+EV_REACT_stabXValues <- eventReactive(input$stab_go, { # on one-way go
+  dt <- values.lu[variable %in% input$stab_xcol, ][order(value_order)]
+  return(dt)
+  # return dt
+})
+
+
+
+EV_REACT_xtabXValues <- eventReactive(input$xtab_go, { # on two-way go
+  # filter values to get variable matching input$xtab_col, re-order
+  dt <- values.lu[variable %in% input$xtab_xcol, ][order(value_order)]
+  # return datatable
+})
+
+EV_REACT_xtabYValues <- eventReactive(input$xtab_go, { # on two-way go
+  # filter values to get variable matching input$ytab_col, re-order
+  dt <- values.lu[variable %in% input$xtab_ycol, ][order(value_order)]
+  v <- as.vector(dt$value_text)
+  # return vector
+})
+
+
+# table creation -----
 
 # on go, return a table with values for the selected
 # category (stab_xcat) (with weights), type (fact or dimension),
@@ -97,83 +129,9 @@ EV_REACT_stabTable <- eventReactive(input$stab_go, { # on one-way go
 
 
 
-EV_REACT_stabTableType <- eventReactive(input$stab_go, { # on go
 
-  # make table with only selected variable
-  select.vars <- variables.lu[variable %in% c(input$stab_xcol), ]
-
-  # unique table names
-  tables <- unique(select.vars$table_name)
-
-  # unique table types
-  dtypes <- as.vector(unique(select.vars$dtype))
-
-  if ("Trip" %in% tables) {
-    res <- "Trip"
-  } else if ("Person" %in% tables) {
-    res <- "Person"
-  } else {
-    res <- "Household"
-  }
-
-  if ("fact" %in% dtypes) {
-    type <- "fact"
-  } else {
-    type <- "dimension"
-  }
-
-  return(list(Res = res, Type = type))
-  # return named list
-})
 
 # return list of tables subsetted by value types
-
-
-
-EV_REACT_xtabXValues <- eventReactive(input$xtab_go, { # on go
-  # filter values to get variable matching input$xtab_col, re-order
-  dt <- values.lu[variable %in% input$xtab_xcol, ][order(value_order)]
-  # return datatable
-})
-
-EV_REACT_xtabYValues <- eventReactive(input$xtab_go, { # on go
-  # filter values to get variable matching input$ytab_col, re-order
-  dt <- values.lu[variable %in% input$xtab_ycol, ][order(value_order)]
-  v <- as.vector(dt$value_text)
-  # return vector
-})
-
-#
-
-
-EV_REACT_xtabTableType <- eventReactive(input$xtab_go, { # on go button
-
-  # using input x col and y col, subset variables.lu to get variable names
-  select.vars <- variables.lu[variable %in% c(input$xtab_xcol, input$xtab_ycol), ]
-
-  # get table name and table type
-  tables <- as.vector(unique(select.vars$table_name))
-  dtypes <- as.vector(unique(select.vars$dtype))
-
-  # assign res to one of Trip, Person, or Household
-  if ("Trip" %in% tables) {
-    res <- "Trip"
-  } else if ("Person" %in% tables) {
-    res <- "Person"
-  } else {
-    res <- "Household"
-  }
-
-  # assign type to one of fact or dimension
-  if ("fact" %in% dtypes) {
-    type <- "fact"
-  } else {
-    type <- "dimension"
-  }
-
-  # return named list Res = table name, Type = table type
-  return(list(Res = res, Type = type))
-})
 
 
 # return list of tables subsetted by value types
@@ -211,12 +169,14 @@ EV_REACT_xtabTable <- eventReactive(input$xtab_go, { # # on two-way go
   type <- EV_REACT_xtabTableType()$Type
 
   if (input$xtab_fltr_sea == T) {
-    # if input$ filter home in Seattle, then filter survey
+    # if input$xtab_fltr_sea == T, filter home in Seattle, then filter survey
     survey <- survey[seattle_home == "Home in Seattle", ]
   }
 
   # create crosstab
-  crosstab <- cross_tab(survey, input$xtab_xcol, input$xtab_ycol, wt_field, type)
+  crosstab <- cross_tab(survey,
+                        input$xtab_xcol, input$xtab_ycol,
+                        wt_field, type)
 
   # fetch x-column values datatable
   # select value_order and value_text columns
@@ -246,6 +206,72 @@ EV_REACT_xtabTable <- eventReactive(input$xtab_go, { # # on two-way go
   # return list of dt
 })
 
+
+
+# table type -----
+
+
+EV_REACT_xtabTableType <- eventReactive(input$xtab_go, { # # on two-way go
+
+  # using input x col and y col, subset variables.lu to get variable names
+  select.vars <- variables.lu[variable %in% c(input$xtab_xcol, input$xtab_ycol), ]
+
+  # get table name and table type
+  tables <- as.vector(unique(select.vars$table_name))
+  dtypes <- as.vector(unique(select.vars$dtype))
+
+  # assign res to one of Trip, Person, or Household
+  if ("Trip" %in% tables) {
+    res <- "Trip"
+  } else if ("Person" %in% tables) {
+    res <- "Person"
+  } else {
+    res <- "Household"
+  }
+
+  # assign type to one of fact or dimension
+  if ("fact" %in% dtypes) {
+    type <- "fact"
+  } else {
+    type <- "dimension"
+  }
+
+  # return named list Res = table name, Type = table type
+  return(list(Res = res, Type = type))
+})
+
+
+EV_REACT_stabTableType <- eventReactive(input$stab_go, { # on one-way go
+
+  # make table with only selected variable
+  select.vars <- variables.lu[variable %in% c(input$stab_xcol), ]
+
+  # unique table names
+  tables <- unique(select.vars$table_name)
+
+  # unique table types
+  dtypes <- as.vector(unique(select.vars$dtype))
+
+  if ("Trip" %in% tables) {
+    res <- "Trip"
+  } else if ("Person" %in% tables) {
+    res <- "Person"
+  } else {
+    res <- "Household"
+  }
+
+  if ("fact" %in% dtypes) {
+    type <- "fact"
+  } else {
+    type <- "dimension"
+  }
+
+  return(list(Res = res, Type = type))
+  # return named list
+})
+
+
+# binning -----
 # ! ONLY USED ONCE INSIDE A REACTIVE
 EV_REACT_xtabDtypeBtns <- eventReactive(input$xtab_go, { # on 2-way go
   # This reactive will change the display of 'Summary Types' radio buttons
@@ -271,20 +297,8 @@ EV_REACT_xtabDtypeBtns <- eventReactive(input$xtab_go, { # on 2-way go
   return(btns)
 })
 
-# fetch relevant variable NAME based on variable input (stab_xcol)
-EV_REACT_stab.varsXAlias <- eventReactive(input$stab_go, { # on go
-  # select only variable name
-  xvar.alias <- variables.lu[variable %in% input$stab_xcol, .(variable_name)]
-  # return character
-  return(unique(xvar.alias$variable_name))
-})
 
-# fetch relevant variable table based on variable input (stab_xcol)
-EV_REACT_stabXValues <- eventReactive(input$stab_go, { # on go
-  dt <- values.lu[variable %in% input$stab_xcol, ][order(value_order)]
-  return(dt)
-  # return dt
-})
+
 
 
 # captions -----
