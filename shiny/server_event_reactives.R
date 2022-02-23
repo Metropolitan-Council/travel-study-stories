@@ -1,9 +1,110 @@
 # event reactives
 
 
-EV_REACT_stabTableType <- eventReactive(input$stab_go, {
+# match input x and y col with corresponding alias names
+# this can be remedied by using return values in selectInput()
+# variable X alias
+EV_REACT_varsXAlias <- eventReactive(input$xtab_go, { # on go
+  # get variable name as shown in table
+  xvar.alias <- variables.lu[variable %in% input$xtab_xcol, .(variable_name)]
+  # returns character
+  return(unique(xvar.alias$variable_name))
+})
+
+# variable Y alias
+EV_REACT_varsYAlias <- eventReactive(input$xtab_go, { # on go
+  yvar.alias <- variables.lu[variable %in% input$xtab_ycol, .(variable_name)]
+  # returns character
+  return(unique(yvar.alias$variable_name))
+})
+
+
+
+# on go, return a table with values for the selected
+# category (stab_xcat) (with weights), type (fact or dimension),
+# and variable (stab_xcol)
+EV_REACT_stabTable <- eventReactive(input$stab_go, { # on go
+
+  # fetch
+  table.type <- EV_REACT_stabTableType()$Res # get table type (Trip, Person, Household)
+  wt_field <- table_names[[table.type]]$weight_name # look up weight name based on table.type
+
+  # temp statement b/c this cat was only asked in 2019. Use 2019 weights
+  if (input$stab_xcat == "Reason for leaving previous residence") {
+    wt_field <- hh_move_weight_name
+  }
+
+  if (input$stab_xcol == "weighted_trip_count") {
+    # use a special weight here because trip counts are a weird case
+    wt_field <- hh_day_weight_name
+  }
+
+  sql.query <- paste("SELECT seattle_home, hhid,",
+                     input$stab_xcol, # variable
+                     ",",
+                     wt_field, # relevant weight
+                     "FROM",
+                     table_names[[table.type]]$table_name # table name given the table type
+  )
+  survey <- read.dt(sql.query, "sqlquery")
+
+  type <- EV_REACT_stabTableType()$Type # fetch table type (fact, dimension)
+
+  if (input$stab_fltr_sea == T){
+    survey <- survey[seattle_home == "Home in Seattle", ]}
+
+  xa <- EV_REACT_stab.varsXAlias() # fetch relevant variable NAME based on variable input (stab_xcol)
+
+  # create simple datatable using given stab_xcol, wt_field, type (fact or dimension)
+  simtable <- simple_table(survey,
+                           input$stab_xcol,
+                           wt_field, type)
+
+
+  # fetch relevant variable table based on variable input (stab_xcol),
+  # select only value_order and value_text columns
+  xvals <- EV_REACT_stabXValues()[, .(value_order, value_text)][]
+
+  # check input type and xvals. sometimes xvals doesn't exist for some variables
+  if ((typeof(input$stab_xcol) == "character") & (nrow(xvals) > 0)) {
+    # if input$stab_xcol is a character AND there are more than 0 rows in xvals,
+    # merge simple table with xvals using stab_xcol and "value_text"
+    simtable <- merge(simtable, xvals, by.x = input$stab_xcol, by.y = "value_text")
+    setorder(simtable, value_order)
+    # simtable now has relevent values
+  }
+
+  dtypes <- dtype.choice.stab # value (share, MOE, sample count, etc). column names, defined in global.R
+  selcols <- c(xa, names(dtypes)) # make index of variable NAME and value columns
+
+  # change column names for simtable
+  setnames(x = simtable,
+           old =  c(input$stab_xcol, dtypes),
+           new =  selcols)
+
+  # set simtable column order
+  setcolorder(x = simtable,
+              neworder = selcols)
+
+  # filter out any blank variable names, select selcols
+  dt <- simtable[!(get(eval(xa)) %in% "")][, ..selcols]
+
+  # return a data.table
+  return(dt)
+
+})
+
+
+
+EV_REACT_stabTableType <- eventReactive(input$stab_go, { # on go
+
+  # make table with only selected variable
   select.vars <- variables.lu[variable %in% c(input$stab_xcol), ]
+
+  # unique table names
   tables <- unique(select.vars$table_name)
+
+  # unique table types
   dtypes <- as.vector(unique(select.vars$dtype))
 
   if ("Trip" %in% tables) {
@@ -21,66 +122,11 @@ EV_REACT_stabTableType <- eventReactive(input$stab_go, {
   }
 
   return(list(Res = res, Type = type))
+  # return named list
 })
 
 # return list of tables subsetted by value types
-EV_REACT_stabTable <- eventReactive(input$stab_go, {
-  table.type <- EV_REACT_stabTableType()$Res
-  wt_field <- table_names[[table.type]]$weight_name
 
-  # temp statement b/c this cat was only asked in 2019. Use 2019 weights
-  if (input$stab_xcat == "Reason for leaving previous residence") {
-    wt_field <- hh_move_weight_name
-  }
-
-  if (input$stab_xcol == "weighted_trip_count") {
-    # use a special weight here because trip counts are a weird case
-    wt_field <- hh_day_weight_name
-  }
-
-  sql.query <- paste("SELECT seattle_home, hhid,", input$stab_xcol, ",", wt_field, "FROM", table_names[[table.type]]$table_name)
-  survey <- read.dt(sql.query, "sqlquery")
-  type <- EV_REACT_stabTableType()$Type
-
-  if (input$stab_fltr_sea == T) survey <- survey[seattle_home == "Home in Seattle", ]
-
-  xa <- EV_REACT_stab.varsXAlias()
-
-  simtable <- simple_table(survey, input$stab_xcol, wt_field, type)
-
-  xvals <- EV_REACT_stabXValues()[, .(value_order, value_text)][]
-
-  # check input type and xvals. sometimes xvals doesn't exist for some variables
-  if ((typeof(input$stab_xcol) == "character") & (nrow(xvals) > 0)) {
-    simtable <- merge(simtable, xvals, by.x = input$stab_xcol, by.y = "value_text")
-    setorder(simtable, value_order)
-  }
-
-  dtypes <- dtype.choice.stab
-  selcols <- c(xa, names(dtypes))
-  setnames(simtable, c(input$stab_xcol, dtypes), selcols)
-  setcolorder(simtable, selcols)
-
-  dt <- simtable[!(get(eval(xa)) %in% "")][, ..selcols]
-})
-
-
-# match input x and y col with corresponding alias names
-# this can be remedied by using return values in selectInput()
-# variable X alias
-EV_REACT_varsXAlias <- eventReactive(input$xtab_go, { # on go
-  # get variable name as shown in table
-  xvar.alias <- variables.lu[variable %in% input$xtab_xcol, .(variable_name)]
-  # returns character
-  unique(xvar.alias$variable_name)
-})
-
-# variable Y alias
-EV_REACT_varsYAlias <- eventReactive(input$xtab_go, {
-  yvar.alias <- variables.lu[variable %in% input$xtab_ycol, .(variable_name)]
-  # returns character
-  unique(yvar.alias$variable_name)
-})
 
 
 EV_REACT_xtabXValues <- eventReactive(input$xtab_go, { # on go
@@ -224,18 +270,27 @@ EV_REACT_xtabDtypeBtns <- eventReactive(input$xtab_go, {
   return(btns)
 })
 
-EV_REACT_stab.varsXAlias <- eventReactive(input$stab_go, {
+# fetch relevant variable NAME based on variable input (stab_xcol)
+EV_REACT_stab.varsXAlias <- eventReactive(input$stab_go, { # on go
+  # select only variable name
   xvar.alias <- variables.lu[variable %in% input$stab_xcol, .(variable_name)]
-  unique(xvar.alias$variable_name)
+  # return character
+  return(unique(xvar.alias$variable_name))
 })
 
-EV_REACT_stabXValues <- eventReactive(input$stab_go, {
-  dt <- values.lu[variable %in% input$stab_xcol, ][order(value_order)] # return dt
+# fetch relevant variable table based on variable input (stab_xcol)
+EV_REACT_stabXValues <- eventReactive(input$stab_go, { # on go
+  dt <- values.lu[variable %in% input$stab_xcol, ][order(value_order)]
+  return(dt)
+  # return dt
 })
 
 
 # captions -----
-EV_REACT_stabCaption <- eventReactive(input$stab_go, {
+
+# Update heading value for one-way table
+# dependent on input$stab_fltr_sea
+EV_REACT_stabCaption <- eventReactive(input$stab_go, { # on go
   if (input$stab_fltr_sea == T) {
     cap <- "Seattle results"
   } else {
@@ -244,6 +299,8 @@ EV_REACT_stabCaption <- eventReactive(input$stab_go, {
   return(cap)
 })
 
+# Update heading value for two-way table
+# dependent on input$xtab_fltr_sea
 EV_REACT_xtabCaption <- eventReactive(input$xtab_go, { # on go
   if (input$xtab_fltr_sea == T) {
     cap <- "Seattle results"
