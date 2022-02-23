@@ -1,25 +1,15 @@
 
 function(input, output, session) {
 
-
-  # Functions ---------------------------------------------------------------
-
-
-
-  # xtab.edit.samplecnt <- function(dt, thresholdcnt) {
-  #   # dt <- copy(xtabstyletable)
-  #   edit.ind <- as.data.table(which(dt < thresholdcnt, arr.ind = T))
-  #   edit.rows <- unique(edit.ind$row)
-  #   dt[edit.rows, (colnames(dt)[2:length(colnames(dt))]) := 1]
-  # }
+  # one way table == stab
+  # two way table == xtab
 
 
-
-
-  # Crosstab Generator Selection --------------------------------------------
+  # 2-way table -----
 
   # show/hide vars definition
   # implemented with JS
+  # we can replace this with a helper pop-up with variable descriptions?
   observe({
     onclick(
       "xtabXtoggleAdvanced",
@@ -43,7 +33,7 @@ function(input, output, session) {
     unique(yvar.det$detail)
   })
 
-  # Update X and Y Categories -----------------------------------------------
+  # XTAB Update X and Y Categories -----------------------------------------------
 
 
   # update y-cat selectInput based on x-cat value
@@ -111,38 +101,24 @@ function(input, output, session) {
 
 
 
+  # render crosstab table name as h4 HTML
   output$ui_xtab_res_type_title <- renderUI({
     h4(EV_REACT_xtabCaption())
   })
 
 
-  # Crosstab Generator data wrangling ---------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-  # Crosstab Generator Visuals ----------------------------------------------
-
-
-
-
-
+# xtab plot
   output$xtab_vis <- renderPlotly({
-    xlabel <- EV_REACT_varsXAlias() # first dim
-    ylabel <- EV_REACT_varsYAlias() # second dim
-    geog.caption <- EV_REACT_xtabCaption()
+    xlabel <- EV_REACT_varsXAlias() # x axis variable first dim
+    ylabel <- EV_REACT_varsYAlias() # y axis variable second dim
+    geog.caption <- EV_REACT_xtabCaption() # caption text
 
+    # type cross tb tble type is dimension, return NULL
     if (EV_REACT_xtabTableType()$Type == "dimension") {
       if (is.null(input$xtab_dtype_rbtns)) {
         return(NULL)
       }
+
       dttype <- input$xtab_dtype_rbtns
       dttype.label <- names(dtype.choice.xtab[dtype.choice.xtab == dttype])
 
