@@ -137,7 +137,7 @@ hh <- replace_survey_missing(hh)
 per <- replace_survey_missing(per)
 veh <- replace_survey_missing(veh)
 
-rm(all_missing, all_missing_labels, dictionary, all_missing_character, all_missing_codes)
+rm(all_missing, all_missing_labels, all_missing_character, all_missing_codes)
 
 # Set IDs as Integer64 -----------
 hh[, hh_id := as.integer64(hh_id)]
@@ -169,27 +169,36 @@ per_race <-
     "aiak" = " American Indian or Alaska Native",
     "hisp" = "Hispanic, Latino, or Spanish origin",
     "mideast" = "Middle-Eastern",
-    "hapi" = "Native Hawaiian or other Pacific Islander"
+    "hapi" = "Native Hawaiian or other Pacific Islander",
+    "other" = "Other"
   )) %>%
-  mutate(race = ifelse(num_races >= 2, "2 or more races", race)) %>%
-  select(-num_races, -name) %>%
+  mutate(race_ethnicity_simple = ifelse(num_races >= 2, "2 or more races", race)) %>%
+  select(-num_races, -name, -race) %>%
   unique()
+
 
 per <- per %>%
   left_join(per_race)
 
 rm(per_race)
 
+## Add new column to dictionary #TODO
+
 # Connect to ancillary Data -----------
 ## Vehicle efficiency (EPA) -----------
-veh_epa <- read.csv("Data/veh_epa.csv") %>%
+veh_epa <- read.csv("data-raw/veh_epa.csv") %>%
   mutate(make = toupper(make), model = toupper(model))
 
 veh <- veh %>%
   left_join(veh_epa)
+
+rm(veh_epa)
+
+## Add new column to dictionary: #TODO
+
 ## Vehicle weight (DPS) -----------
 # Load Car Weight Data
-Vehicle_wtsDPS <- read_csv("Vehicle_wtsDPS.CSV",
+Vehicle_wtsDPS <- read_csv("data-raw/Vehicle_wtsDPS.CSV",
   col_types = cols(X1 = col_skip())
 )
 
@@ -208,6 +217,12 @@ veh <- veh %>%
   )))
 
 rm(Vehicle_wtsDPS)
+
+## Add new column to dictionary: #TODO
+
+
+
+
 ## Geospatial Data -----------
 ### Thrive Category -----------
 ### MPO boundary -----------
