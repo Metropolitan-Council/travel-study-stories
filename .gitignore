@@ -5,3 +5,5 @@ data/person.csv
 .Rproj.user
 
 travel.survey.explorer/connect_string.R
+
+travel.survey.explorer/.Rhistory
