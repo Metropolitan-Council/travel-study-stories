@@ -37,14 +37,13 @@ veh <- ROracle::dbReadTable(tbidb, "TBI19_VEHICLE_RAW") %>% as.data.table()
 day <- ROracle::dbReadTable(tbidb, "TBI19_DAY_RAW") %>% as.data.table()
 
 ## Translate tables using dictionary -----------
-dictionary <-  ROracle::dbReadTable(tbidb, "TBI19_DICTIONARY") %>% as.data.table()
+dictionary <-
+  ROracle::dbReadTable(tbidb, "TBI19_DICTIONARY") %>% select(-table) %>% unique() %>% as.data.table()
 
 # note: this part uses data.table syntax and functions.
 translate_using_dictionary <- function(dat, dictionary) {
   # select the names of columns that do not need to be translated -
   # (anything column that's not in the codebook):
-  dat <- hh
-
   dat_id_vars <-
     names(dat[, !colnames(dat) %in% unique(dictionary$variable), with = FALSE])
 
@@ -94,11 +93,54 @@ translate_using_dictionary <- function(dat, dictionary) {
   return(newdat)
 }
 
-translate_using_dictionary(day, dictionary)
+per <- translate_using_dictionary(per, dictionary)
+hh <- translate_using_dictionary(hh, dictionary)
+veh <- translate_using_dictionary(veh, dictionary)
+day <- translate_using_dictionary(day, dictionary)
+trip <- translate_using_dictionary(trip, dictionary)
 
 # Replace missing with NA -----------
+# all the numeric codes for missing:
+all_missing_codes <-
+  dictionary[grep("Missing", value_label), 'value', with = F]
+all_missing_codes <- unique(all_missing_codes$value)
 
-# Set IDs as Integer64
+# all the value labels that include missing:
+all_missing_labels <-
+  dictionary[grep("Missing", value_label), 'value_label', with = F]
+# both as character:
+all_missing_character <- unique(rbind(all_missing_codes, all_missing_labels, use.names = F))
+all_missing_character <- all_missing_character$x
+
+# function to repalce missing values with NA:
+replace_survey_missing <- function(dat){
+  na_dat <- dat %>%
+    mutate(across(where(is.numeric),
+                  ~ ifelse(. %in% all_missing_codes, NA, .))) %>%
+    # replace factor entries with NA:
+    mutate(across(where(is.factor),
+                  ~ factor(., exclude = all_missing_character)))
+
+  return(na_dat)
+
+}
+
+day <- replace_survey_missing(day)
+trip <- replace_survey_missing(trip)
+hh <- replace_survey_missing(hh)
+per <- replace_survey_missing(per)
+veh <- replace_survey_missing(veh)
+
+
+# Set IDs as Integer64 -----------
+hh[, hh_id := as.integer64(hh_id)]
+veh[, hh_id := as.integer64(hh_id)]
+day[, c('hh_id', 'person_id') := lapply(.SD, as.integer64),
+    .SDcols = c('hh_id', 'person_id')]
+trip[, c('hh_id', 'person_id', 'trip_id') := lapply(.SD, as.integer64),
+     .SDcols = c('hh_id', 'person_id', 'trip_id')]
+per[, c('hh_id', 'person_id') := lapply(.SD, as.integer64),
+    .SDcols = c('hh_id', 'person_id')]
 
 # Simplify answers to select-all questions -----------
 ## Race -----------
