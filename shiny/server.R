@@ -198,7 +198,7 @@ function(input, output, session) {
     stabfltrsea = F
   )
 
-  observeEvent(input$stab_go, {
+  observeEvent(input$stab_go, { # on one-way go
     vs$stabxcol <- input$stab_xcol
     vs$stabgo <- vs$stabgo + 1
     vs$stabfltrsea <- input$stab_fltr_sea
@@ -704,7 +704,7 @@ function(input, output, session) {
     xtabfltrsea = F
   )
 
-  observeEvent(input$xtab_go, {
+  observeEvent(input$xtab_go, { # on two way go
     v$xtabxcol <- input$xtab_xcol
     v$xtabycol <- input$xtab_ycol
     v$xtabgo <- v$xtabgo + 1

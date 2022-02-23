@@ -1,10 +1,11 @@
 # event reactives
 
+# alias and value lookups -----
 
 # match input x and y col with corresponding alias names
 # this can be remedied by using return values in selectInput()
 # variable X alias
-EV_REACT_varsXAlias <- eventReactive(input$xtab_go, { # on go
+EV_REACT_varsXAlias <- eventReactive(input$xtab_go, { # on two-way go
   # get variable name as shown in table
   xvar.alias <- variables.lu[variable %in% input$xtab_xcol, .(variable_name)]
   # returns character
@@ -12,7 +13,7 @@ EV_REACT_varsXAlias <- eventReactive(input$xtab_go, { # on go
 })
 
 # variable Y alias
-EV_REACT_varsYAlias <- eventReactive(input$xtab_go, { # on go
+EV_REACT_varsYAlias <- eventReactive(input$xtab_go, { # on two-way go
   yvar.alias <- variables.lu[variable %in% input$xtab_ycol, .(variable_name)]
   # returns character
   return(unique(yvar.alias$variable_name))
@@ -23,7 +24,7 @@ EV_REACT_varsYAlias <- eventReactive(input$xtab_go, { # on go
 # on go, return a table with values for the selected
 # category (stab_xcat) (with weights), type (fact or dimension),
 # and variable (stab_xcol)
-EV_REACT_stabTable <- eventReactive(input$stab_go, { # on go
+EV_REACT_stabTable <- eventReactive(input$stab_go, { # on one-way go
 
   # fetch
   table.type <- EV_REACT_stabTableType()$Res # get table type (Trip, Person, Household)
@@ -177,7 +178,7 @@ EV_REACT_xtabTableType <- eventReactive(input$xtab_go, { # on go button
 
 # return list of tables subsetted by value types
 # ! ONLY USED ONCE INSIDE A REACTIVE
-EV_REACT_xtabTable <- eventReactive(input$xtab_go, { # on "Go button"
+EV_REACT_xtabTable <- eventReactive(input$xtab_go, { # # on two-way go
   table.type <- EV_REACT_xtabTableType()$Res # get table name
   wt_field <- table_names[[table.type]]$weight_name # get weight name
 
@@ -246,7 +247,7 @@ EV_REACT_xtabTable <- eventReactive(input$xtab_go, { # on "Go button"
 })
 
 # ! ONLY USED ONCE INSIDE A REACTIVE
-EV_REACT_xtabDtypeBtns <- eventReactive(input$xtab_go, {
+EV_REACT_xtabDtypeBtns <- eventReactive(input$xtab_go, { # on 2-way go
   # This reactive will change the display of 'Summary Types' radio buttons
   # depending on whether it is a dimension or fact related table
 
@@ -290,7 +291,7 @@ EV_REACT_stabXValues <- eventReactive(input$stab_go, { # on go
 
 # Update heading value for one-way table
 # dependent on input$stab_fltr_sea
-EV_REACT_stabCaption <- eventReactive(input$stab_go, { # on go
+EV_REACT_stabCaption <- eventReactive(input$stab_go, { # on one-way go
   if (input$stab_fltr_sea == T) {
     cap <- "Seattle results"
   } else {
@@ -301,7 +302,7 @@ EV_REACT_stabCaption <- eventReactive(input$stab_go, { # on go
 
 # Update heading value for two-way table
 # dependent on input$xtab_fltr_sea
-EV_REACT_xtabCaption <- eventReactive(input$xtab_go, { # on go
+EV_REACT_xtabCaption <- eventReactive(input$xtab_go, { # on two-way go
   if (input$xtab_fltr_sea == T) {
     cap <- "Seattle results"
   } else {
