@@ -144,7 +144,23 @@ per[, c('hh_id', 'person_id') := lapply(.SD, as.integer64),
 
 # Simplify answers to select-all questions -----------
 ## Race -----------
-
+race <-
+  per %>%
+  select(person_id, starts_with('ethnicity')) %>%
+  pivot_longer(cols = starts_with('ethnicity'), names_prefix = 'ethnicity_') %>%
+  filter(value == "Yes") %>%
+  select(-value) %>%
+  group_by(person_id) %>%
+  add_tally(name = "num_races") %>%
+  mutate(race = recode(name, 'afam' = 'African-American',
+                       'asian' = 'Asian',
+                       'aiak' = 'Indigenous',
+                       'hisp' = 'Hispanic/Latino',
+                       'mideast' = 'Middle-Eastern',
+                       'hapi' = 'Hawaiian/Pacific Islander')) %>%
+  mutate(race = ifelse(num_races >= 2, "2 or more races", race)) %>%
+  select(-num_races, -name) %>%
+  unique()
 
 # Connect to ancillary Data -----------
 ## Vehicle efficiency (EPA) -----------
