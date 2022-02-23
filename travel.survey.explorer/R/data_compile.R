@@ -1,4 +1,34 @@
+# Packages -------------
+suppressMessages(library(bit64, quietly = T)) # for loading in integer iDs for households/persons in TBI dataset
+suppressMessages(library(tidyverse, quietly = T))
+suppressMessages(library(sf, quietly = T)) # for mapping
+
+suppressMessages(library(here, quietly = T)) # working directories
+suppressMessages(library(lubridate, quietly = T)) # dates and times
+suppressMessages(library(DBI, quietly = T)) # link to internal databases
+suppressMessages(library(keyring, quietly = T)) # store passwords
+
 # Connect to database -----------
+# Configure database time zone
+Sys.setenv(TZ = "America/Chicago")
+Sys.setenv(ORA_SDTZ = "America/Chicago")
+
+# read connection string (git-ignored)
+source('connect_string.R')
+
+# connnect:
+tbidb <- ROracle::dbConnect(
+  dbDriver("Oracle"),
+  dbname = connect_string,
+  username = "mts_planning_data",
+  # mts_planning_view for viewing data only, no write privileges.
+  # mts_planning_data is the username for write privileges.
+  password = keyring::key_get("mts_planning_data_pw")
+)
+
+
+
+# Download tables ---------
 
 # Translate tables using dictionary -----------
 
