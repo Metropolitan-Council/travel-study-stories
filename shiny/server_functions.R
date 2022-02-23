@@ -29,13 +29,16 @@ FUN_xtab.join.samplecnt <- function(xtabcleandt, dttype, EV_REACT_varsXAlias) {
   dt <- dt[order(var1.sort)][, var1.sort := NULL]
 }
 
-FUN_xtab.tblMOE.join.samplecnt <- function(xtabcleantblMOEdt, xtabcleandt, dttype, EV_REACT_varsXAlias) {
+FUN_xtab.tblMOE.join.samplecnt <- function(xtabcleantblMOEdt,
+                                           xtabcleandt, dttype,
+                                           EV_REACT_varsXAlias) {
   dt.data <- xtabcleantblMOEdt
   dt.style <- copy(xtabcleandt[["sample_count"]])
   dt.sort.rows <- dt.data[[EV_REACT_varsXAlias]]
 
   idx <- 2:ncol(dt.style)
-  colnames(dt.style)[idx] <- paste0(letters[1:(ncol(dt.style) - 1)], "_", colnames(dt.style)[idx], "_sc")
+  colnames(dt.style)[idx] <- paste0(letters[1:(ncol(dt.style) - 1)],
+                                    "_", colnames(dt.style)[idx], "_sc")
   new.cols <- paste0(colnames(dt.style)[idx], "2")
   cols <- colnames(dt.style)[idx]
   col2order <- sort(c(cols, new.cols))
@@ -51,7 +54,8 @@ FUN_xtab.tblMOE.join.samplecnt <- function(xtabcleantblMOEdt, xtabcleandt, dttyp
   dt <- dt[order(var1.sort)][, var1.sort := NULL]
 }
 
-FUN_xtab.create.DT <- function(atable, moe = c(TRUE, FALSE), acontainer, indices2hide, maxyvals, sc.cols) {
+FUN_xtab.create.DT <- function(atable, moe = c(TRUE, FALSE),
+                               acontainer, indices2hide, maxyvals, sc.cols) {
   colors <- list(ltgrey = "#bdbdc3", dkgrey = "#343439")
   if (moe == TRUE) {
     defs <- list(
@@ -63,13 +67,13 @@ FUN_xtab.create.DT <- function(atable, moe = c(TRUE, FALSE), acontainer, indices
   }
 
   DT::datatable(atable,
-    # caption = acaption,
-    container = acontainer,
-    rownames = FALSE,
-    options = list(
-      bFilter = 0,
-      columnDefs = defs
-    ) # DT's column index starts at 0 not 1
+                # caption = acaption,
+                container = acontainer,
+                rownames = FALSE,
+                options = list(
+                  bFilter = 0,
+                  columnDefs = defs
+                ) # DT's column index starts at 0 not 1
   ) %>%
     formatStyle(
       columns = 2:maxyvals,

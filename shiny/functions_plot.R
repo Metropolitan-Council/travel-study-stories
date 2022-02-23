@@ -1,6 +1,7 @@
 source.string <- "Combined 2017/19 Household Travel Survey"
 font.family <- list(family = "Lato")
 
+# format numbers
 plot.format.nums <- function(format = c("percent", "nominal")) {
   if (format == "percent") {
     yscale <- scales::percent
@@ -10,6 +11,7 @@ plot.format.nums <- function(format = c("percent", "nominal")) {
   return(yscale)
 }
 
+# plot styling
 plot.layout <- function(df, dttype.label,
                         geog.caption, xlabel, ylabel = NULL) {
   if (!is.null(ylabel)) {
@@ -44,7 +46,7 @@ plot.layout <- function(df, dttype.label,
 
 # Two-way Table functions -------------------------------------------------
 
-
+# 2-way bar plot
 xtab.plot.bar <- function(table, format = c("percent", "nominal"),
                           xlabel, ylabel, dttype.label, geog.caption) {
   yscale <- plot.format.nums(format)
@@ -135,6 +137,7 @@ xtab.plot.bar.pivot <- function(table, format = c("percent", "nominal"),
   # layout(font = font.family)
 }
 
+# 2-way bar plot with MOE
 xtab.plot.bar.moe <- function(table, format = c("percent", "nominal"),
                               xlabel, ylabel, geog.caption) {
   yscale <- plot.format.nums(format)
@@ -221,6 +224,7 @@ xtab.plot.bar.moe <- function(table, format = c("percent", "nominal"),
     ) # layout(font = font.family)
 }
 
+# 2-way bar plot with MOE
 xtab.plot.bar.moe.pivot <- function(table, format = c("percent", "nominal"),
                                     xlabel, ylabel, geog.caption) {
   yscale <- plot.format.nums(format)
