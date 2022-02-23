@@ -131,6 +131,7 @@ hh <- replace_survey_missing(hh)
 per <- replace_survey_missing(per)
 veh <- replace_survey_missing(veh)
 
+rm(all_missing, all_missing_labels, dictionary, all_missing_character, all_missing_codes)
 
 # Set IDs as Integer64 -----------
 hh[, hh_id := as.integer64(hh_id)]
@@ -144,7 +145,7 @@ per[, c('hh_id', 'person_id') := lapply(.SD, as.integer64),
 
 # Simplify answers to select-all questions -----------
 ## Race -----------
-race <-
+per_race <-
   per %>%
   select(person_id, starts_with('ethnicity')) %>%
   pivot_longer(cols = starts_with('ethnicity'), names_prefix = 'ethnicity_') %>%
@@ -161,6 +162,11 @@ race <-
   mutate(race = ifelse(num_races >= 2, "2 or more races", race)) %>%
   select(-num_races, -name) %>%
   unique()
+
+per <- per %>%
+  left_join(per_race)
+
+rm(per_race)
 
 # Connect to ancillary Data -----------
 ## Vehicle efficiency (EPA) -----------
