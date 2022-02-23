@@ -10,11 +10,19 @@ plot.format.nums <- function(format = c("percent", "nominal")) {
   return(yscale)
 }
 
-plot.layout <- function(df, dttype.label, geog.caption, xlabel, ylabel = NULL) {
+plot.layout <- function(df, dttype.label,
+                        geog.caption, xlabel, ylabel = NULL) {
   if (!is.null(ylabel)) {
-    main.title <- paste0(paste(geog.caption, ": ", dttype.label, "of", "<i>", ylabel, "</i>", "by", "<i>", xlabel, "</i>"))
+    main.title <- paste0(paste(
+      geog.caption, ": ",
+      dttype.label, "of", "<i>",
+      ylabel, "</i>", "by", "<i>", xlabel, "</i>"
+    ))
   } else {
-    main.title <- paste0(paste(geog.caption, ": ", dttype.label, "of", "<i>", xlabel, "</i>"))
+    main.title <- paste0(paste(
+      geog.caption, ": ",
+      dttype.label, "of", "<i>", xlabel, "</i>"
+    ))
   }
 
   df %>% layout(
@@ -37,7 +45,8 @@ plot.layout <- function(df, dttype.label, geog.caption, xlabel, ylabel = NULL) {
 # Two-way Table functions -------------------------------------------------
 
 
-xtab.plot.bar <- function(table, format = c("percent", "nominal"), xlabel, ylabel, dttype.label, geog.caption) {
+xtab.plot.bar <- function(table, format = c("percent", "nominal"),
+                          xlabel, ylabel, dttype.label, geog.caption) {
   yscale <- plot.format.nums(format)
 
   g <- ggplot(
@@ -61,7 +70,7 @@ xtab.plot.bar <- function(table, format = c("percent", "nominal"), xlabel, ylabe
       x = ylabel,
       y = NULL
     ) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
+    scale_x_discrete(labels = function(x) (str_wrap(x, width = 15))) +
     scale_y_continuous(labels = yscale) +
     theme(
       axis.title.x = element_text(margin = margin(t = 30)),
@@ -70,7 +79,10 @@ xtab.plot.bar <- function(table, format = c("percent", "nominal"), xlabel, ylabe
       plot.margin = margin(.6, 4.5, 0, 0, "cm")
     )
 
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel, ylabel)
+  p <- ggplotly(g, tooltip = "text") %>% plot.layout(
+    dttype.label,
+    geog.caption, xlabel, ylabel
+  )
   # layout(font = font.family,
   #        title = list(text = paste0(paste(dttype.label, "of", ylabel, "by", xlabel),
   #                                   '<br>',
@@ -84,7 +96,8 @@ xtab.plot.bar <- function(table, format = c("percent", "nominal"), xlabel, ylabe
   #        ) # end layout
 }
 
-xtab.plot.bar.pivot <- function(table, format = c("percent", "nominal"), xlabel, ylabel, dttype.label, geog.caption) {
+xtab.plot.bar.pivot <- function(table, format = c("percent", "nominal"),
+                                xlabel, ylabel, dttype.label, geog.caption) {
   yscale <- plot.format.nums(format)
 
   g <- ggplot(
@@ -115,11 +128,15 @@ xtab.plot.bar.pivot <- function(table, format = c("percent", "nominal"), xlabel,
     ) +
     coord_flip()
 
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel, ylabel)
+  p <- ggplotly(g, tooltip = "text") %>% plot.layout(
+    dttype.label,
+    geog.caption, xlabel, ylabel
+  )
   # layout(font = font.family)
 }
 
-xtab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, ylabel, geog.caption) {
+xtab.plot.bar.moe <- function(table, format = c("percent", "nominal"),
+                              xlabel, ylabel, geog.caption) {
   yscale <- plot.format.nums(format)
 
   if (format == "percent") {
@@ -134,15 +151,21 @@ xtab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, y
           paste0(xlabel, ":"), group,
           paste0("<br>", ylabel, ":"), value,
           paste0("<br>", "Share (min, max):"),
-          yscale(result), paste0("(", yscale(pmax(result - result_moe, 0)), ", ", yscale(pmin(result + result_moe, 1)), ")")
+          yscale(result), paste0(
+            "(", yscale(pmax(result - result_moe, 0)),
+            ", ", yscale(pmin(result + result_moe, 1)), ")"
+          )
         )
       )
     ) +
       geom_col(position = position_dodge(preserve = "single")) +
-      geom_errorbar(aes(ymin = pmax(result - result_moe, 0), ymax = pmin(result + result_moe, 1)),
-        alpha = .5,
-        width = 0.2,
-        position = position_dodge(width = .9)
+      geom_errorbar(aes(
+        ymin = pmax(result - result_moe, 0),
+        ymax = pmin(result + result_moe, 1)
+      ),
+      alpha = .5,
+      width = 0.2,
+      position = position_dodge(width = .9)
       )
     title.text <- "Share"
   } else {
@@ -157,15 +180,18 @@ xtab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, y
           paste0(xlabel, ":"), group,
           paste0("<br>", ylabel, ":"), value,
           paste0("<br>", "Total (min, max):"),
-          yscale(result), paste0("(", yscale(result - result_moe), ", ", yscale(result + result_moe), ")")
+          yscale(result), paste0(
+            "(", yscale(result - result_moe), ", ",
+            yscale(result + result_moe), ")"
+          )
         )
       )
     ) +
       geom_col(position = position_dodge(preserve = "single")) +
       geom_errorbar(aes(ymin = result - result_moe, ymax = result + result_moe),
-        alpha = .5,
-        width = 0.2,
-        position = position_dodge(width = .9)
+                    alpha = .5,
+                    width = 0.2,
+                    position = position_dodge(width = .9)
       )
     title.text <- "Total"
   }
@@ -177,7 +203,9 @@ xtab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, y
       x = ylabel,
       y = NULL
     ) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
+    scale_x_discrete(labels = function(x) {
+      str_wrap(x, width = 15)
+    }) +
     scale_y_continuous(labels = yscale) +
     theme(
       axis.title.x = element_text(margin = margin(t = 30)),
@@ -186,10 +214,15 @@ xtab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, y
       plot.margin = margin(.6, 4.5, 0, 0, "cm")
     )
 
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel, ylabel) # layout(font = font.family)
+  p <- ggplotly(g, tooltip = "text") %>%
+    plot.layout(
+      dttype.label,
+      geog.caption, xlabel, ylabel
+    ) # layout(font = font.family)
 }
 
-xtab.plot.bar.moe.pivot <- function(table, format = c("percent", "nominal"), xlabel, ylabel, geog.caption) {
+xtab.plot.bar.moe.pivot <- function(table, format = c("percent", "nominal"),
+                                    xlabel, ylabel, geog.caption) {
   yscale <- plot.format.nums(format)
 
   if (format == "percent") {
@@ -203,16 +236,22 @@ xtab.plot.bar.moe.pivot <- function(table, format = c("percent", "nominal"), xla
         text = paste(
           paste0(xlabel, ":"), group,
           paste0("<br>", ylabel, ":"), value,
-          yscale(result), paste0("(", yscale(pmax(result - result_moe, 0)), ", ", yscale(pmin(result + result_moe, 1)), ")")
+          yscale(result), paste0(
+            "(", yscale(pmax(result - result_moe, 0)), ", ",
+            yscale(pmin(result + result_moe, 1)), ")"
+          )
         )
         # paste0('<br>', dttype.label, ':'), yscale(result))
       )
     ) +
       geom_col(position = position_dodge(preserve = "single")) +
-      geom_linerange(aes(ymin = pmax(result - result_moe, 0), ymax = pmin(result + result_moe, 1)),
-        alpha = .4,
-        size = .02,
-        position = position_dodge(width = .9)
+      geom_linerange(aes(
+        ymin = pmax(result - result_moe, 0),
+        ymax = pmin(result + result_moe, 1)
+      ),
+      alpha = .4,
+      size = .02,
+      position = position_dodge(width = .9)
       )
     title.text <- "Share"
   } else {
@@ -226,16 +265,22 @@ xtab.plot.bar.moe.pivot <- function(table, format = c("percent", "nominal"), xla
         text = paste(
           paste0(xlabel, ":"), group,
           paste0("<br>", ylabel, ":"), value,
-          yscale(result), paste0("(", yscale(result - result_moe), ", ", yscale(result + result_moe), ")")
+          yscale(result), paste0(
+            "(", yscale(result - result_moe),
+            ", ", yscale(result + result_moe), ")"
+          )
         )
         # paste0('<br>', dttype.label, ':'), yscale(result))
       )
     ) +
       geom_col(position = position_dodge(preserve = "single")) +
-      geom_linerange(aes(ymin = result - result_moe, ymax = result + result_moe),
-        alpha = .4,
-        size = .02,
-        position = position_dodge(width = .9)
+      geom_linerange(aes(
+        ymin = result - result_moe,
+        ymax = result + result_moe
+      ),
+      alpha = .4,
+      size = .02,
+      position = position_dodge(width = .9)
       )
     title.text <- "Total"
   }
@@ -256,13 +301,15 @@ xtab.plot.bar.moe.pivot <- function(table, format = c("percent", "nominal"), xla
     ) +
     coord_flip()
 
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel, ylabel) # layout(font = font.family)
+  p <- ggplotly(g, tooltip = "text") %>%
+    plot.layout(dttype.label, geog.caption, xlabel, ylabel) # layout(font = font.family)
 }
 
 # One-way Table functions -------------------------------------------------
 
 
-stab.plot.bar <- function(table, format = c("percent", "nominal"), xlabel, geog.caption) {
+stab.plot.bar <- function(table, format = c("percent", "nominal"),
+                          xlabel, geog.caption) {
   yscale <- plot.format.nums(format)
   dttype.label <- unique(table$type)
   g <- ggplot(
@@ -284,7 +331,9 @@ stab.plot.bar <- function(table, format = c("percent", "nominal"), xlabel, geog.
       x = xlabel,
       y = NULL
     ) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
+    scale_x_discrete(labels = function(x) {
+      str_wrap(x, width = 15)
+    }) +
     scale_y_continuous(labels = yscale) +
     theme(
       axis.title.x = element_text(margin = margin(t = 30)),
@@ -292,10 +341,12 @@ stab.plot.bar <- function(table, format = c("percent", "nominal"), xlabel, geog.
       legend.position = "none"
     )
 
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel) # layout(font = font.family)
+  p <- ggplotly(g, tooltip = "text") %>%
+    plot.layout(dttype.label, geog.caption, xlabel) # layout(font = font.family)
 }
 
-stab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, geog.caption) {
+stab.plot.bar.moe <- function(table, format = c("percent", "nominal"),
+                              xlabel, geog.caption) {
   yscale <- plot.format.nums(format)
 
   if (format == "percent") {
@@ -308,15 +359,21 @@ stab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, g
         text = paste(
           paste0(xlabel, ":"), value,
           paste0("<br>", "Share (min, max):"),
-          yscale(result), paste0("(", yscale(pmax(result - result_moe, 0)), ", ", yscale(pmin(result + result_moe, 1)), ")")
+          yscale(result), paste0(
+            "(", yscale(pmax(result - result_moe, 0)), ", ",
+            yscale(pmin(result + result_moe, 1)), ")"
+          )
         )
       )
     ) +
       geom_col(position = position_dodge(preserve = "single")) +
-      geom_errorbar(aes(ymin = pmax(result - result_moe, 0), ymax = pmin(result + result_moe, 1)),
-        alpha = .5,
-        width = 0.2,
-        position = position_dodge(width = .9)
+      geom_errorbar(aes(
+        ymin = pmax(result - result_moe, 0),
+        ymax = pmin(result + result_moe, 1)
+      ),
+      alpha = .5,
+      width = 0.2,
+      position = position_dodge(width = .9)
       )
     title.text <- "Share"
   } else {
@@ -329,15 +386,21 @@ stab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, g
         text = paste(
           paste0(xlabel, ":"), value,
           paste0("<br>", "Total (min, max):"),
-          yscale(result), paste0("(", yscale(result - result_moe), ", ", yscale(result + result_moe), ")")
+          yscale(result), paste0(
+            "(", yscale(result - result_moe),
+            ", ", yscale(result + result_moe), ")"
+          )
         )
       )
     ) +
       geom_col(position = position_dodge(preserve = "single")) +
-      geom_errorbar(aes(ymin = result - result_moe, ymax = result + result_moe),
-        alpha = .5,
-        width = 0.2,
-        position = position_dodge(width = .9)
+      geom_errorbar(aes(
+        ymin = result - result_moe,
+        ymax = result + result_moe
+      ),
+      alpha = .5,
+      width = 0.2,
+      position = position_dodge(width = .9)
       )
     title.text <- "Total"
   }
@@ -349,7 +412,9 @@ stab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, g
       x = xlabel,
       y = NULL
     ) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
+    scale_x_discrete(labels = function(x) {
+      str_wrap(x, width = 15)
+    }) +
     scale_y_continuous(labels = yscale) +
     theme(
       axis.title.x = element_text(margin = margin(t = 30)),
@@ -357,10 +422,12 @@ stab.plot.bar.moe <- function(table, format = c("percent", "nominal"), xlabel, g
       legend.position = "none"
     )
 
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel) # layout(font = font.family)
+  p <- ggplotly(g, tooltip = "text") %>%
+    plot.layout(dttype.label, geog.caption, xlabel) # layout(font = font.family)
 }
 
-stab.plot.bar2 <- function(table, format = c("percent", "nominal"), xlabel, geog.caption) {
+stab.plot.bar2 <- function(table, format = c("percent", "nominal"),
+                           xlabel, geog.caption) {
   yscale <- plot.format.nums(format)
   dttype.label <- unique(table$type)
   g <- ggplot(
@@ -389,11 +456,13 @@ stab.plot.bar2 <- function(table, format = c("percent", "nominal"), xlabel, geog
       axis.title.y = element_text(margin = margin(r = 20)) # ,
     )
 
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel) # layout(font = font.family)
+  p <- ggplotly(g, tooltip = "text") %>%
+    plot.layout(dttype.label, geog.caption, xlabel) # layout(font = font.family)
 }
 
 
-stab.plot.bar2.moe <- function(table, format = c("percent", "nominal"), xlabel, geog.caption) {
+stab.plot.bar2.moe <- function(table, format = c("percent", "nominal"),
+                               xlabel, geog.caption) {
   yscale <- plot.format.nums(format)
 
   if (format == "percent") {
@@ -406,15 +475,21 @@ stab.plot.bar2.moe <- function(table, format = c("percent", "nominal"), xlabel, 
         text = paste(
           paste0(xlabel, ":"), value,
           paste0("<br>", "Share (min, max):"),
-          yscale(result), paste0("(", yscale(pmax(result - result_moe, 0)), ", ", yscale(pmin(result + result_moe, 1)), ")")
+          yscale(result), paste0(
+            "(", yscale(pmax(result - result_moe, 0)), ", ",
+            yscale(pmin(result + result_moe, 1)), ")"
+          )
         )
       )
     ) +
       geom_col(position = position_dodge(preserve = "single")) +
-      geom_errorbar(aes(ymin = pmax(result - result_moe, 0), ymax = pmin(result + result_moe, 1)),
-        alpha = .5,
-        width = 0.2,
-        position = position_dodge(width = .9)
+      geom_errorbar(aes(
+        ymin = pmax(result - result_moe, 0),
+        ymax = pmin(result + result_moe, 1)
+      ),
+      alpha = .5,
+      width = 0.2,
+      position = position_dodge(width = .9)
       )
     title.text <- "Share"
   } else {
@@ -427,15 +502,21 @@ stab.plot.bar2.moe <- function(table, format = c("percent", "nominal"), xlabel, 
         text = paste(
           paste0(xlabel, ":"), value,
           paste0("<br>", "Total (min, max):"),
-          yscale(result), paste0("(", yscale(result - result_moe), ", ", yscale(result + result_moe), ")")
+          yscale(result), paste0(
+            "(", yscale(result - result_moe),
+            ", ", yscale(result + result_moe), ")"
+          )
         )
       )
     ) +
       geom_col(position = position_dodge(preserve = "single")) +
-      geom_errorbar(aes(ymin = result - result_moe, ymax = result + result_moe),
-        alpha = .5,
-        width = 0.2,
-        position = position_dodge(width = .9)
+      geom_errorbar(aes(
+        ymin = result - result_moe,
+        ymax = result + result_moe
+      ),
+      alpha = .5,
+      width = 0.2,
+      position = position_dodge(width = .9)
       )
     title.text <- "Total"
   }
@@ -454,13 +535,15 @@ stab.plot.bar2.moe <- function(table, format = c("percent", "nominal"), xlabel, 
       axis.title.y = element_text(margin = margin(r = 20)) # ,
     )
 
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel) # layout(font = font.family)
+  p <- ggplotly(g, tooltip = "text") %>%
+    plot.layout(dttype.label, geog.caption, xlabel) # layout(font = font.family)
 }
 
 # Two-way Facts Table functions -------------------------------------------
 
 
-xtab.plot.bar.fact <- function(table, format = c("percent", "nominal"), xlabel, ylabel, dttype.label, geog.caption) {
+xtab.plot.bar.fact <- function(table, format = c("percent", "nominal"),
+                               xlabel, ylabel, dttype.label, geog.caption) {
   yscale <- plot.format.nums(format)
   g <- ggplot(
     table,
@@ -481,7 +564,9 @@ xtab.plot.bar.fact <- function(table, format = c("percent", "nominal"), xlabel, 
       x = ylabel,
       y = NULL
     ) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
+    scale_x_discrete(labels = function(x) {
+      str_wrap(x, width = 15)
+    }) +
     scale_y_continuous(labels = yscale) +
     theme(
       axis.title.x = element_text(margin = margin(t = 30)),
@@ -489,10 +574,15 @@ xtab.plot.bar.fact <- function(table, format = c("percent", "nominal"), xlabel, 
       legend.title = element_text(size = 10),
       plot.margin = margin(.6, 4.5, 0, 0, "cm")
     )
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel, ylabel) # layout(font = font.family)
+  p <- ggplotly(g, tooltip = "text") %>%
+    plot.layout(
+      dttype.label,
+      geog.caption, xlabel, ylabel
+    ) # layout(font = font.family)
 }
 
-xtab.plot.bar.fact.moe <- function(table, format = c("percent", "nominal"), xlabel, ylabel, dttype.label, geog.caption) {
+xtab.plot.bar.fact.moe <- function(table, format = c("percent", "nominal"),
+                                   xlabel, ylabel, dttype.label, geog.caption) {
   yscale <- plot.format.nums(format)
 
   f <- ggplot(
@@ -505,15 +595,21 @@ xtab.plot.bar.fact.moe <- function(table, format = c("percent", "nominal"), xlab
         paste0(xlabel, ":"), group,
         paste0("<br>", value, " of ", ylabel, ":"), round(result, 2),
         paste0("<br>", "Total (min, max):"),
-        yscale(result), paste0("(", round(result - result_moe, 2), ", ", round(result + result_moe, 2), ")")
+        yscale(result), paste0(
+          "(", round(result - result_moe, 2), ", ",
+          round(result + result_moe, 2), ")"
+        )
       )
     )
   ) +
     geom_col(position = position_dodge(preserve = "single")) +
-    geom_errorbar(aes(ymin = result - result_moe, ymax = result + result_moe),
-      alpha = .5,
-      width = 0.2,
-      position = position_dodge(width = .9)
+    geom_errorbar(aes(
+      ymin = result - result_moe,
+      ymax = result + result_moe
+    ),
+    alpha = .5,
+    width = 0.2,
+    position = position_dodge(width = .9)
     )
 
   g <- f +
@@ -523,7 +619,9 @@ xtab.plot.bar.fact.moe <- function(table, format = c("percent", "nominal"), xlab
       x = ylabel,
       y = NULL
     ) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
+    scale_x_discrete(labels = function(x) {
+      str_wrap(x, width = 15)
+    }) +
     scale_y_continuous(labels = yscale) +
     theme(
       axis.title.x = element_text(margin = margin(t = 30)),
@@ -532,5 +630,6 @@ xtab.plot.bar.fact.moe <- function(table, format = c("percent", "nominal"), xlab
       plot.margin = margin(.6, 4.5, 0, 0, "cm")
     )
 
-  p <- ggplotly(g, tooltip = "text") %>% plot.layout(dttype.label, geog.caption, xlabel, ylabel) # layout(font = font.family)
+  p <- ggplotly(g, tooltip = "text") %>%
+    plot.layout(dttype.label, geog.caption, xlabel, ylabel) # layout(font = font.family)
 }
