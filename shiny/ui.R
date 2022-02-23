@@ -2,7 +2,8 @@ fluidPage(
   title = "", windowTitle = "Travel Survey Data Explorer",
   theme = shinytheme("flatly"),
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "additional-styles.css")
+    tags$link(rel = "stylesheet",
+              type = "text/css", href = "additional-styles.css")
   ),
   useShinyjs(),
   navbarPage(
@@ -20,10 +21,10 @@ fluidPage(
           p("Click 'Download Data' to download tabular data after the table has been generated."),
           br(),
           selectInput(
-            "stab_xcat",
-            "Category",
+           inputId =  "stab_xcat",
+            label = "Category",
             # width = '75%',
-            vars.cat[!(vars.cat %in% "None")]
+           choices =  vars.cat[!(vars.cat %in% "None")]
           ),
           uiOutput("ui_stab_xcol"),
           div(
@@ -156,7 +157,7 @@ fluidPage(
               ), # end hidden
               style = "font-size: 90%"
             ) # end div
-          ) # end welPanel
+          ) # end wellPanel
         ), # end column
 
         column(
