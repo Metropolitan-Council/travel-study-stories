@@ -48,13 +48,16 @@ function(input, output, session) {
     dt <- REACT_stabTable.DT()
 
     fmt.per <- names(dtype.choice[dtype.choice %in% c("share")])
-    fmt.num <- names(dtype.choice[dtype.choice %in% c("estimate", "sample_count")])
+    fmt.num <- names(dtype.choice[dtype.choice %in% c("estimate",
+                                                      "sample_count")])
     DT::datatable(dt,
                   options = list(
                     bFilter = 0,
                     # pageLength = 10,
                     autoWidth = FALSE,
-                    columnDefs = list(list(className = "dt-center", width = "100px", targets = c(2:ncol(dt))))
+                    columnDefs = list(list(
+                      className = "dt-center", width = "100px",
+                      targets = c(2:ncol(dt))))
                   )
     ) %>%
       formatPercentage(fmt.per, 1) %>%
@@ -62,7 +65,8 @@ function(input, output, session) {
       formatStyle(
         columns = 2:ncol(dt),
         valueColumns = ncol(dt),
-        color = styleInterval(c(30), c(colors$ltgrey, colors$dkgrey))
+        color = styleInterval(c(30),
+                              c(colors$ltgrey, colors$dkgrey))
       )
   })
 
@@ -107,7 +111,8 @@ function(input, output, session) {
         )
       }
       return(p)
-    } else if (dttype %in% c("estimate", "sample_count", "N_HH")) {
+    } else if (dttype %in% c("estimate",
+                             "sample_count", "N_HH")) {
       if (l < 10) {
         p <- stab.plot.bar(
           table = dt,
