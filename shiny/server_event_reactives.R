@@ -7,14 +7,14 @@
 # variable X alias
 EV_REACT_varsXAlias <- eventReactive(input$xtab_go, { # on two-way go
   # get variable name as shown in table
-  xvar.alias <- variables.lu[variable %in% input$xtab_xcol, .(variable_name)]
+  xvar.alias <- lookup_variables[variable %in% input$xtab_xcol, .(variable_name)]
   # returns character
   return(unique(xvar.alias$variable_name))
 })
 
 # variable Y alias
 EV_REACT_varsYAlias <- eventReactive(input$xtab_go, { # on two-way go
-  yvar.alias <- variables.lu[variable %in% input$xtab_ycol, .(variable_name)]
+  yvar.alias <- lookup_variables[variable %in% input$xtab_ycol, .(variable_name)]
   # returns character
   return(unique(yvar.alias$variable_name))
 })
@@ -22,7 +22,7 @@ EV_REACT_varsYAlias <- eventReactive(input$xtab_go, { # on two-way go
 # fetch relevant variable NAME based on variable input (stab_xcol)
 EV_REACT_stab.varsXAlias <- eventReactive(input$stab_go, { # on one-way go
   # select only variable name
-  xvar.alias <- variables.lu[variable %in% input$stab_xcol, .(variable_name)]
+  xvar.alias <- lookup_variables[variable %in% input$stab_xcol, .(variable_name)]
   # return character
   return(unique(xvar.alias$variable_name))
 })
@@ -30,7 +30,7 @@ EV_REACT_stab.varsXAlias <- eventReactive(input$stab_go, { # on one-way go
 
 # fetch relevant variable table based on variable input (stab_xcol)
 EV_REACT_stabXValues <- eventReactive(input$stab_go, { # on one-way go
-  dt <- values.lu[variable %in% input$stab_xcol, ][order(value_order)]
+  dt <- lookup_values[variable %in% input$stab_xcol, ][order(value_order)]
   return(dt)
   # return dt
 })
@@ -39,13 +39,13 @@ EV_REACT_stabXValues <- eventReactive(input$stab_go, { # on one-way go
 
 EV_REACT_xtabXValues <- eventReactive(input$xtab_go, { # on two-way go
   # filter values to get variable matching input$xtab_col, re-order
-  dt <- values.lu[variable %in% input$xtab_xcol, ][order(value_order)]
+  dt <- lookup_values[variable %in% input$xtab_xcol, ][order(value_order)]
   # return datatable
 })
 
 EV_REACT_xtabYValues <- eventReactive(input$xtab_go, { # on two-way go
   # filter values to get variable matching input$ytab_col, re-order
-  dt <- values.lu[variable %in% input$xtab_ycol, ][order(value_order)]
+  dt <- lookup_values[variable %in% input$xtab_ycol, ][order(value_order)]
   v <- as.vector(dt$value_text)
   # return vector
 })
@@ -213,8 +213,8 @@ EV_REACT_xtabTable <- eventReactive(input$xtab_go, { # # on two-way go
 
 EV_REACT_xtabTableType <- eventReactive(input$xtab_go, { # # on two-way go
 
-  # using input x col and y col, subset variables.lu to get variable names
-  select.vars <- variables.lu[variable %in% c(input$xtab_xcol, input$xtab_ycol), ]
+  # using input x col and y col, subset lookup_variables to get variable names
+  select.vars <- lookup_variables[variable %in% c(input$xtab_xcol, input$xtab_ycol), ]
 
   # get table name and table type
   tables <- as.vector(unique(select.vars$table_name))
@@ -244,7 +244,7 @@ EV_REACT_xtabTableType <- eventReactive(input$xtab_go, { # # on two-way go
 EV_REACT_stabTableType <- eventReactive(input$stab_go, { # on one-way go
 
   # make table with only selected variable
-  select.vars <- variables.lu[variable %in% c(input$stab_xcol), ]
+  select.vars <- lookup_variables[variable %in% c(input$stab_xcol), ]
 
   # unique table names
   tables <- unique(select.vars$table_name)

@@ -16,7 +16,7 @@ function(input, output, session) {
 
   output$stab_xcol_det <- renderText({
     # fetch "detail" column given stab_xcol
-    xvar.det <- variables.lu[variable %in% input$stab_xcol, .(detail)]
+    xvar.det <- lookup_variables[variable %in% input$stab_xcol, .(detail)]
     # return unique text
     return(unique(xvar.det$detail))
   })
@@ -248,13 +248,13 @@ function(input, output, session) {
 
   # renders text detail on x-column selection
   output$xtab_xcol_det <- renderText({
-    xvar.det <- variables.lu[variable %in% input$xtab_xcol, .(detail)]
+    xvar.det <- lookup_variables[variable %in% input$xtab_xcol, .(detail)]
     unique(xvar.det$detail)
   })
 
   # renders text detail on x-column selection
   output$xtab_ycol_det <- renderText({
-    yvar.det <- variables.lu[variable %in% input$xtab_ycol, .(detail)]
+    yvar.det <- lookup_variables[variable %in% input$xtab_ycol, .(detail)]
     unique(yvar.det$detail)
   })
 

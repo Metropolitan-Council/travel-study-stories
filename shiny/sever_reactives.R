@@ -5,7 +5,7 @@
 
 # fetch variables available given the category (xtab_cat)
 REACT_varsListX <- reactive({
-  t <- variables.lu[category %in% input$xtab_xcat & dtype != "fact", ]
+  t <- lookup_variables[category %in% input$xtab_xcat & dtype != "fact", ]
 
   vars.raw <- as.list(unique(t$variable))
   vars.list <- setNames(vars.raw, as.list(unique(t$variable_name)))
@@ -16,7 +16,7 @@ REACT_varsListX <- reactive({
 # variable Y alias list
 # ! ONLY USED ONCE
 REACT_varsListY <- reactive({
-  t <- variables.lu[category %in% input$xtab_ycat, ]
+  t <- lookup_variables[category %in% input$xtab_ycat, ]
 
   vars.raw <- as.list(unique(t$variable))
   vars.list <- setNames(vars.raw, as.list(unique(t$variable_name)))
