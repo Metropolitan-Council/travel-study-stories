@@ -38,10 +38,10 @@ cross_tab <- function(table, var1, var2,
     expanded[, share := estimate / get(eval(wt_field))] # calculate share = estimate/weight
 
     expanded <- merge(expanded, N_hh, by = var1)
-    expanded[, p_col := p_MOE] # set MOE column
+    expanded[, p_col := p_MOE] # p_col = 0.5
     expanded[
       , ("in") := (p_col * (1 - p_col)) / hhid
-    ][ # in = (MOE column * (1 - MOE column)) / n_households
+    ][ # in = (0.5 * (1 - 0.5)) / n_households
       , MOE := z * sqrt(get("in"))
     ][ # MOE = 1.645 * sqrt(in)
       , N_HH := hhid
@@ -154,8 +154,8 @@ simple_table <- function(table, var, wt_field, type) {
     setnames(expanded, wt_field, "estimate")
 
     expanded[, share := estimate / eval(expanded_tot)] # estimate / expanded total
-    expanded[, p_col := p_MOE] # add MOE column
-    expanded[, ("in") := (p_col * (1 - p_col)) / hhid][ # in = (MOEcol * (1-MOEcol))/n households
+    expanded[, p_col := p_MOE] # add p_col column, 0.5
+    expanded[, ("in") := (p_col * (1 - p_col)) / hhid][ # in = (0.5 * (1-0.5))/n households
       , MOE := z * sqrt(get("in"))
     ][ # MOE  = 1.645 * sqrt(in)
       , N_HH := hhid
