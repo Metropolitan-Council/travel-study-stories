@@ -19,6 +19,7 @@ app_ui <- function(request) {
         title = "One-Way Table",
         sidebarLayout(
           sidebarPanel= sidebarPanel(
+            width = 3,
             mod_input_one_way_ui("input_one_way_ui_1")
           ),
           mainPanel = mainPanel(
