@@ -17,7 +17,12 @@ app_ui <- function(request) {
       id = "nav",
       tabPanel(
         title = "One-Way Table",
-        mod_table_one_way_ui("table_one_way_ui_1")
+        sidebarLayout(
+          sidebarPanel= sidebarPanel(
+            mod_input_one_way_ui("input_one_way_ui_1")
+          ),
+          mainPanel = mainPanel(
+            mod_table_one_way_ui("table_one_way_ui_1")))
       ),
       tabPanel(
         title = "Two-Way Table",
