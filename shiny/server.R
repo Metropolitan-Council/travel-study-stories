@@ -4,7 +4,7 @@ function(input, output, session) {
   # one way table == stab
   # two way table == xtab
 
-# One-way Table ------------------------------------------------------------
+  # One-way Table ------------------------------------------------------------
 
   # fancy show/hide variable definition
   observe({
@@ -23,7 +23,7 @@ function(input, output, session) {
 
 
   # use REACT_varsListX to keep stab_xcol up to date
-  # with stab_xcat
+  # with input$stab_xcat
   output$ui_stab_xcol <- renderUI({
     selectInput(
       inputId = "stab_xcol",
@@ -34,7 +34,7 @@ function(input, output, session) {
 
 
   output$ui_stab_res_type_title <- renderUI({
-    # heading noting whether Seattle or Regional
+    # heading noting whether Seattle only or Regional
     h4(EV_REACT_stabCaption())
   })
 
@@ -169,14 +169,9 @@ function(input, output, session) {
   })
 
   output$ui_stab_tbl <- renderUI({
-    # if (EV_REACT_stabTableType()$Type == 'dimension') {
     div(DT::dataTableOutput("stab_tbl"),
         style = "font-size: 95%; width: 85%"
     )
-    # } #else {
-    #   #div(p('Tabular results not available. This functionality is in progress.'),
-    #    style = 'display: flex; justify-content: center; align-items: center; margin-top: 5em;')
-    #  }
   })
 
 
@@ -198,6 +193,7 @@ function(input, output, session) {
 
   # Enable/Disable Download button
   vs <- reactiveValues(
+    # default values
     stabxcol = NULL,
     stabgo = 0,
     stabfltrsea = F
@@ -228,7 +224,6 @@ function(input, output, session) {
       )
     },
     content = function(file) {
-      # write.xlsx(EV_REACT_stabTable(), file)
       write.xlsx(REACT_stabDownloadOutput(), file)
     }
   )
