@@ -182,6 +182,40 @@ per <- per %>%
 
 rm(per_race)
 
+# Select only relevant columns
+trip <- trip %>%
+  select(person_id, trip_num, trip_id, hh_id, person_num,
+    day_num, travel_date, leg_num, linked_trip_num, depart_time,
+    arrive_time, o_lat, o_lon, o_bg, o_county, o_state,
+    d_lat, d_lon, d_bg, d_county, d_state,
+    duration_imputed, distance, speed_mph_imputed,
+    depart_time_imputed, trip_weight,
+    d_purpose_category_imputed, d_purpose_imputed,
+    mode_type, mode_type_detailed,
+    num_travelers, o_purpose_category_imputed, o_purpose_imputed)
+
+
+# Write Data -------------------------
+tbi_tables <- list("day" = day,
+                   "per"= per,
+                   "hh" = hh,
+                   "veh" = veh,
+                   "trip" = trip)
+
+usethis::use_data(tbi_tables,
+                  overwrite = TRUE,
+                  compress = "xz",
+                  internal = FALSE
+)
+
+tbi_dict <- dictionary
+usethis::use_data(tbi_dict,
+                  overwrite = TRUE,
+                  compress = "xz",
+                  internal = FALSE
+)
+
+
 ## Add new column to dictionary #TODO----
 
 # Connect to ancillary Data -----------
