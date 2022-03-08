@@ -182,7 +182,7 @@ per <- per %>%
 
 rm(per_race)
 
-## Add new column to dictionary #TODO
+## Add new column to dictionary #TODO----
 
 # Connect to ancillary Data -----------
 ## Vehicle efficiency (EPA) -----------
@@ -194,7 +194,7 @@ veh <- veh %>%
 
 rm(veh_epa)
 
-## Add new column to dictionary: #TODO
+## Add new column to dictionary: #TODO --------
 
 ## Vehicle weight (DPS) -----------
 # Load Car Weight Data
@@ -218,12 +218,263 @@ veh <- veh %>%
 
 rm(Vehicle_wtsDPS)
 
-## Add new column to dictionary: #TODO
+## Add new column to dictionary: #TODO--------
 
 
 
 
 ## Geospatial Data -----------
+# Spatial coordinates - cast as such.
+# Trip origins and destinations
+trip_d_sf <- trip %>%
+  select(trip_id, d_lon, d_lat) %>%
+  na.omit() %>%
+  st_as_sf(coords = c('d_lon', 'd_lat'), crs = 4326)
+trip_o_sf <- trip %>%
+  select(trip_id, o_lon, o_lat) %>%
+  na.omit() %>%
+  st_as_sf(coords = c('o_lon', 'o_lat'), crs = 4326)
+
+# Household locations
+hh_sf <- hh %>%
+  select(hh_id, home_lon, home_lat) %>%
+  na.omit() %>%
+  st_as_sf(coords = c('home_lon', 'home_lat'),
+           crs = 4326)
+
+# Work locations
+work_sf <- per %>%
+  select(person_id, work_lon, work_lat) %>%
+  na.omit() %>%
+  st_as_sf(coords = c('work_lon', 'work_lat'),
+           crs = 4326)
+
+# School locations
+school_sf <- per %>%
+  select(person_id, school_lon, school_lat) %>%
+  na.omit() %>%
+  st_as_sf(coords = c('school_lon', 'school_lat'),
+           crs = 4326)
+
+# Download Geographies Needed
+db <- DBI::dbConnect(odbc::odbc(), "GISLibrary")
+
+# CTU (Cities-Townships-Unincorporated)
+ctu_sf <- DBI::dbGetQuery(db,
+                          "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.CTUs;") %>%
+  st_as_sf(wkt = "geometry", crs = "+init=epsg:26915") %>%
+  st_transform(crs = "+init=epsg:26915 +proj=longlat +datum=WGS84")
+ctu_sf <- st_transform(ctu_sf, crs = 4326)
+
+
+# County
+mn_cty_sf <- DBI::dbGetQuery(db,
+                             "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.MNCounties;") %>%
+  st_as_sf(wkt = "geometry", crs = "+init=epsg:26915") %>%
+  st_transform(crs = "+init=epsg:26915 +proj=longlat +datum=WGS84") %>%
+  select(CO_NAME) %>%
+  mutate(CO_NAME = toupper(CO_NAME)) %>%
+  mutate(State = "MN")
+wi_cty_sf <- DBI::dbGetQuery(db,
+                             "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.WICounties;") %>%
+  st_as_sf(wkt = "geometry", crs = "+init=epsg:26915") %>%
+  st_transform(crs = "+init=epsg:26915 +proj=longlat +datum=WGS84") %>%
+  select(CO_NAME) %>%
+  mutate(State = "WI")
+
+cty_sf <- rbind(mn_cty_sf, wi_cty_sf) %>%
+  st_transform(cty_sf, crs = 4326)
+
+# MPO Area (Metropolitan Planning Organization - Twin Cities)
+mpo_sf <- DBI::dbGetQuery(
+  db,
+  "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.MetropolitanPlanningOrganizationArea;"
+) %>%
+  st_as_sf(wkt = "geometry", crs = "+init=epsg:26915") %>%
+  st_transform(crs = "+init=epsg:26915 +proj=longlat +datum=WGS84")
+mpo_sf <- st_transform(mpo_sf, crs = 4326)
+
+
+
+### MPO JOINS
+# (1) TRIPS
+
+# find trip IDs where origin or destination falls within MPO area:
+trip_o_ids <-
+  st_join(trip_o_sf, mpo_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  filter(OBJECTID == 1) %>%
+  select(trip_id)
+trip_d_ids <-
+  st_join(trip_d_sf, mpo_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  filter(OBJECTID == 1) %>%
+  select(trip_id)
+hh_ids <-
+  st_join(hh_sf, mpo_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  filter(OBJECTID == 1) %>%
+  select(hh_id)
+work_ids <-
+  st_join(work_sf, mpo_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  filter(OBJECTID == 1) %>%
+  select(person_id)
+school_ids <-
+  st_join(school_sf, mpo_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  filter(OBJECTID == 1) %>%
+  select(person_id)
+
+# Join back to main tables:
+trip[, trip_in_mpo := ifelse(
+  trip_id %in% trip_d_ids$trip_id |
+    trip_id %in% trip_o_ids$trip_id,
+  'trip_in_mpo',
+  'trip_outside_mpo'
+)]
+
+trip[, trip_d_in_mpo := ifelse(trip_id %in% trip_d_ids$trip_id,
+                               'trip_ends_in_mpo',
+                               'trip_ends_outside_mpo')]
+trip[, trip_o_in_mpo := ifelse(trip_id %in% trip_o_ids$trip_id,
+                               'trip_starts_in_mpo',
+                               'trip_starts_outside_mpo')]
+
+
+hh[, hh_in_mpo := ifelse(hh_id %in% hh_ids$hh_id, 'in_mpo', 'outside_mpo')]
+per[, work_in_mpo  := ifelse(
+  is.na(work_lon),
+  NA,
+  ifelse(person_id %in% work_ids$person_id, 'in_mpo', 'outside_mpo')
+)]
+per[, school_in_mpo  := ifelse(
+  is.na(school_lon),
+  NA,
+  ifelse(person_id %in% school_ids$person_id, 'in_mpo', 'outside_mpo')
+)]
+
+
+# (2) COUNTY & STATE
+# already done for work, school, home.
+trip_o_cty <-
+  st_join(trip_o_sf, cty_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(trip_o_county = CO_NAME, trip_o_state = State) %>%
+  # interesting problem with counties for trips - 2 trips that end on the mn/wi border
+  group_by(trip_id) %>%
+  filter(row_number() == 1) %>%
+  ungroup() %>%
+  select(trip_id, trip_o_county, trip_o_state)
+
+trip_d_cty <-
+  st_join(trip_d_sf, cty_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(trip_d_county = CO_NAME, trip_d_state = State) %>%
+  # interesting problem with counties for trips - 2 trips that end on the mn/wi border
+  group_by(trip_id) %>%
+  filter(row_number() == 1) %>%
+  ungroup() %>%
+  select(trip_id, trip_d_county, trip_d_state)
+
+# Join to trip table:
+trip <- merge(trip, trip_o_cty, by = "trip_id", all.x = T)
+trip <- merge(trip, trip_d_cty, by = "trip_id", all.x = T)
+
+# (3) Census Block Group
+# already done for work, school, home.
+trip_o_cbg <-
+  st_join(trip_o_sf, cbg_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(trip_o_cbg = GEOID10) %>%
+  select(trip_id, trip_o_cbg)
+trip_d_cbg <-
+  st_join(trip_d_sf, cbg_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(trip_d_cbg = GEOID10) %>%
+  select(trip_id, trip_d_cbg)
+
+# Join to trip table:
+trip <- merge(trip, trip_o_cbg, by = "trip_id", all.x = T)
+trip <- merge(trip, trip_d_cbg, by = "trip_id", all.x = T)
+
+# (3) TAZ
+trip_o_taz <-
+  st_join(trip_o_sf, taz_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(trip_o_taz = TAZ) %>%
+  select(trip_id, trip_o_taz)
+trip_d_taz <-
+  st_join(trip_d_sf, taz_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(trip_d_taz = TAZ) %>%
+  select(trip_id, trip_d_taz)
+trip <- merge(trip, trip_o_taz, by = "trip_id", all.x = T)
+trip <- merge(trip, trip_d_taz, by = "trip_id", all.x = T)
+
+hh_taz <-
+  st_join(hh_sf, taz_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(hh_taz = TAZ) %>%
+  select(hh_id, hh_taz)
+hh <- merge(hh, hh_taz, by = "hh_id", all.x = T)
+
+work_taz <-
+  st_join(work_sf, taz_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(work_taz = TAZ) %>%
+  select(person_id, work_taz)
+
+school_taz <-
+  st_join(school_sf, taz_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(school_taz = TAZ) %>%
+  select(person_id, school_taz)
+
+
+per <- merge(per, work_taz, by = "person_id", all.x = T)
+per <- merge(per, school_taz, by = "person_id", all.x = T)
+
+
+# (5) CTU
+trip_o_ctu <-
+  st_join(trip_o_sf, ctu_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(trip_o_ctu = CTU_NAME) %>%
+  select(trip_id, trip_o_ctu)
+trip_d_ctu <-
+  st_join(trip_d_sf, ctu_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(trip_d_ctu = CTU_NAME) %>%
+  select(trip_id, trip_d_ctu)
+
+trip <- merge(trip, trip_o_ctu, by = "trip_id", all.x = T)
+trip <- merge(trip, trip_d_ctu, by = "trip_id", all.x = T)
+
+hh_ctu <-
+  st_join(hh_sf, ctu_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(hh_ctu = CTU_NAME) %>%
+  select(hh_id, hh_ctu)
+hh <- merge(hh, hh_ctu, by = "hh_id", all.x = T)
+
+work_ctu <-
+  st_join(work_sf, ctu_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(work_ctu = CTU_NAME) %>%
+  select(person_id, work_ctu)
+
+school_ctu <-
+  st_join(school_sf, ctu_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
+  as.data.frame() %>%
+  rename(school_ctu = CTU_NAME) %>%
+  select(person_id, school_ctu)
+
+
+per <- merge(per, work_ctu, by = "person_id", all.x = T)
+per <- merge(per, school_ctu, by = "person_id", all.x = T)
+
+
 ### Thrive Category -----------
 ### MPO boundary -----------
 ### PUMA -----------
@@ -267,4 +518,7 @@ rm(getSeason)
 
 # Select relevant columns -----------
 
+# Redact all lat/lon data
+
 # Make tables into survey objects -----------
+per_svy <- as_survey_design(per, weights = person_weight)
