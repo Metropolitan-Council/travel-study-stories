@@ -208,7 +208,16 @@ usethis::use_data(tbi_tables,
                   internal = FALSE
 )
 
-tbi_dict <- dictionary
+tbi_dict <- dictionary %>%
+  filter(category %in% c("Demographics",
+                         "Attitudes toward autonomous vehicles",
+                         "Shared mobility",
+                         "Commute",
+                         "Trips",
+                         "Days without travel",
+                         "Delivery & online shopping",
+                         "Vehicle"))
+
 usethis::use_data(tbi_dict,
                   overwrite = TRUE,
                   compress = "xz",
