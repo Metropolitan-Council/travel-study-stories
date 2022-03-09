@@ -6,8 +6,8 @@ library(magrittr)
 wrkdir <- "J:/Projects/Surveys/HHTravel/Survey2017/Data/travel_crosstab/for_shiny_app"
 outdir <- "path/to/travel-study-stories/data"
 
-variables.lu <- read.xlsx(file.path(wrkdir, "variables.xlsx")) %>% as.data.table()
-# values.lu <- read.xlsx(file.path(wrkdir, 'variables_values.xlsx')) %>% as.data.table
+lookup_variables <- read.xlsx(file.path(wrkdir, "variables.xlsx")) %>% as.data.table()
+# lookup_values <- read.xlsx(file.path(wrkdir, 'variables_values.xlsx')) %>% as.data.table
 
-fwrite(variables.lu, file.path(outdir, "variables.csv"))
-# fwrite(values.lu, file.path(outdir, "variables_values.csv"))
+fwrite(lookup_variables, file.path(outdir, "variables.csv"))
+# fwrite(lookup_values, file.path(outdir, "variables_values.csv"))

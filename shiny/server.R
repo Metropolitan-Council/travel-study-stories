@@ -4,7 +4,7 @@ function(input, output, session) {
   # one way table == stab
   # two way table == xtab
 
-# One-way Table ------------------------------------------------------------
+  # One-way Table ------------------------------------------------------------
 
   # fancy show/hide variable definition
   observe({
@@ -16,14 +16,14 @@ function(input, output, session) {
 
   output$stab_xcol_det <- renderText({
     # fetch "detail" column given stab_xcol
-    xvar.det <- variables.lu[variable %in% input$stab_xcol, .(detail)]
+    xvar.det <- lookup_variables[variable %in% input$stab_xcol, .(detail)]
     # return unique text
     return(unique(xvar.det$detail))
   })
 
 
   # use REACT_varsListX to keep stab_xcol up to date
-  # with stab_xcat
+  # with input$stab_xcat
   output$ui_stab_xcol <- renderUI({
     selectInput(
       inputId = "stab_xcol",
@@ -34,7 +34,7 @@ function(input, output, session) {
 
 
   output$ui_stab_res_type_title <- renderUI({
-    # heading noting whether Seattle or Regional
+    # heading noting whether Seattle only or Regional
     h4(EV_REACT_stabCaption())
   })
 
@@ -48,13 +48,16 @@ function(input, output, session) {
     dt <- REACT_stabTable.DT()
 
     fmt.per <- names(dtype.choice[dtype.choice %in% c("share")])
-    fmt.num <- names(dtype.choice[dtype.choice %in% c("estimate", "sample_count")])
+    fmt.num <- names(dtype.choice[dtype.choice %in% c("estimate",
+                                                      "sample_count")])
     DT::datatable(dt,
                   options = list(
                     bFilter = 0,
                     # pageLength = 10,
                     autoWidth = FALSE,
-                    columnDefs = list(list(className = "dt-center", width = "100px", targets = c(2:ncol(dt))))
+                    columnDefs = list(list(
+                      className = "dt-center", width = "100px",
+                      targets = c(2:ncol(dt))))
                   )
     ) %>%
       formatPercentage(fmt.per, 1) %>%
@@ -62,7 +65,8 @@ function(input, output, session) {
       formatStyle(
         columns = 2:ncol(dt),
         valueColumns = ncol(dt),
-        color = styleInterval(c(30), c(colors$ltgrey, colors$dkgrey))
+        color = styleInterval(c(30),
+                              c(colors$ltgrey, colors$dkgrey))
       )
   })
 
@@ -107,7 +111,8 @@ function(input, output, session) {
         )
       }
       return(p)
-    } else if (dttype %in% c("estimate", "sample_count", "N_HH")) {
+    } else if (dttype %in% c("estimate",
+                             "sample_count", "N_HH")) {
       if (l < 10) {
         p <- stab.plot.bar(
           table = dt,
@@ -164,14 +169,9 @@ function(input, output, session) {
   })
 
   output$ui_stab_tbl <- renderUI({
-    # if (EV_REACT_stabTableType()$Type == 'dimension') {
     div(DT::dataTableOutput("stab_tbl"),
         style = "font-size: 95%; width: 85%"
     )
-    # } #else {
-    #   #div(p('Tabular results not available. This functionality is in progress.'),
-    #    style = 'display: flex; justify-content: center; align-items: center; margin-top: 5em;')
-    #  }
   })
 
 
@@ -193,12 +193,13 @@ function(input, output, session) {
 
   # Enable/Disable Download button
   vs <- reactiveValues(
+    # default values
     stabxcol = NULL,
     stabgo = 0,
     stabfltrsea = F
   )
 
-  observeEvent(input$stab_go, { # on one-way go
+  observeEvent(input$stab_go, { # on one-way go button
     vs$stabxcol <- input$stab_xcol
     vs$stabgo <- vs$stabgo + 1
     vs$stabfltrsea <- input$stab_fltr_sea
@@ -223,7 +224,6 @@ function(input, output, session) {
       )
     },
     content = function(file) {
-      # write.xlsx(EV_REACT_stabTable(), file)
       write.xlsx(REACT_stabDownloadOutput(), file)
     }
   )
@@ -248,13 +248,13 @@ function(input, output, session) {
 
   # renders text detail on x-column selection
   output$xtab_xcol_det <- renderText({
-    xvar.det <- variables.lu[variable %in% input$xtab_xcol, .(detail)]
+    xvar.det <- lookup_variables[variable %in% input$xtab_xcol, .(detail)]
     unique(xvar.det$detail)
   })
 
   # renders text detail on x-column selection
   output$xtab_ycol_det <- renderText({
-    yvar.det <- variables.lu[variable %in% input$xtab_ycol, .(detail)]
+    yvar.det <- lookup_variables[variable %in% input$xtab_ycol, .(detail)]
     unique(yvar.det$detail)
   })
 
