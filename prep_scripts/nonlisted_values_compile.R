@@ -19,4 +19,4 @@ for (col in cols) {
   vlist[[col]] <- dt
 }
 
-values.lu <- rbindlist(vlist, use.names = T)
+lookup_values <- rbindlist(vlist, use.names = T)

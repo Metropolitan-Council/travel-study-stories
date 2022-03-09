@@ -19,10 +19,10 @@ library(DBI)
 
 # shiny server
 # wrkdir <- "/home/shiny/apps/testing-travel-study-stories/shiny"
-wrkdir <- "/home/shiny/apps/travel-study-stories/shiny"
+# wrkdir <- "/home/shiny/apps/travel-study-stories/shiny"
 
-source(file.path(wrkdir, "travel_crosstab.R"))
-source(file.path(wrkdir, "functions_plot.R"))
+# source(file.path(wrkdir, "travel_crosstab.R"))
+# source(file.path(wrkdir, "functions_plot.R"))
 
 missing_codes <- c(
   "Missing: Technical Error",
@@ -99,15 +99,15 @@ read.dt <- function(astring, type = c(
   setDT(dtelm)
 }
 
-variables.lu <- read.dt(dbtable.variables, "table_name")
-variables.lu <- na.omit(variables.lu)
-variables.lu <- variables.lu[survey_year < 2021, ][order(category_order, variable_name)]
-values.lu <- read.dt(dbtable.values, "table_name")
-values.lu <- values.lu[order(value_order)]
+# lookup_variables <- read.dt(dbtable.variables, "table_name")
+# lookup_variables <- na.omit(lookup_variables)
+# lookup_variables <- lookup_variables[survey_year < 2021, ][order(category_order, variable_name)]
+# lookup_values <- read.dt(dbtable.values, "table_name")
+# lookup_values <- lookup_values[order(value_order)]
+#
+# readme.dt <- read.xlsx(file.path(wrkdir, "readme.xlsx"), colNames = T, skipEmptyRows = F)
 
-readme.dt <- read.xlsx(file.path(wrkdir, "readme.xlsx"), colNames = T, skipEmptyRows = F)
-
-vars.cat <- unique(variables.lu$category)
+# vars.cat <- unique(lookup_variables$category)
 
 # master list
 dtype.choice <- c(
