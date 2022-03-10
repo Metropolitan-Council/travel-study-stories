@@ -111,11 +111,13 @@ all_missing_codes <- unique(all_missing_codes$value)
 # all the value labels that include missing:
 all_missing_labels <-
   dictionary[grep("Missing", value_label), "value_label", with = F]
-# both as character:
-all_missing_character <- unique(rbind(all_missing_codes, all_missing_labels, use.names = F))
-all_missing_character <- all_missing_character$x
 
-# function to repalce missing values with NA:
+# both as character:
+all_missing_vector <- unique(rbind(all_missing_codes, all_missing_labels, use.names = F))
+all_missing_vector <- all_missing_vector$x
+
+
+# function to replace missing values with NA:
 replace_survey_missing <- function(dat) {
   na_dat <- dat %>%
     mutate(across(
@@ -125,7 +127,7 @@ replace_survey_missing <- function(dat) {
     # replace factor entries with NA:
     mutate(across(
       where(is.factor),
-      ~ factor(., exclude = all_missing_character)
+      ~ factor(., exclude = all_missing_vector)
     ))
 
   return(na_dat)
@@ -137,7 +139,7 @@ hh <- replace_survey_missing(hh)
 per <- replace_survey_missing(per)
 veh <- replace_survey_missing(veh)
 
-rm(all_missing, all_missing_labels, all_missing_character, all_missing_codes)
+rm(all_missing, all_missing_labels, all_missing_vector, all_missing_codes)
 
 # Set IDs as Integer64 -----------
 hh[, hh_id := as.integer64(hh_id)]
@@ -216,7 +218,21 @@ tbi_dict <- dictionary %>%
                          "Trips",
                          "Days without travel",
                          "Delivery & online shopping",
-                         "Vehicle"))
+                         "Vehicle")) %>%
+  # we'll probably want to play with the ORDERING of this case-when command
+  # to assign variables to tables when they appear in multiple tables.
+  mutate(which_table = case_when(variable %in% names(per) ~ 'per',
+                           variable %in% names(hh) ~ 'hh',
+                           variable %in% names(trip) ~ 'trip',
+                           variable %in% names(day) ~ 'day',
+                           variable %in% names(veh) ~ 'veh')) %>%
+  # find the weighting field for each table:
+  mutate(wt_field = case_when(which_table == 'per' ~ 'person_weight',
+                              which_table == 'hh' ~ 'hh_weight',
+                              which_table == 'trip' ~ 'trip_weight',
+                              which_table == 'day' ~ 'day_weight',
+                              which_table == 'veh' ~ 'hh_weight'))
+
 
 usethis::use_data(tbi_dict,
                   overwrite = TRUE,
