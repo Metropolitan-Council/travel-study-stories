@@ -7,18 +7,15 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_input_category_variable_ui <- function(id){
+mod_input_category_variable_ui <- function(id) {
   ns <- NS(id)
   tagList(
-
     selectInput(
       inputId = ns("category"),
       label = "Category",
       choices = unique(tbi_dict$category),
       selected = "Demographics"
     ),
-
-
     selectInput(
       inputId = ns("variable"),
       label = "Variable",
@@ -27,28 +24,29 @@ mod_input_category_variable_ui <- function(id){
     )
 
     # textOutput(outputId = "question")
-
-
   )
 }
 
 #' input_category_variable Server Functions
 #'
 #' @noRd
-mod_input_category_variable_server <- function(id){
-  moduleServer( id, function(input, output, session){
+mod_input_category_variable_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    observeEvent(input$category, {
-      # update variable input by fetching variables specific
-      # to the input$category
-      updateSelectInput(
-        session = session,
-        inputId = "variable",
-        label = "Variable",
-        choices = input_list[input$category][[1]]
-      )
-    }, ignoreInit = TRUE)
+    observeEvent(input$category,
+      {
+        # update variable input by fetching variables specific
+        # to the input$category
+        updateSelectInput(
+          session = session,
+          inputId = "variable",
+          label = "Variable",
+          choices = input_list[input$category][[1]]
+        )
+      },
+      ignoreInit = TRUE
+    )
 
 
     # output$question <- renderText({
@@ -59,7 +57,9 @@ mod_input_category_variable_server <- function(id){
 
 
     # print the selected input$category and input$variable
-    observe({print(paste0(id, "-", input$category, ":", input$variable))})
+    observe({
+      print(paste0(id, "-", input$category, ":", input$variable))
+    })
   })
 }
 

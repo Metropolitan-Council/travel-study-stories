@@ -18,25 +18,26 @@ app_ui <- function(request) {
       tabPanel(
         title = "One-Way Table",
         sidebarLayout(
-          sidebarPanel= sidebarPanel(
+          sidebarPanel = sidebarPanel(
             width = 3,
             mod_input_category_variable_ui("1w_input_1")
           ),
           mainPanel = mainPanel(
-            mod_table_one_way_ui("table_one_way_ui_1")))
+            mod_table_one_way_ui("table_one_way_ui_1")
+          )
+        )
       ),
       tabPanel(
         title = "Two-Way Table",
         wellPanel(
           h3("First variable"),
-          mod_input_category_variable_ui("2w_input_2")),
-
+          mod_input_category_variable_ui("2w_input_2")
+        ),
         wellPanel(
           h3("Second variable"),
-          mod_input_category_variable_ui("2w_input_1")),
+          mod_input_category_variable_ui("2w_input_1")
+        ),
         mod_table_two_way_ui("table_two_way_ui_1")
-
-
       ),
       tabPanel(
         title = "About",

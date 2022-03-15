@@ -21,8 +21,10 @@ mod_table_one_way_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    missing_codes <- c("-9998", "995", "-9999", "-1", "Missing: Non-response", "Missing: Skip logic",
-                       "Missing: Error", "Missing: Technical error", "Missing: Non-imputable")
+    missing_codes <- c(
+      "-9998", "995", "-9999", "-1", "Missing: Non-response", "Missing: Skip logic",
+      "Missing: Error", "Missing: Technical error", "Missing: Non-imputable"
+    )
 
     # find the table where the variable lives:
     # this_variable <- input$variable
@@ -61,12 +63,16 @@ mod_table_one_way_server <- function(id) {
         # clean up:
         droplevels() %>%
         # big N sample size - for the whole data frame:
-        mutate(total_N = length(hh_id), # raw sample size - number of people, trips, households, days
-               total_N_hh = length(unique(hh_id))) %>% # total number of households in sample
+        mutate(
+          total_N = length(hh_id), # raw sample size - number of people, trips, households, days
+          total_N_hh = length(unique(hh_id))
+        ) %>% # total number of households in sample
         srvyr::as_survey_design(weights = !!this_weight) %>%
-        group_by(get(this_variable),
-                 # grouping by number of samples, number of households to keep this info
-                 total_N, total_N_hh) %>%
+        group_by(
+          get(this_variable),
+          # grouping by number of samples, number of households to keep this info
+          total_N, total_N_hh
+        ) %>%
         summarize(
           group_N = length(hh_id), # raw sample size - number of people, trips, households, days (by group)
           group_N_hh = length(unique(hh_id)), # number of households in sample (by group)
