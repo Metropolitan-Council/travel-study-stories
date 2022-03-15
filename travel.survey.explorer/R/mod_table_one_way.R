@@ -48,7 +48,7 @@ mod_table_one_way_server <- function(id) {
 
     # a more generalized version:
     output$table <- DT::renderDataTable({
-      get(this_table) %>%
+      tbi_tables[[this_table]] %>%
         select(sym(this_variable), sym(this_weight), hh_id) %>%
         # filter where the variable is missing (missing codes = "Missing: No Response", "Missing: skip logic").
         # this list of missing codes is created in data_compile.R, line ~105.
@@ -64,7 +64,9 @@ mod_table_one_way_server <- function(id) {
         mutate(total_N = length(hh_id), # raw sample size - number of people, trips, households, days
                total_N_hh = length(unique(hh_id))) %>% # total number of households in sample
         srvyr::as_survey_design(weights = !!this_weight) %>%
-        group_by(get(this_variable), total_N, total_N_hh) %>%
+        group_by(get(this_variable),
+                 # grouping by number of samples, number of households to keep this info
+                 total_N, total_N_hh) %>%
         summarize(
           group_N = length(hh_id), # raw sample size - number of people, trips, households, days (by group)
           group_N_hh = length(unique(hh_id)), # number of households in sample (by group)
@@ -73,8 +75,6 @@ mod_table_one_way_server <- function(id) {
         ) %>%
         # rename the column back to the original name - it gets weird for some reason
         rename(!!quo_name(this_variable) := `get(this_variable)`)
-
-
     })
   })
 }
