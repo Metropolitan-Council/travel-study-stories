@@ -3,12 +3,16 @@
 library(dplyr)
 library(travel.survey.explorer)
 
-input_list <- purrr::map(unique(tbi_dict$category), function(x){
+input_list <- purrr::map(unique(tbi_dict$category), function(x) {
   tb <- tbi_dict %>%
     dplyr::filter(category == x)
 
-  variab <- tb$variable %>% unique() %>% as.list()
-  variab_name <- tb$variable_label %>% unique() %>% as.list()
+  variab <- tb$variable %>%
+    unique() %>%
+    as.list()
+  variab_name <- tb$variable_label %>%
+    unique() %>%
+    as.list()
 
   names(variab) <- variab_name
   return(variab)
@@ -25,12 +29,16 @@ usethis::use_data(input_list, overwrite = TRUE)
 library(dplyr)
 library(travel.survey.explorer)
 
-input_list_question <- purrr::map(unique(tbi_dict$variable), function(x){
+input_list_question <- purrr::map(unique(tbi_dict$variable), function(x) {
   tb <- tbi_dict %>%
-      dplyr::filter(variable == x)
+    dplyr::filter(variable == x)
 
-  variab <- tb$variable %>% unique() %>% as.list()
-  variab_name <- tb$survey_question %>% unique() %>% as.list()
+  variab <- tb$variable %>%
+    unique() %>%
+    as.list()
+  variab_name <- tb$survey_question %>%
+    unique() %>%
+    as.list()
 
   names(variab) <- variab_name
 

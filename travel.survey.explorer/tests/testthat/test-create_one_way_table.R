@@ -24,19 +24,19 @@ purrr::map(
 
 
 
-test_edu <-create_one_way_table("education")
+test_edu <- create_one_way_table("education")
 expect_edu <-
   # datapasta::tribble_paste(test_edu)
-tibble::tribble(
-                       ~education, ~total_N, ~total_N_hh, ~group_N, ~group_N_hh, ~expanded_total, ~expanded_total_se, ~estimated_prop, ~estimated_prop_se,
-          "Less than high school",    12980,        7784,      174,         161,     66185.26582,          6598.4337,           0.022,            0.00218,
-       "High school graduate/GED",    12980,        7784,     1302,        1095,    360140.32488,        14908.51073,         0.11969,            0.00474,
-                   "Some college",    12980,        7784,     1601,        1423,    407267.93642,        15858.41047,         0.13536,            0.00501,
-  "Vocational/technical training",    12980,        7784,      893,         803,     212505.3997,          11185.741,         0.07063,            0.00364,
-               "Associate degree",    12980,        7784,      893,         823,    239986.29926,        12319.77649,         0.07976,            0.00398,
-              "Bachelor's degree",    12980,        7784,     4817,        3854,   1042932.57502,        23560.60663,         0.34662,            0.00682,
-  "Graduate/post-graduate degree",    12980,        7784,     3205,        2598,    635388.62677,        18692.87181,         0.21117,            0.00579,
-           "Prefer not to answer",    12980,        7784,       95,          75,     44425.92788,         5707.51676,         0.01477,            0.00189
+  tibble::tribble(
+    ~education, ~total_N, ~total_N_hh, ~group_N, ~group_N_hh, ~expanded_total, ~expanded_total_se, ~estimated_prop, ~estimated_prop_se,
+    "Less than high school", 12980, 7784, 174, 161, 66185.26582, 6598.4337, 0.022, 0.00218,
+    "High school graduate/GED", 12980, 7784, 1302, 1095, 360140.32488, 14908.51073, 0.11969, 0.00474,
+    "Some college", 12980, 7784, 1601, 1423, 407267.93642, 15858.41047, 0.13536, 0.00501,
+    "Vocational/technical training", 12980, 7784, 893, 803, 212505.3997, 11185.741, 0.07063, 0.00364,
+    "Associate degree", 12980, 7784, 893, 823, 239986.29926, 12319.77649, 0.07976, 0.00398,
+    "Bachelor's degree", 12980, 7784, 4817, 3854, 1042932.57502, 23560.60663, 0.34662, 0.00682,
+    "Graduate/post-graduate degree", 12980, 7784, 3205, 2598, 635388.62677, 18692.87181, 0.21117, 0.00579,
+    "Prefer not to answer", 12980, 7784, 95, 75, 44425.92788, 5707.51676, 0.01477, 0.00189
   )
 
 purrr::map(
@@ -45,4 +45,3 @@ purrr::map(
     testthat::expect_equal(test_edu[x], expect_edu[x])
   }
 )
-

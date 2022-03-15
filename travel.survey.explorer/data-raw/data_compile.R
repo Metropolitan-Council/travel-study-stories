@@ -186,7 +186,8 @@ rm(per_race)
 
 # Select only relevant columns
 trip <- trip %>%
-  select(person_id, trip_num, trip_id, hh_id, person_num,
+  select(
+    person_id, trip_num, trip_id, hh_id, person_num,
     day_num, travel_date, leg_num, linked_trip_num, depart_time,
     arrive_time, o_lat, o_lon, o_bg, o_county, o_state,
     d_lat, d_lon, d_bg, d_county, d_state,
@@ -194,50 +195,59 @@ trip <- trip %>%
     depart_time_imputed, trip_weight,
     d_purpose_category_imputed, d_purpose_imputed,
     mode_type, mode_type_detailed,
-    num_travelers, o_purpose_category_imputed, o_purpose_imputed)
+    num_travelers, o_purpose_category_imputed, o_purpose_imputed
+  )
 
 
 # Write Data -------------------------
-tbi_tables <- list("day" = day,
-                   "per"= per,
-                   "hh" = hh,
-                   "veh" = veh,
-                   "trip" = trip)
+tbi_tables <- list(
+  "day" = day,
+  "per" = per,
+  "hh" = hh,
+  "veh" = veh,
+  "trip" = trip
+)
 
 usethis::use_data(tbi_tables,
-                  overwrite = TRUE,
-                  compress = "xz",
-                  internal = FALSE
+  overwrite = TRUE,
+  compress = "xz",
+  internal = FALSE
 )
 
 tbi_dict <- dictionary %>%
-  filter(category %in% c("Demographics",
-                         "Attitudes toward autonomous vehicles",
-                         "Shared mobility",
-                         "Commute",
-                         "Trips",
-                         "Days without travel",
-                         "Delivery & online shopping",
-                         "Vehicle")) %>%
+  filter(category %in% c(
+    "Demographics",
+    "Attitudes toward autonomous vehicles",
+    "Shared mobility",
+    "Commute",
+    "Trips",
+    "Days without travel",
+    "Delivery & online shopping",
+    "Vehicle"
+  )) %>%
   # we'll probably want to play with the ORDERING of this case-when command
   # to assign variables to tables when they appear in multiple tables.
-  mutate(which_table = case_when(variable %in% names(per) ~ 'per',
-                           variable %in% names(hh) ~ 'hh',
-                           variable %in% names(trip) ~ 'trip',
-                           variable %in% names(day) ~ 'day',
-                           variable %in% names(veh) ~ 'veh')) %>%
+  mutate(which_table = case_when(
+    variable %in% names(per) ~ "per",
+    variable %in% names(hh) ~ "hh",
+    variable %in% names(trip) ~ "trip",
+    variable %in% names(day) ~ "day",
+    variable %in% names(veh) ~ "veh"
+  )) %>%
   # find the weighting field for each table:
-  mutate(wt_field = case_when(which_table == 'per' ~ 'person_weight',
-                              which_table == 'hh' ~ 'hh_weight',
-                              which_table == 'trip' ~ 'trip_weight',
-                              which_table == 'day' ~ 'day_weight',
-                              which_table == 'veh' ~ 'hh_weight'))
+  mutate(wt_field = case_when(
+    which_table == "per" ~ "person_weight",
+    which_table == "hh" ~ "hh_weight",
+    which_table == "trip" ~ "trip_weight",
+    which_table == "day" ~ "day_weight",
+    which_table == "veh" ~ "hh_weight"
+  ))
 
 
 usethis::use_data(tbi_dict,
-                  overwrite = TRUE,
-                  compress = "xz",
-                  internal = FALSE
+  overwrite = TRUE,
+  compress = "xz",
+  internal = FALSE
 )
 
 
@@ -288,54 +298,66 @@ rm(Vehicle_wtsDPS)
 trip_d_sf <- trip %>%
   select(trip_id, d_lon, d_lat) %>%
   na.omit() %>%
-  st_as_sf(coords = c('d_lon', 'd_lat'), crs = 4326)
+  st_as_sf(coords = c("d_lon", "d_lat"), crs = 4326)
 trip_o_sf <- trip %>%
   select(trip_id, o_lon, o_lat) %>%
   na.omit() %>%
-  st_as_sf(coords = c('o_lon', 'o_lat'), crs = 4326)
+  st_as_sf(coords = c("o_lon", "o_lat"), crs = 4326)
 
 # Household locations
 hh_sf <- hh %>%
   select(hh_id, home_lon, home_lat) %>%
   na.omit() %>%
-  st_as_sf(coords = c('home_lon', 'home_lat'),
-           crs = 4326)
+  st_as_sf(
+    coords = c("home_lon", "home_lat"),
+    crs = 4326
+  )
 
 # Work locations
 work_sf <- per %>%
   select(person_id, work_lon, work_lat) %>%
   na.omit() %>%
-  st_as_sf(coords = c('work_lon', 'work_lat'),
-           crs = 4326)
+  st_as_sf(
+    coords = c("work_lon", "work_lat"),
+    crs = 4326
+  )
 
 # School locations
 school_sf <- per %>%
   select(person_id, school_lon, school_lat) %>%
   na.omit() %>%
-  st_as_sf(coords = c('school_lon', 'school_lat'),
-           crs = 4326)
+  st_as_sf(
+    coords = c("school_lon", "school_lat"),
+    crs = 4326
+  )
 
 # Download Geographies Needed
 db <- DBI::dbConnect(odbc::odbc(), "GISLibrary")
 
 # CTU (Cities-Townships-Unincorporated)
-ctu_sf <- DBI::dbGetQuery(db,
-                          "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.CTUs;") %>%
+ctu_sf <- DBI::dbGetQuery(
+  db,
+  "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.CTUs;"
+) %>%
   st_as_sf(wkt = "geometry", crs = "+init=epsg:26915") %>%
   st_transform(crs = "+init=epsg:26915 +proj=longlat +datum=WGS84")
 ctu_sf <- st_transform(ctu_sf, crs = 4326)
 
 
 # County
-mn_cty_sf <- DBI::dbGetQuery(db,
-                             "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.MNCounties;") %>%
+mn_cty_sf <- DBI::dbGetQuery(
+  db,
+  "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.MNCounties;"
+) %>%
   st_as_sf(wkt = "geometry", crs = "+init=epsg:26915") %>%
   st_transform(crs = "+init=epsg:26915 +proj=longlat +datum=WGS84") %>%
   select(CO_NAME) %>%
   mutate(CO_NAME = toupper(CO_NAME)) %>%
   mutate(State = "MN")
-wi_cty_sf <- DBI::dbGetQuery(db,
-                             "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.WICounties;") %>%
+wi_cty_sf <- DBI::dbGetQuery(
+  db,
+  "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.WICounties;"
+) %>%
   st_as_sf(wkt = "geometry", crs = "+init=epsg:26915") %>%
   st_transform(crs = "+init=epsg:26915 +proj=longlat +datum=WGS84") %>%
   select(CO_NAME) %>%
@@ -389,28 +411,30 @@ school_ids <-
 trip[, trip_in_mpo := ifelse(
   trip_id %in% trip_d_ids$trip_id |
     trip_id %in% trip_o_ids$trip_id,
-  'trip_in_mpo',
-  'trip_outside_mpo'
+  "trip_in_mpo",
+  "trip_outside_mpo"
 )]
 
 trip[, trip_d_in_mpo := ifelse(trip_id %in% trip_d_ids$trip_id,
-                               'trip_ends_in_mpo',
-                               'trip_ends_outside_mpo')]
+  "trip_ends_in_mpo",
+  "trip_ends_outside_mpo"
+)]
 trip[, trip_o_in_mpo := ifelse(trip_id %in% trip_o_ids$trip_id,
-                               'trip_starts_in_mpo',
-                               'trip_starts_outside_mpo')]
+  "trip_starts_in_mpo",
+  "trip_starts_outside_mpo"
+)]
 
 
-hh[, hh_in_mpo := ifelse(hh_id %in% hh_ids$hh_id, 'in_mpo', 'outside_mpo')]
-per[, work_in_mpo  := ifelse(
+hh[, hh_in_mpo := ifelse(hh_id %in% hh_ids$hh_id, "in_mpo", "outside_mpo")]
+per[, work_in_mpo := ifelse(
   is.na(work_lon),
   NA,
-  ifelse(person_id %in% work_ids$person_id, 'in_mpo', 'outside_mpo')
+  ifelse(person_id %in% work_ids$person_id, "in_mpo", "outside_mpo")
 )]
-per[, school_in_mpo  := ifelse(
+per[, school_in_mpo := ifelse(
   is.na(school_lon),
   NA,
-  ifelse(person_id %in% school_ids$person_id, 'in_mpo', 'outside_mpo')
+  ifelse(person_id %in% school_ids$person_id, "in_mpo", "outside_mpo")
 )]
 
 
