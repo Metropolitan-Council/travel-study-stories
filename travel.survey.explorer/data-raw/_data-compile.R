@@ -22,32 +22,6 @@ source("data-raw/add-mpo-boundary-to-trips.R")
 
 # check for any PII and remove
 # for vehicle table, remove make, model, year and name, and then round the numbers from DPS/EPA
-
-
-veh_wt_tally <- veh %>%
-  mutate(veh_age = 2019 - year) %>%
-  left_join(hh %>% select(hh_id, hh_weight)) %>%
-  group_by(make, model) %>%
-  summarize(raw_n = length(veh_id), ave_year = round(mean(year)), weighted_n = sum(hh_weight)) %>%
-  filter(!make == "Other") %>%
-  arrange(desc(weighted_n)) %>%
-  left_join(veh %>% select(make, model, year, co2_gpm, mpg_city, mpg_highway, weight_unladen) %>% unique(),
-            by = c('make' = 'make', 'model' = 'model', 'ave_year' = 'year'))
-
-veh_wt_tally_thrive <- veh %>%
-  mutate(veh_age = 2019 - year) %>%
-  left_join(hh %>% select(hh_id, hh_weight, thriveCatBroader)) %>%
-  group_by(thriveCatBroader, make, model) %>%
-  summarize(raw_n_xthrive = length(veh_id), ave_year_xthrive = round(mean(year)), weighted_n_xthrive = sum(hh_weight)) %>%
-  filter(!make == "Other") %>%
-  filter(!make == "Motorcycle") %>%
-  arrange(thriveCatBroader, desc(weighted_n_xthrive)) %>%
-  left_join(veh %>% select(make, model, year, co2_gpm, mpg_city, mpg_highway, weight_unladen) %>% unique(),
-            by = c('make' = 'make', 'model' = 'model', 'ave_year_xthrive' = 'year'))
-
-write.csv(veh_wt_tally, 'data/vehicle_tally_weighted.csv', row.names = F)
-write.csv(veh_wt_tally_thrive, 'data/vehicle_tally_weighted_bythrive.csv', row.names = F)
-
 veh <- veh %>%
   select(-make, -model, -vehicle_name, -class_vehicle) %>%
   select(-epa_tbi_veh_match_notes, -dps_tbi_veh_match_notes) %>%
