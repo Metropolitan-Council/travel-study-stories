@@ -25,8 +25,9 @@
 #' @importFrom magrittr extract2
 #' @importFrom srvyr survey_total survey_prop
 #'
-create_one_way_table <- function(variable, type = "numeric"){
+create_one_way_table <- function(variable){
 
+  variable <- "distance"
   this_variable <- variable
 
   this_table <-
@@ -43,10 +44,26 @@ create_one_way_table <- function(variable, type = "numeric"){
     unique() %>%
     magrittr::extract2(1)
 
+  vartype <-
+  tbi_tables[[this_table]] %>%
+    dplyr::select(rlang::sym(this_variable),
+                  rlang::sym(this_weight), hh_id) %>%
+    select(sym(this_variable)) %>%
+    summarize_all(class) %>%
+    pluck(1)
 
+  if(vartype == "numeric"){
+    # do a thing for numeric variables -- binning???
+    # get a survey_mean? survey_median?
+  } else{
+    # do the usual thing
+  }
   rt_tab <- tbi_tables[[this_table]] %>%
     dplyr::select(rlang::sym(this_variable),
                   rlang::sym(this_weight), hh_id) %>%
+    select(sym(this_variable)) %>%
+    summarize_all(class) %>%
+    pluck(1)
     # dplyr::filter where the variable is missing (missing codes = "Missing: No Response", "Missing: skip logic").
     # this list of missing codes is created in data-raw/data_compile.R, line ~105 and
     # data-raw/missing_codes.R
