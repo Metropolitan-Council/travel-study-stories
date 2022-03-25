@@ -34,7 +34,8 @@ hh_ids <-
 hh[, hh_in_mpo := ifelse(hh_id %in% hh_ids$hh_id, "in_mpo", "outside_mpo")]
 
 hh <- hh %>%
-  filter(hh_in_mpo == "in_mpo")
+  filter(hh_in_mpo == "in_mpo") %>%
+  select(-hh_in_mpo)
 
 ### Trim veh: Vehicles owned by HHs in MPO----------
 veh <- veh %>%
@@ -58,6 +59,7 @@ day <- day %>%
 trip <- trip %>%
   left_join(select(per, person_id, hh_id)) %>%
   left_join(select(hh, hh_id, hh_in_mpo)) %>%
-  filter(hh_in_mpo == "in_mpo")
+  filter(hh_in_mpo == "in_mpo") %>%
+  select(-hh_in_mpo)
 
 rm(hh_sf, db, hh_ids, mpo_sf)

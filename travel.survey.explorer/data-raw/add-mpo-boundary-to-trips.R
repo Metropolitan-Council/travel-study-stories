@@ -52,4 +52,5 @@ trip[, trip_o_in_mpo := ifelse(trip_id %in% trip_o_ids$trip_id,
   "trip_starts_outside_mpo"
 )]
 
+
 rm(trip_o_sf, trip_d_sf, trip_o_ids, trip_d_ids, mpo_sf, db)
