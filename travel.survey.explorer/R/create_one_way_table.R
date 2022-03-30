@@ -46,11 +46,36 @@ create_one_way_table <- function(variable){
 
   vartype <-
   tbi_tables[[this_table]] %>%
-    select(sym(this_variable)) %>%
-    summarize_all(class) %>%
+    dplyr::select(rlang::sym(this_variable)) %>%
+    dplyr::summarize_all(class) %>%
     purrr::pluck(1)
 
   if(vartype == "numeric"){
+
+    tab <- tbi_tables[[this_table]] %>%
+      dplyr::filter(!(get(this_variable) %in% missing_codes))
+
+    if(this_variable == "weighted_trip_count"){
+
+      brks <- histogram_breaks$trip_breaks
+
+    } else {
+      tab <- tab %>%
+        dplyr::filter(get(this_variable) > 0,
+                      get(this_variable) < 200)
+
+      brks <- histogram_breaks$other_breaks
+    }
+
+
+    tab2 <- tab %>%
+      dplyr::mutate(cuts = cut(get(this_variable),
+                               breaks = brks,
+                               labels = names(brks),
+                               order_result = TRUE
+                               ))
+
+
     # do a thing for numeric variables -- binning???
     # get a survey_mean? survey_median?
   } else {
