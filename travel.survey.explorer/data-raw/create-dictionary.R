@@ -1,3 +1,34 @@
+# Packages -------------
+packages <- list("bit64", "tidyverse", "data.table", "DBI", "ROracle", "keyring", "here")
+invisible(lapply(packages, library, character.only = TRUE))
+rm(packages)
+
+
+# Set wd-------------
+here::here()
+
+# Get data -----------
+# Configure database time zone
+Sys.setenv(TZ = "America/Chicago")
+Sys.setenv(ORA_SDTZ = "America/Chicago")
+
+# read connection string (git-ignored)
+source("data-raw/database-connect-string.R")
+
+## connect to database ------------
+tbidb <- ROracle::dbConnect(
+  dbDriver("Oracle"),
+  dbname = connect_string,
+  username = "mts_planning_data",
+  password = keyring::key_get("mts_planning_data_pw"))
+
+dictionary <-
+  ROracle::dbReadTable(tbidb, "TBI19_DICTIONARY") %>%
+  select(-table) %>%
+  unique() %>%
+  as.data.table()
+# code to compile dictionary, and add numeric column descriptors
+
 tbi_dict <- dictionary %>%
   filter(category %in% c(
     "Demographics",
@@ -54,11 +85,17 @@ tbi_dict <- dictionary %>%
 
 
 # some work by hand occurred:
-tbi_dict <- read.csv('data-raw/full_dictionary.csv')
+tbi_dict_numeric <- read.csv('data-raw/dictionary_numeric_cols.csv')
+
+tbi_dict <- bind_rows(tbi_dict_numeric, tbi_dict)
+
 
 usethis::use_data(tbi_dict,
                   overwrite = TRUE,
                   compress = "xz",
                   internal = FALSE
 )
+
+## Clean up---------------
+rm(connect_string, tbi_dict_numeric, tbidb)
 
