@@ -4,7 +4,7 @@
 \alias{create_one_way_table}
 \title{Create a one-way cross table}
 \usage{
-create_one_way_table(variable, type = "numeric")
+create_one_way_table(variable)
 }
 \arguments{
 \item{variable}{character, variable name.}
