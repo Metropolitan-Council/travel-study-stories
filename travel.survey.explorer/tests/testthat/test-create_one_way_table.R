@@ -1,3 +1,4 @@
+
 test_bike_freq <-
   create_one_way_table("bike_freq")
 
@@ -45,3 +46,28 @@ purrr::map(
     testthat::expect_equal(test_edu[x], expect_edu[x])
   }
 )
+
+# Test a numeric variable - trip distance ------------
+test_trip_distance <-
+  create_one_way_table("distance")
+
+expect_trip_distance <-
+  tibble::tribble(
+    ~bike_freq, ~total_N, ~total_N_hh, ~group_N, ~group_N_hh, ~expanded_total, ~expanded_total_se, ~estimated_prop, ~estimated_prop_se,
+    "6-7 days a week", 13032, 7816, 163, 149, 24321.80626, 3506.59353, 0.00799, 0.00115,
+    "5 days a week", 13032, 7816, 191, 180, 32412.15513, 4323.06254, 0.01064, 0.00142,
+    "4 days a week", 13032, 7816, 196, 187, 31180.30774, 4108.29054, 0.01024, 0.00135,
+    "2-3 days a week", 13032, 7816, 672, 601, 127489.35502, 8600.60126, 0.04187, 0.00279,
+    "1 day a week", 13032, 7816, 559, 500, 129459.17456, 9035.96291, 0.04251, 0.00292,
+    "1-3 days a month", 13032, 7816, 1031, 881, 242458.03179, 12349.76871, 0.07962, 0.00394,
+    "Less than monthly", 13032, 7816, 3398, 2589, 784361.78589, 20993.22219, 0.25757, 0.00626,
+    "Never", 13032, 7816, 6822, 4684, 1673529.56654, 29007.60499, 0.54956, 0.00713
+  )
+
+purrr::map(
+  names(test_bike_freq)[2:9],
+  function(x) {
+    testthat::expect_equal(test_bike_freq[x], expect_bike_freq[x])
+  }
+) %>%
+  suppressMessages()
