@@ -58,6 +58,7 @@ create_one_way_table <- function(variable){
     if(this_variable == "weighted_trip_count"){
 
       brks <- histogram_breaks$trip_breaks
+      brks_labs <- histogram_breaks$trip_breaks_labs
 
     } else {
       tab <- tab %>%
@@ -65,15 +66,23 @@ create_one_way_table <- function(variable){
                       get(this_variable) < 200)
 
       brks <- histogram_breaks$other_breaks
+      brks_labs <- histogram_breaks$other_breaks_labs
     }
 
 
     tab2 <- tab %>%
       dplyr::mutate(cuts = cut(get(this_variable),
                                breaks = brks,
-                               labels = names(brks),
+                               labels =  brks_labs,
                                order_result = TRUE
-                               ))
+                               )) %>%
+      dplyr::group_by(cuts) %>%
+      dplyr::mutate(n_hhid = length(unique(.$hh_id)),
+                    sample_count = dplyr::n())
+
+    tab2 %>%
+      dplyr::summarize(total_weights = sum(get(this_weight)),
+                       total_estimate = sum(get(this_variable)))
 
 
     # do a thing for numeric variables -- binning???
