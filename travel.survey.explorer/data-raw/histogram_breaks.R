@@ -45,9 +45,10 @@ hist_breaks_num_trips_labels <- c(
 )
 
 histogram_breaks <- list(
-  trip_breaks = hist_breaks,
-
-  other_breaks = hist_breaks
+  trip_breaks = hist_breaks_num_trips,
+  trip_breaks_labs = hist_breaks_num_trips_labels,
+  other_breaks = hist_breaks,
+  other_breaks_labs = hist_breaks_labels
 )
 
 usethis::use_data(histogram_breaks, overwrite = TRUE)
