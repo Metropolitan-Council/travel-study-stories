@@ -4,23 +4,23 @@ histogram_breaks <-
   list(
     "num_trips" = list(
       breaks = c(-.01, 0, 2, 4, 6, 8, 10, 100),
-      labels = c("0", "1-2", "3-4", "5-6", "7-8", "9-10", "More than 10")
+      labels = c("0", "1-2", "3-4", "5-6", "7-8", "9-10", "11 or more")
     ),
 
-    "num_adults" = list(breaks = c(),
-                        labels = c()),
+    "num_adults" = list(breaks = c(0, 1, 2, 3, 4, 10),
+                        labels = c("1", "2", "3", "4", "5 or more")),
 
-    "num_kids" = list(breaks = c(),
-                      labels = c()),
+    "num_kids" = list(breaks = c(-0.1, 0, 1, 2, 3, 4, 10),
+                      labels = c("0", "1", "2", "3", "4", "5 or more")),
 
-    "num_students" = list(breaks = c(),
-                          labels = c()),
+    "num_students" = list(breaks = c(-0.1, 0, 1, 2, 3, 4, 10),
+                          labels = c("0", "1", "2", "3", "4", "5 or more")),
 
-    "num_workers" = list(breaks = c(),
-                         labels = c()),
+    "num_workers" = list(breaks = c(-0.1, 0, 1, 2, 3, 4, 10),
+                         labels = c("0", "1", "2", "3", "4", "5 or more")),
 
-    "co2_gpm" = list(breaks = c(),
-                     labels = c()),
+    "co2_gpm" = list(breaks = c(-0.1, 0, 100, 200, 300, 400, 500, 600, 700, 1000),
+                     labels = c("0", "1-100", "101-200", "201-300", "301-400", "401-500", "501-600", "601-700", "More than 700")),
 
     "mpg_city" = list(breaks = c(),
                       labels = c()),
