@@ -24,73 +24,68 @@
 #' @importFrom srvyr survey_total survey_prop
 #' @importFrom purrr pluck
 #'
-create_one_way_table <- function(variable){
-  this_variable <- variable
+create_one_way_table <- function(variable_row){
+
+  variable_row <- "num_trips"
 
   this_table <-
     tbi_dict %>%
-    dplyr::filter(variable == this_variable) %>%
+    dplyr::filter(variable == variable_row) %>%
     dplyr::select(which_table) %>%
     unique() %>%
     magrittr::extract2(1)
 
   this_weight <-
     tbi_dict %>%
-    dplyr::filter(variable == this_variable) %>%
+    dplyr::filter(variable == variable_row) %>%
     dplyr::select(wt_field) %>%
     unique() %>%
     magrittr::extract2(1)
 
   vartype <-
     tbi_tables[[this_table]] %>%
-    dplyr::select(rlang::sym(this_variable)) %>%
+    dplyr::select(rlang::sym(variable_row)) %>%
     dplyr::summarize_all(class) %>%
     purrr::pluck(1)
 
   if(vartype == "numeric"){
 
     tab <- tbi_tables[[this_table]] %>%
-      dplyr::filter(!(get(this_variable) %in% missing_codes))
+      dplyr::filter(!(get(variable_row) %in% missing_codes))
 
-    if(this_variable == "weighted_trip_count"){
+    # table of median and means for numeric data:
+    tab_mean <-
+      tab %>%
+      srvyr::as_survey_design(weights = !!this_weight) %>%
+      dplyr::summarize(mean = srvyr::survey_mean(get(variable_row)),
+                       median = srvyr::survey_median(get(variable_row)))%>%
+      dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
 
-      brks <- histogram_breaks$trip_breaks
-      brks_labs <- histogram_breaks$trip_breaks_labs
+    # now cut into bins, depending on the variable type:
+
+
+      brks <- histogram_breaks[[variable_row]]$breaks
+      brks_labs <- histogram_breaks[[variable_row]]$labels
 
 
       tab <- tab %>%
         dplyr::mutate(cuts = cut(
-          get(this_variable),
+          get(variable_row),
           breaks = brks,
           labels =  brks_labs,
           order_result = TRUE
         )) %>%
-        dplyr::select(-rlang::sym(this_variable)) %>%
-        dplyr::rename(!!rlang::enquo(this_variable) := cuts)
+        dplyr::select(-rlang::sym(variable_row)) %>%
+        dplyr::rename(!!rlang::enquo(variable_row) := cuts)
 
-    } else {
 
-      brks <- histogram_breaks$other_breaks
-      brks_labs <- histogram_breaks$other_breaks_labs
 
-      tab <- tab %>%
-        dplyr::filter(get(this_variable) > 0,
-                      get(this_variable) < 200) %>%
-        dplyr::mutate(cuts = cut(
-          get(this_variable),
-          breaks = brks,
-          labels =  brks_labs,
-          order_result = TRUE
-        )) %>%
-        dplyr::select(-rlang::sym(this_variable)) %>%
-        dplyr::rename(!!rlang::enquo(this_variable) := cuts)
-    }
-
-    # do a thing for numeric variables -- binning???
-    # get a survey_mean? survey_median?
   } else {
     tab <- tbi_tables[[this_table]] %>%
-      dplyr::filter(!(get(this_variable) %in% missing_codes))
+      dplyr::filter(!(get(variable_row) %in% missing_codes))
+
+    # table of median and means for numeric data:
+    tab_mean <- data.frame(mean= NA, mean_se = NA, median = NA, median_se = NA)
   }
 
   rt_tab <- tab %>%
@@ -103,7 +98,7 @@ create_one_way_table <- function(variable){
     dplyr::group_by(
       # grouping by number of samples, number of households to keep this info
       total_N, total_N_hh,
-      get(this_variable),) %>%
+      get(variable_row)) %>%
     dplyr::summarize(
       group_N = length(hh_id), # raw sample size - number of people, trips, households, days (by group)
       group_N_hh = length(unique(hh_id)), # number of households in sample (by group)
@@ -111,12 +106,13 @@ create_one_way_table <- function(variable){
       estimated_prop = srvyr::survey_prop() # estimated proportion (0.0 - 1.0) and SE; multiply by 100 for percentages.
     ) %>%
     # rename the column back to the original name - it gets weird for some reason
-    dplyr::rename(!!rlang::quo_name(this_variable) := `get(this_variable)`) %>%
-    dplyr::select(all_of(this_variable), "total_N", "total_N_hh","group_N", "group_N_hh",
+    dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`) %>%
+    dplyr::select(all_of(variable_row), "total_N", "total_N_hh","group_N", "group_N_hh",
                   "expanded_total", "expanded_total_se", "estimated_prop", "estimated_prop_se") %>%
     dplyr::ungroup() %>%
     dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
 
   return(rt_tab)
+  return(tab_mean)
 }
 
