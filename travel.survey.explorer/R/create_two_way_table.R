@@ -1,8 +1,6 @@
 #' @title Create a two-way cross table
 #'
-#' @param variable character, variable name.
-#' @param type character, one of `"numeric"` or `"category"`.
-#'     Default is `"numeric"`
+#' @param variable character, variable name. Must be one of `tbi_dict$variable`.
 #'
 #' @return A tibble with columns
 #'    - variable name with relevant values
@@ -20,12 +18,12 @@
 #' create_one_way_table("bike_freq")
 #'
 #' }
-#' @importFrom rlang sym quo_name
-#' @importFrom dplyr filter select mutate rename group_by summarize ungroup
+#' @importFrom rlang sym quo_name enquo
+#' @importFrom dplyr filter select mutate rename group_by summarize ungroup summarize_all
 #' @importFrom magrittr extract2
 #' @importFrom srvyr survey_total survey_prop
+#' @importFrom purrr pluck
 #'
-# create_cross_tab_with_weights
 create_two_way_table <- function(variable_row, variable_col){
   # z <- 1.96 # 95% CI
 
