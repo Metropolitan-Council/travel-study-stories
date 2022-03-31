@@ -34,6 +34,7 @@ histogram_breaks <-
     "veh_age" = list(breaks = c(),
                      labels = c()),
 
+    # Time will be weird -- need to remember how to cut time
     "depart_time_imputed" = list(breaks = c(),
                                  labels = c()),
 
