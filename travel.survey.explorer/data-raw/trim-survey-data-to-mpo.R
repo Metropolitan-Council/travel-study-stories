@@ -34,8 +34,7 @@ hh_ids <-
 hh[, hh_in_mpo := ifelse(hh_id %in% hh_ids$hh_id, "in_mpo", "outside_mpo")]
 
 hh <- hh %>%
-  filter(hh_in_mpo == "in_mpo") %>%
-  select(-hh_in_mpo)
+  filter(hh_in_mpo == "in_mpo")
 
 ### Trim veh: Vehicles owned by HHs in MPO----------
 veh <- veh %>%
