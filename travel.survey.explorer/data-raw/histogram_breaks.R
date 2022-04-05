@@ -35,22 +35,21 @@ histogram_breaks <-
                      labels = c("0", "1-2", "3-4", "5-6", "7-8", "9-10", "11-12", "13-14", "15-16", "more than 16")),
 
     # Time will be weird -- need to remember how to cut time
-    "depart_time_imputed" = list(breaks = c(),
-                                 labels = c()),
+    "depart_time_imputed" = list(breaks = c(as.ITime("00:00"), as.ITime("06:00"), as.ITime("09:00"), as.ITime("12:00"), as.ITime("15:00"), as.ITime("18:00"), as.ITime("21:00"), as.ITime("24:00")),
+                                 labels = c("12-6 AM", "6-9 AM", "9 AM-12 PM", "12-3 PM", "3-6 PM", "6-9 PM", "9 PM-12 AM")),
 
-    "arrive_time" = list(breaks = c(),
-                         labels = c()),
+    "arrive_time" = list(breaks = c(as.ITime("00:00"), as.ITime("06:00"), as.ITime("09:00"), as.ITime("12:00"), as.ITime("15:00"), as.ITime("18:00"), as.ITime("21:00"), as.ITime("23:59:59")),
+                         labels = c("12-6 AM", "6-9 AM", "9 AM-12 PM", "12-3 PM", "3-6 PM", "6-9 PM", "9 PM-12 AM")),
 
-    "duration_imputed" = list(breaks = c(-10, 15, 30, 45, 60, 120, 240, Inf),
-                              labels = c("15 min or less", "16-30 min", "31-45 min", "46-60 min", "1-2 hours", "more than 2 hours")),
+    "duration_imputed" = list(breaks = c(-10, 15, 30, 45, 60, 120, Inf),
+                              labels = c("15 min or less", "15-30 min", "30-45 min", "45-60 min", "1-2 hours", "more than 2 hours")),
 
     "distance" = list(breaks = c(-10, 1, 3, 5, 10, 20, 50, Inf),
-                      labels = c("1 or less", "2-3", "4-5", "6-10", "11-20", "21-50", "more than 50")),
+                      labels = c("1 or less", "1-3", "3-5", "5-10", "10-20", "20-50", "50 or more")),
 
     "speed_mph_imputed" = list(breaks = c(-10, 5, 10, 15, 20, 40, 60, Inf),
-                               labels = c("5 or less", "6-10", "11-15", "16-20", "21-40", "41-60", "More than 60"))
+                               labels = c("5 or less", "5-10", "10-15", "15-20", "20-40", "40-60", "More than 60"))
   )
-
 
 
 usethis::use_data(histogram_breaks, overwrite = TRUE)
