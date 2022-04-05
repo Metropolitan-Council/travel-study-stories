@@ -5,7 +5,7 @@ source("data-raw/get-survey-data.R")
 source("data-raw/create-dictionary.R")
 
 # Trim columns down for manageability ----------
-source("data-raw/slim-survey-data-columns.R")
+# source("data-raw/slim-survey-data-columns.R")
 
 # Trim survey data to MPO region -----------
 source("data-raw/trim-survey-data-to-mpo.R")
@@ -35,7 +35,9 @@ veh <- veh %>%
     mpg_city = round(mpg_city, 0),
     mpg_highway = round(mpg_highway, 0),
     weight_unladen = round(weight_unladen, -2)
-  )
+  ) %>%
+  left_join(hh %>% select(hh_id, hh_weight))
+
 hh <-
   hh %>%
   select(-home_lat, -home_lon)
@@ -47,6 +49,7 @@ trip <-
 
 per <- per %>%
   select(-ethnicity_other_specify)
+
 
 
 # Write Data -------------------------
