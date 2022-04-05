@@ -7,10 +7,7 @@
 create_two_way_table(variable_row, variable_col)
 }
 \arguments{
-\item{variable}{character, variable name.}
-
-\item{type}{character, one of \code{"numeric"} or \code{"category"}.
-Default is \code{"numeric"}}
+\item{variable}{character, variable name. Must be one of \code{tbi_dict$variable}.}
 }
 \value{
 A tibble with columns
