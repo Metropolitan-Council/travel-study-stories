@@ -26,7 +26,7 @@
 #'
 create_one_way_table <- function(variable_row){
 
-  variable_row <- "num_trips"
+  # variable_row <- "num_trips"
 
   this_table <-
     tbi_dict %>%
