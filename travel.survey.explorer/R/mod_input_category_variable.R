@@ -35,17 +35,17 @@ mod_input_category_variable_server <- function(id) {
     ns <- session$ns
 
     observeEvent(input$category,
-      {
-        # update variable input by fetching variables specific
-        # to the input$category
-        updateSelectInput(
-          session = session,
-          inputId = "variable",
-          label = "Variable",
-          choices = input_list[input$category][[1]]
-        )
-      },
-      ignoreInit = TRUE
+                 {
+                   # update variable input by fetching variables specific
+                   # to the input$category
+                   updateSelectInput(
+                     session = session,
+                     inputId = "variable",
+                     label = "Variable",
+                     choices = input_list[input$category][[1]]
+                   )
+                 },
+                 ignoreInit = TRUE
     )
 
 
@@ -60,8 +60,17 @@ mod_input_category_variable_server <- function(id) {
     observe({
       print(paste0(id, "-", input$category, ":", input$variable))
     })
+
+    vals <- reactiveValues()
+
+    observeEvent(input$variable,{
+      vals$variable <- input$variable
+    })
+
+    return(vals)
   })
 }
+
 
 ## To be copied in the UI
 # mod_input_category_variable_ui("input_category_variable_ui_1")
