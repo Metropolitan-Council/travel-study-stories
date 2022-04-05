@@ -22,6 +22,10 @@ source("data-raw/add-thrive-to-hh-trip.R")
 # Append MPO boundary to trips
 source("data-raw/add-mpo-boundary-to-trips.R")
 
+# Re-format time
+trip <- trip %>%
+  mutate(depart_time_imputed = as.ITime(depart_time_imputed),
+         arrive_time = as.ITime(arrive_time))
 
 # check for any PII and remove
 # for vehicle table, remove make, model, year and name, and then round the numbers from DPS/EPA
