@@ -4,7 +4,7 @@
 \alias{create_one_way_table}
 \title{Create a one-way cross table}
 \usage{
-create_one_way_table(variable)
+create_one_way_table(variable_row)
 }
 \arguments{
 \item{variable}{character, variable name. Must be one of \code{tbi_dict$variable}.}
