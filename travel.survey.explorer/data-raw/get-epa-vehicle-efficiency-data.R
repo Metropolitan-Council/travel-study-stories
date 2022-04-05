@@ -193,8 +193,8 @@ epa <- epa %>%
 # Fix up for electric vehicles
 epa <- epa %>%
   mutate(co2_gpm = ifelse(fuel_type == "Electricity", 0, co2_gpm)) %>%
-  mutate(mpg_city = ifelse(fuel_type == "Electricity", NA, mpg_city)) %>%
-  mutate(mpg_highway = ifelse(fuel_type == "Electricity", NA, mpg_highway))
+  mutate(mpg_city = ifelse(fuel_type == "Electricity", 9999, mpg_city)) %>%
+  mutate(mpg_highway = ifelse(fuel_type == "Electricity", 9999, mpg_highway))
 
 
 
