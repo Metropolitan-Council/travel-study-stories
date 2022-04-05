@@ -56,6 +56,8 @@ create_one_way_table <- function(variable_row){
     # table of median and means for numeric data:
     tab_mean <-
       tab %>%
+      # get rid of "Inf" values (for mpg_city, mpg_highway) :
+      filter(!get(variable_row) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_row)),
                        median = srvyr::survey_median(get(variable_row)))%>%
