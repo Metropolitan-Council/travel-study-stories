@@ -26,7 +26,7 @@
 #'
 create_one_way_table <- function(variable_row){
 
-  # variable_row <- "num_trips"
+  variable_row <- "arrive_time"
 
   this_table <-
     tbi_dict %>%
@@ -81,6 +81,27 @@ create_one_way_table <- function(variable_row){
         dplyr::rename(!!rlang::enquo(variable_row) := cuts)
 
 
+      if(vartype == "ITime"){
+
+        tab <- tbi_tables[[this_table]] %>%
+          dplyr::filter(!(get(variable_row) %in% missing_codes))
+
+        # table of median and means for numeric data:
+        tab_mean <- ""
+
+        brks <- histogram_breaks[[variable_row]]$breaks
+        brks_labs <- histogram_breaks[[variable_row]]$labels
+
+
+        tab <- tab %>%
+          dplyr::mutate(cuts = cut(
+            get(variable_row),
+            breaks = brks,
+            labels =  brks_labs,
+            order_result = TRUE
+          )) %>%
+          dplyr::select(-rlang::sym(variable_row)) %>%
+          dplyr::rename(!!rlang::enquo(variable_row) := cuts)
 
   } else {
     tab <- tbi_tables[[this_table]] %>%
