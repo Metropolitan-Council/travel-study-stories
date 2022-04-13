@@ -26,7 +26,6 @@
 #' @importFrom data.table as.ITime
 #'
 create_one_way_table <- function(variable_row) {
-  variable_row <- "arrive_time"
 
   this_table <-
     tbi_dict %>%
