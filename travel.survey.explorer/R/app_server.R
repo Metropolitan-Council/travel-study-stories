@@ -15,6 +15,7 @@ app_server <- function(input, output, session) {
 
 
   one_way_tab <- mod_input_utils_server("input_utils_ui_1", one_way_input)
+  mod_plot_one_way_server("plot_one_way_ui_1", one_way_tab)
 
 
   # tables -----
