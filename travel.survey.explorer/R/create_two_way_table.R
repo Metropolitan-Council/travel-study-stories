@@ -25,14 +25,13 @@
 #' @importFrom purrr pluck
 #'
 create_two_way_table <- function(variable_row, variable_col){
-  # z <- 1.96 # 95% CI
 
   print("reading in data")
 
   # example: get number of trips, by category, for each age group
   # rows = age, columns = purpose
-  variable_row <- "age"
-  variable_col <- "d_purpose_category_imputed"
+  variable_row <- "distance"
+  variable_col <- "arrive_time"
 
 
   this_table_row <-
@@ -69,73 +68,155 @@ create_two_way_table <- function(variable_row, variable_col){
     summarize_all(class) %>%
     purrr::pluck(1)
 
-  if(vartype == "numeric"){
+  tab_0 <- tbi_tables[[this_table]] %>%
+    dplyr::filter(!(get(variable_row) %in% missing_codes)) %>%
+    dplyr::filter(!(get(variable_col) %in% missing_codes))
 
-    tab <- tbi_tables[[this_table]] %>%
-      dplyr::filter(!(get(this_variable) %in% missing_codes))
+  # Bin row variable ----------------------------
+  if (vartype_row == "numeric") {
+    # cut into bins:
+    brks <- histogram_breaks[[variable_row]]$breaks
+    brks_labs <- histogram_breaks[[variable_row]]$labels
 
-    if(this_variable == "weighted_trip_count"){
 
-      brks <- histogram_breaks$trip_breaks
+    tab_1 <- tab_0 %>%
+      dplyr::mutate(cuts = cut(
+        get(variable_row),
+        breaks = brks,
+        labels =  brks_labs,
+        order_result = TRUE
+      )) %>%
+      dplyr::select(-rlang::sym(variable_row)) %>%
+      dplyr::rename(!!rlang::enquo(variable_row) := cuts)
 
-    } else {
-      tab <- tab %>%
-        dplyr::filter(get(this_variable) > 0,
-                      get(this_variable) < 200)
 
-      brks <- histogram_breaks$other_breaks
+  } else if (vartype_row == "ITime") {
+
+    brks <- histogram_breaks[[variable_row]]$breaks
+    brks_labs <- histogram_breaks[[variable_row]]$labels
+
+    tab_1 <- tab_0 %>%
+      dplyr::mutate(cuts = cut(
+        get(variable_row),
+        breaks = brks,
+        labels =  brks_labs,
+        order_result = TRUE,
+        include.lowest = TRUE
+      )) %>%
+      dplyr::select(-rlang::sym(variable_row)) %>%
+      dplyr::rename(!!rlang::enquo(variable_row) := cuts)
+
+
+  } else {
+    tab_1 <- tab_0
+  }
+
+  # Bin column variable ----------------------------
+  if (vartype_col == "numeric") {
+    # cut into bins:
+    brks <- histogram_breaks[[variable_col]]$breaks
+    brks_labs <- histogram_breaks[[variable_col]]$labels
+
+    tab_2 <- tab_1 %>%
+      dplyr::mutate(cuts = cut(
+        get(variable_col),
+        breaks = brks,
+        labels =  brks_labs,
+        order_result = TRUE
+      )) %>%
+      dplyr::select(-rlang::sym(variable_col)) %>%
+      dplyr::rename(!!rlang::enquo(variable_col) := cuts)
+
+    # table of median and means for numeric data:
+    tab_mean <-
+      tab_1 %>%
+      # get rid of "Inf" values (for mpg_city, mpg_highway) :
+      filter(!get(variable_col) == Inf) %>%
+      srvyr::as_survey_design(weights = !!this_weight) %>%
+      dplyr::group_by(get(variable_row)) %>%
+      dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
+                       median = srvyr::survey_median(get(variable_col))) %>%
+      dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5)) %>%
+      dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
+
+  } else if (vartype_col == "ITime") {
+    brks <- histogram_breaks[[vartype_col]]$breaks
+    brks_labs <- histogram_breaks[[vartype_col]]$labels
+
+    tab_2 <- tab_1 %>%
+      dplyr::mutate(cuts = cut(
+        get(vartype_col),
+        breaks = brks,
+        labels =  brks_labs,
+        order_result = TRUE,
+        include.lowest = TRUE
+      )) %>%
+      dplyr::select(-rlang::sym(vartype_col)) %>%
+      dplyr::rename(!!rlang::enquo(vartype_col) := cuts)
+
+    tab_mean <-
+      tab_1 %>%
+      # get rid of "Inf" values (for mpg_city, mpg_highway) :
+      filter(!get(variable_col) == Inf) %>%
+      srvyr::as_survey_design(weights = !!this_weight) %>%
+      dplyr::group_by(get(variable_row)) %>%
+      dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
+                       median = srvyr::survey_median(get(variable_col))) %>%
+      # round to nearest minute:
+      dplyr::mutate(across(where(is.numeric), function(x) (x %/% 60L) * 60L)) %>%
+      # make into a time obj:
+      dplyr::mutate(across(where(is.numeric), data.table::as.ITime)) %>%
+      dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
+
+  } else {
+    tab_2 <- tab_1
+
+    tab_mean <-
+      data.frame(
+        mean = NA,
+        mean_se = NA,
+        median = NA,
+        median_se = NA
+      )
     }
 
+  # Final Crosstab ----------------------------
+  rt_tab <- tab_2 %>%
+    # clean up:
+    droplevels() %>%
+    # big N sample size - for the whole data frame:
+    dplyr::mutate(total_N = length(hh_id), # raw sample size - number of people, trips, households, days
+                  total_N_hh = length(unique(hh_id))) %>% # total number of households in sample
+    srvyr::as_survey_design(weights = !!this_weight) %>%
+    dplyr::group_by(# grouping by number of samples, number of households to keep this info
+      total_N, total_N_hh,
+      get(variable_row)) %>%
+    dplyr::summarize(
+      group_N = length(hh_id),
+      # raw sample size - number of people, trips, households, days (by group)
+      group_N_hh = length(unique(hh_id)),
+      # number of households in sample (by group)
+      expanded_total = srvyr::survey_total(),
+      # expanded total and SE
+      estimated_prop = srvyr::survey_prop() # estimated proportion (0.0 - 1.0) and SE; multiply by 100 for percentages.
+    ) %>%
+    # rename the column back to the original name - it gets weird for some reason
+    dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`) %>%
+    dplyr::select(
+      all_of(variable_row),
+      "total_N",
+      "total_N_hh",
+      "group_N",
+      "group_N_hh",
+      "expanded_total",
+      "expanded_total_se",
+      "estimated_prop",
+      "estimated_prop_se"
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
 
-    tab2 <- tab %>%
-      dplyr::mutate(cuts = cut(get(this_variable),
-                               breaks = brks,
-                               labels = names(brks),
-                               order_result = TRUE
-      ))
-
-
-    # do a thing for numeric variables -- binning???
-    # get a survey_mean? survey_median?
-  } else {
-    rt_tab <- tbi_tables[[this_table_col]] %>%
-             left_join(tbi_tables[[this_table_row]]) %>%
-             dplyr::select(
-               rlang::sym(variable_row),
-                 rlang::sym(variable_col),
-                 rlang::sym(this_weight),
-                 hh_id
-               ) %>%
-             # dplyr::filter where the variable is missing (missing codes = "Missing: No Response", "Missing: skip logic").
-             # this list of missing codes is created in data-raw/data_compile.R, line ~105 and
-             # data-raw/missing_codes.R
-             dplyr::filter(!(get(variable_row) %in% missing_codes) &
-                              +                       !(get(variable_col) %in% missing_codes)) %>%
-             # clean up:
-             droplevels() %>%
-      # big N sample size - for the whole data frame:
-      dplyr::mutate(total_N = length(hh_id), # raw sample size - number of people, trips, households, days
-                    total_N_hh = length(unique(hh_id))) %>% # total number of households in sample
-      srvyr::as_survey_design(weights = !!this_weight) %>%
-      dplyr::group_by(
-        # grouping by number of samples, number of households to keep this info
-        total_N, total_N_hh,
-        get(variable_row), get(variable_col)) %>%
-      dplyr::summarize(
-        group_N = length(hh_id), # raw sample size - number of people, trips, households, days (by group)
-        group_N_hh = length(unique(hh_id)), # number of households in sample (by group)
-        expanded_total = srvyr::survey_total(), # expanded total and SE
-        estimated_prop = srvyr::survey_prop() # estimated proportion (0.0 - 1.0) and SE; multiply by 100 for percentages.
-      ) %>%
-      # rename the column back to the original name - it gets weird for some reason
-      dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`,
-                    !!rlang::quo_name(variable_col) := `get(variable_col)`) %>%
-      dplyr::select(all_of(variable_row), all_of(variable_col), "total_N", "total_N_hh","group_N", "group_N_hh",
-                    "expanded_total", "expanded_total_se", "estimated_prop", "estimated_prop_se") %>%
-      dplyr::ungroup() %>%
-      dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
-
-    return(rt_tab)
-  }
+  return(rt_tab)
+  return(tab_mean)
 
 }
