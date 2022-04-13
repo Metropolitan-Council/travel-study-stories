@@ -23,9 +23,10 @@
 #' @importFrom magrittr extract2
 #' @importFrom srvyr survey_total survey_prop
 #' @importFrom purrr pluck
+#' @importFrom data.table as.ITime
 #'
 create_one_way_table <- function(variable_row) {
-  # variable_row <- "arrive_time"
+  variable_row <- "arrive_time"
 
   this_table <-
     tbi_dict %>%
@@ -82,15 +83,6 @@ create_one_way_table <- function(variable_row) {
     tab <- tbi_tables[[this_table]] %>%
       dplyr::filter(!(get(variable_row) %in% missing_codes))
 
-    # empty table of median and means for numeric data:
-    tab_mean <-
-      data.frame(
-        mean = NA,
-        mean_se = NA,
-        median = NA,
-        median_se = NA
-      )
-
     tab_mean <-
       tab %>%
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
@@ -101,7 +93,7 @@ create_one_way_table <- function(variable_row) {
       # round to nearest minute:
       dplyr::mutate(across(everything(), function(x) (x %/% 60L) * 60L)) %>%
       # make into a time obj:
-      dplyr::mutate(across(everything(), as.ITime))
+      dplyr::mutate(across(everything(), data.table::as.ITime))
 
 
     brks <- histogram_breaks[[variable_row]]$breaks
@@ -113,7 +105,8 @@ create_one_way_table <- function(variable_row) {
         get(variable_row),
         breaks = brks,
         labels =  brks_labs,
-        order_result = TRUE
+        order_result = TRUE,
+        include.lowest = TRUE
       )) %>%
       dplyr::select(-rlang::sym(variable_row)) %>%
       dplyr::rename(!!rlang::enquo(variable_row) := cuts)

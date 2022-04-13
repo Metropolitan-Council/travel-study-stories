@@ -35,10 +35,10 @@ histogram_breaks <-
                      labels = c("0", "1-2", "3-4", "5-6", "7-8", "9-10", "11-12", "13-14", "15-16", "more than 16")),
 
     # Time will be weird -- need to remember how to cut time
-    "depart_time_imputed" = list(breaks = c(as.ITime("00:00"), as.ITime("06:00"), as.ITime("09:00"), as.ITime("12:00"), as.ITime("15:00"), as.ITime("18:00"), as.ITime("21:00"), as.ITime("24:00")),
+    "depart_time_imputed" = list(breaks = c(data.table::as.ITime("00:00"), as.ITime("06:00"), data.table::as.ITime("09:00"), data.table::as.ITime("12:00"), data.table::as.ITime("15:00"), data.table::as.ITime("18:00"), data.table::as.ITime("21:00"), data.table::as.ITime("24:00")),
                                  labels = c("12-6 AM", "6-9 AM", "9 AM-12 PM", "12-3 PM", "3-6 PM", "6-9 PM", "9 PM-12 AM")),
 
-    "arrive_time" = list(breaks = c(as.ITime("00:00"), as.ITime("06:00"), as.ITime("09:00"), as.ITime("12:00"), as.ITime("15:00"), as.ITime("18:00"), as.ITime("21:00"), as.ITime("23:59:59")),
+    "arrive_time" = list(breaks = c(data.table::as.ITime("00:00"), data.table::as.ITime("06:00"), as.ITime("09:00"), data.table::as.ITime("12:00"), data.table::as.ITime("15:00"), data.table::as.ITime("18:00"), data.table::as.ITime("21:00"), data.table::as.ITime("23:59:59")),
                          labels = c("12-6 AM", "6-9 AM", "9 AM-12 PM", "12-3 PM", "3-6 PM", "6-9 PM", "9 PM-12 AM")),
 
     "duration_imputed" = list(breaks = c(-10, 15, 30, 45, 60, 120, Inf),
