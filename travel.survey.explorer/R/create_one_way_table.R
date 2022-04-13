@@ -47,9 +47,11 @@ create_one_way_table <- function(variable_row) {
     dplyr::summarize_all(class) %>%
     purrr::pluck(1)
 
+  tab <- tbi_tables[[this_table]] %>%
+    dplyr::filter(!(get(variable_row) %in% missing_codes))
+
   if (vartype == "numeric") {
-    tab <- tbi_tables[[this_table]] %>%
-      dplyr::filter(!(get(variable_row) %in% missing_codes))
+
 
     # table of median and means for numeric data:
     tab_mean <-
@@ -77,10 +79,8 @@ create_one_way_table <- function(variable_row) {
       dplyr::select(-rlang::sym(variable_row)) %>%
       dplyr::rename(!!rlang::enquo(variable_row) := cuts)
 
-
   } else if (vartype == "ITime") {
-    tab <- tbi_tables[[this_table]] %>%
-      dplyr::filter(!(get(variable_row) %in% missing_codes))
+
 
     tab_mean <-
       tab %>%
@@ -112,8 +112,6 @@ create_one_way_table <- function(variable_row) {
 
 
   } else {
-    tab <- tbi_tables[[this_table]] %>%
-      dplyr::filter(!(get(variable_row) %in% missing_codes))
 
     # empty table of median and means for numeric data:
     tab_mean <-
