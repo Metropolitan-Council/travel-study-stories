@@ -78,7 +78,7 @@ create_one_way_table <- function(variable_row) {
       dplyr::rename(!!rlang::enquo(variable_row) := cuts)
 
 
-  } if (vartype == "ITime") {
+  } else if (vartype == "ITime") {
     tab <- tbi_tables[[this_table]] %>%
       dplyr::filter(!(get(variable_row) %in% missing_codes))
 
