@@ -1,5 +1,5 @@
 ### Lump Purpose Categories --------------
-tbi$trip %>%
+trip <- trip %>%
   mutate(
     d_purpose_category_new =
       recode_factor(d_purpose_category_imputed,
