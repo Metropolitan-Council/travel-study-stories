@@ -24,10 +24,33 @@ mod_plot_one_way_server <- function(id, table_data){
     ns <- session$ns
 
     output$plot <- plotly::renderPlotly({
-      plotly::plot_ly() %>%
+     council_plot_ly() %>%
         plotly::add_trace(type = "bar",
-                          x = table_data$table_data[[1]],
-                          y = table_data$table_data$estimated_prop)
+                          x = table_data[[1]],
+                          y = table_data$estimated_prop) %>%
+        plotly::layout(
+          # title = "one-way-title",
+          xaxis = list(
+            title = list(
+              text = "",
+              # standoff = 25,
+              font = plotly_layout$axis_titlefont
+            ),
+            tickfont = plotly_layout$tickfont
+          ),
+
+          yaxis = list(
+            title = list(
+              text = "Proportion",
+              # standoff = 25,
+              font = plotly_layout$axis_titlefont
+            ),
+            tickfont = plotly_layout$tickfont,
+            rangemode = "nonnegative",
+            tickformat = ".0%"
+          )
+
+        )
 
     })
 
