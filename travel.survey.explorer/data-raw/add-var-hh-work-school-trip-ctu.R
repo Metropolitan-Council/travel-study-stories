@@ -63,6 +63,13 @@ new_entry <- data.frame(which_table = "hh", variable = "hh_ctu", wt_field = "hh_
                         value = unique(hh$hh_ctu))
 
 tbi_dict <- bind_rows(tbi_dict, new_entry)
+
+usethis::use_data(tbi_dict,
+                  overwrite = TRUE,
+                  compress = "xz",
+                  internal = FALSE
+)
+
 message("New column created in hh table: hh_ctu")
 
 
