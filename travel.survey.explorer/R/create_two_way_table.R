@@ -28,11 +28,8 @@ create_two_way_table <- function(variable_row, variable_col){
 
   print("reading in data")
 
-  # example: get number of trips, by category, for each age group
-  # rows = age, columns = purpose
-  variable_row <- "distance"
-  variable_col <- "arrive_time"
-
+  variable_row <- "d_purpose_category_imputed"
+  variable_col <- "depart_time_imputed"
 
   this_table_row <-
     tbi_dict %>%
@@ -68,7 +65,8 @@ create_two_way_table <- function(variable_row, variable_col){
     summarize_all(class) %>%
     purrr::pluck(1)
 
-  tab_0 <- tbi_tables[[this_table]] %>%
+  tab_0 <- tbi_tables[[this_table_row]] %>%
+    dplyr::left_join(tbi_tables[[this_table_col]]) %>%
     dplyr::filter(!(get(variable_row) %in% missing_codes)) %>%
     dplyr::filter(!(get(variable_col) %in% missing_codes))
 
@@ -140,19 +138,19 @@ create_two_way_table <- function(variable_row, variable_col){
       dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
 
   } else if (vartype_col == "ITime") {
-    brks <- histogram_breaks[[vartype_col]]$breaks
-    brks_labs <- histogram_breaks[[vartype_col]]$labels
+    brks <- histogram_breaks[[variable_col]]$breaks
+    brks_labs <- histogram_breaks[[variable_col]]$labels
 
     tab_2 <- tab_1 %>%
       dplyr::mutate(cuts = cut(
-        get(vartype_col),
+        get(variable_col),
         breaks = brks,
         labels =  brks_labs,
         order_result = TRUE,
         include.lowest = TRUE
       )) %>%
-      dplyr::select(-rlang::sym(vartype_col)) %>%
-      dplyr::rename(!!rlang::enquo(vartype_col) := cuts)
+      dplyr::select(-rlang::sym(variable_col)) %>%
+      dplyr::rename(!!rlang::enquo(variable_col) := cuts)
 
     tab_mean <-
       tab_1 %>%
@@ -165,7 +163,7 @@ create_two_way_table <- function(variable_row, variable_col){
       # round to nearest minute:
       dplyr::mutate(across(where(is.numeric), function(x) (x %/% 60L) * 60L)) %>%
       # make into a time obj:
-      dplyr::mutate(across(where(is.numeric), data.table::as.ITime)) %>%
+      dplyr::mutate(across(where(is.numeric), function(x) data.table::as.ITime(x))) %>%
       dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
 
   } else {
