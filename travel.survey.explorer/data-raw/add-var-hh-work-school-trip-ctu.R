@@ -18,6 +18,7 @@ trip_o_ctu <-
   as.data.frame() %>%
   rename(trip_o_ctu = CTU_NAME) %>%
   select(trip_id, trip_o_ctu)
+
 trip_d_ctu <-
   st_join(trip_d_sf, ctu_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
   as.data.frame() %>%

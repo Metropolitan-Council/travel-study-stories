@@ -22,7 +22,8 @@ source("data-raw/add-thrive-to-hh-trip.R")
 # Append MPO boundary to trips ------------
 source("data-raw/add-mpo-boundary-to-trips.R")
 
-# Derived columns -----------
+# Append CTU to household, trip and person (work/school location) table -----------
+source("data-raw/add-var-hh-work-school-trip-ctu.R")
 
 
 # Re-format time
