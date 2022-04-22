@@ -17,6 +17,9 @@ mod_input_utils_ui <- function(id){
 #' input_utils Server Functions
 #'
 #' @noRd
+#'
+#' @return [shiny::reactiveValues()] `table_data` and `context_data`.
+#'
 mod_input_utils_server <- function(id, user_inputs){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
