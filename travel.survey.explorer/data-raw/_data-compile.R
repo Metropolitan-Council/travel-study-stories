@@ -10,17 +10,20 @@ source("data-raw/create-dictionary.R")
 # Trim survey data to MPO region -----------
 source("data-raw/trim-survey-data-to-mpo.R")
 
-# Get EPA and Vehicle Weight Data:
+# Get EPA and Vehicle Weight Data -----------
 source("data-raw/get-epa-vehicle-efficiency-data.R")
 
 source("data-raw/get-dps-vehicle-weight-data.R")
 
 
-# Append Thrive Category (can aggregate to other geographies here)
+# Append Thrive Category -----------
 source("data-raw/add-thrive-to-hh-trip.R")
 
-# Append MPO boundary to trips
+# Append MPO boundary to trips ------------
 source("data-raw/add-mpo-boundary-to-trips.R")
+
+# Derived columns -----------
+
 
 # Re-format time
 trip <- trip %>%
