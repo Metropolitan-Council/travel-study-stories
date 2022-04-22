@@ -17,14 +17,28 @@ mod_table_one_way_ui <- function(id) {
 #' table_one_way Server Functions
 #'
 #' @noRd
-mod_table_one_way_server <- function(id, table_data) {
+mod_table_one_way_server <- function(id, table_data, context_data) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     output$table <- DT::renderDataTable({
-      DT::datatable(table_data$table_data %>%
-                      select(1, estimated_prop, estimated_prop_se),
-                    rownames = F)
+      # browser()
+      DT::datatable(table_data %>%
+                      dplyr::select(1,
+                                    estimated_prop,
+                                    estimated_prop_se,
+                             group_N) %>%
+                      mutate(estimated_prop_se = scales::percent(estimated_prop_se,
+                                                                 accuracy = 0.01)),
+                    rownames = F,
+                    colnames = c(context_data$variable_label,
+                                 "Estimated proportion",
+                                 "Standard error",
+                                 "Group size")) %>%
+        DT::formatPercentage(columns = c(2), digits = 2) %>%
+        DT::formatString(columns = c(3),
+                         prefix = "+/-") %>%
+        DT::formatRound(columns = c(4), digits = 0)
     })
 
   })
