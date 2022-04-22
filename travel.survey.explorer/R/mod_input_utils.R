@@ -23,17 +23,32 @@ mod_input_utils_ui <- function(id){
 mod_input_utils_server <- function(id, user_inputs){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    # browser()
-
 
     vals <- reactiveValues()
 
+    # generate table
     table_return <- reactive({
+      # browser()
       create_one_way_table(user_inputs$variable)
-      })
+    })
+
+    # find contextual data, like variable names, question text, etc.
+    context_return <- reactive({
+      # browser()
+      tbi_dict %>%
+        dplyr::filter(variable == user_inputs$variable) %>%
+        dplyr::select(variable_label, survey_question, variable_logic, which_table ,category, units) %>%
+        unique()
+
+    })
+
 
     observe({
       vals$table_data <- table_return()
+    })
+
+    observe({
+      vals$context_data <- context_return()
     })
 
 
