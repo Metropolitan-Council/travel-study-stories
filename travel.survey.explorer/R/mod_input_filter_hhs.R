@@ -33,7 +33,7 @@ mod_input_category_variable_ui <- function(id) {
 mod_input_category_variable_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
+    # go_button
     observeEvent(input$category,
                  {
                    # update variable input by fetching variables specific
