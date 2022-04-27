@@ -67,7 +67,7 @@ create_two_way_table <- function(variable_row, variable_col){
 
   # placeholder here
   tab_0 <- our_household_set %>%
-    left_join(tbi_tables[[this_table_row]] %>%
+    left_join(tbi_tables[[this_table_row]]) %>%
     dplyr::left_join(tbi_tables[[this_table_col]]) %>%
     dplyr::filter(!(get(variable_row) %in% missing_codes)) %>%
     dplyr::filter(!(get(variable_col) %in% missing_codes))
