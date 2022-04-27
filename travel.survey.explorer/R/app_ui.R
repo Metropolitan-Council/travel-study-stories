@@ -21,6 +21,10 @@ app_ui <- function(request) {
           sidebarPanel = sidebarPanel(
             width = 3,
             mod_input_category_variable_ui("1w_input_1"),
+            # Filters go here
+            # Filter to year (2018/2019; 2021/2022)
+            # Filter to county
+            # Filter to city (selected cities only)
             actionButton("go_one_way", "Create Table")
           ),
           mainPanel = mainPanel(
@@ -35,7 +39,10 @@ app_ui <- function(request) {
         title = "Two-Way Table",
         wellPanel(
           h3("Filter data")
-          # add filters here
+          # Filters go here
+          # Filter to year (2018/2019; 2021/2022)
+          # Filter to county
+          # Filter to city (selected cities only)
         ),
         wellPanel(
           h3("First variable"),
