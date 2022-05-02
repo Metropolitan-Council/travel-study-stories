@@ -40,9 +40,9 @@ app_ui <- function(request) {
         wellPanel(
           h3("Filter data")
           # Filters go here
-          # Filter to year (2018/2019; 2021/2022)
-          # Filter to county
-          # Filter to city (selected cities only)
+          selectInput(inputId = "2w_input_year", "Survey Year"),
+          selectInput(inputId = "2w_input_county", "County"),
+          selectInput(inputId = "2w_input_city", "City*")
         ),
         wellPanel(
           h3("First variable"),
