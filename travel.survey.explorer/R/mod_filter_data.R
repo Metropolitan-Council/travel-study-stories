@@ -1,4 +1,4 @@
-#' input_category_variable UI Function
+#' filter_data UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,73 +7,85 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_input_category_variable_ui <- function(id) {
-  ns <- NS(id)
-  tagList(
-    selectInput(
-      inputId = ns("category"),
-      label = "Category",
-      choices = unique(tbi_dict$category),
-      selected = "Demographics"
-    ),
-    selectInput(
-      inputId = ns("variable"),
-      label = "Variable",
-      choices = input_list$Demographics,
-      selected = "Age"
-    )
+# mod_filter_data_ui <- function(id) {
+#   ns <- NS(id)
+#   tagList(
+#   )
+# }
 
-    # textOutput(outputId = "question")
-  )
-}
-
-#' input_category_variable Server Functions
+#' filter_data_1way Server Functions
 #'
 #' @noRd
-mod_input_category_variable_server <- function(id) {
+mod_filter_data_1way_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     # go_button
-    observeEvent(input$category,
+
+    filtered_tbi_tables <- reactive({
+      tbi_tables
+    })
+
+    observeEvent(input$go_one_way,
                  {
-                   # update variable input by fetching variables specific
-                   # to the input$category
-                   updateSelectInput(
-                     session = session,
-                     inputId = "variable",
-                     label = "Variable",
-                     choices = input_list[input$category][[1]]
-                   )
+
+                   # Survey year: Filter all tables to appropriate survey year 1w_input_year
+
+                   # Did the user filter to geography?
+                   # if no, nothing
+                   # if yes -
+                      # figure out if the user has selected a county or a city in 1w_input_geography
+                      # if county,
+                          # filter hh to those that are in the selected county
+                          # then filter the per, trip, day, and veh of the filtered households
+                      # if city,
+                           # filter hh to those that are in the selected city
+                           # then filter the per, trip, day, and veh of the filtered households
+
+                   filtered_tbi_tables() <- # put filtered data here
                  },
                  ignoreInit = TRUE
     )
 
-
-    # output$question <- renderText({
-    #   return("text")
-    #   # browser()
-    #   # input_question_list[input$variable]
-    # })
-
-
-    # print the selected input$category and input$variable
-    observe({
-      print(paste0(id, "-", input$category, ":", input$variable))
-    })
-
-    vals <- reactiveValues()
-
-    observeEvent(input$variable,{
-      vals$variable <- input$variable
-    })
-
-    return(vals)
+    # return a filtered version of tbi_tables
+    return(filtered_tbi_tables)
   })
 }
 
 
-## To be copied in the UI
-# mod_input_category_variable_ui("input_category_variable_ui_1")
+#' filter_data_2way Server Functions
+#'
+#' @noRd
+mod_filter_data_2way_server <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+    # go_button
 
-## To be copied in the server
-# mod_input_category_variable_server("input_category_variable_ui_1")
+    filtered_tbi_tables <- reactive({
+      tbi_tables
+    })
+
+    observeEvent(input$go_two_way,
+                 {
+
+                   # Survey year: Filter all tables to appropriate survey year
+
+                   # Did the user filter to geography?
+                   # if no, nothing
+                   # if yes -
+                   # figure out if the user has selected a county or a city in 2w_input_geography
+                   # if county,
+                   # filter hh to those that are in the selected county
+                   # then filter the per, trip, day, and veh of the filtered households
+                   # if city,
+                   # filter hh to those that are in the selected city
+                   # then filter the per, trip, day, and veh of the filtered households
+
+                   filtered_tbi_tables() <- # put filtered data here
+                 },
+                 ignoreInit = TRUE
+    )
+
+    # return a filtered version of tbi_tables
+    return(filtered_tbi_tables)
+  })
+}
