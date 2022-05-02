@@ -38,7 +38,7 @@ app_ui <- function(request) {
       tabPanel(
         title = "Two-Way Table",
         wellPanel(
-          h3("Filter data")
+          h3("Filter data"),
           # Filters go here
           selectInput(inputId = "2w_input_year", "Survey Year"),
           selectInput(inputId = "2w_input_county", "County"),
