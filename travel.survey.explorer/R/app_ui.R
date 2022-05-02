@@ -22,9 +22,9 @@ app_ui <- function(request) {
             width = 3,
             mod_input_category_variable_ui("1w_input_1"),
             # Filters go here
-            # Filter to year (2018/2019; 2021/2022)
-            # Filter to county
-            # Filter to city (selected cities only)
+            selectInput(inputId = "1w_input_year", "Survey Year"),
+            selectInput(inputId = "1w_input_county", "County"),
+            selectInput(inputId = "1w_input_city", "City*"),
             actionButton("go_one_way", "Create Table")
           ),
           mainPanel = mainPanel(
