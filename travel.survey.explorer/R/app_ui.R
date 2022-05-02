@@ -23,8 +23,7 @@ app_ui <- function(request) {
             mod_input_category_variable_ui("1w_input_1"),
             # Filters go here
             selectInput(inputId = "1w_input_year", "Survey Year"),
-            selectInput(inputId = "1w_input_county", "County"),
-            selectInput(inputId = "1w_input_city", "City*"),
+            selectInput(inputId = "1w_input_geography", "County or City*"),
             actionButton("go_one_way", "Create Table")
           ),
           mainPanel = mainPanel(
@@ -40,9 +39,8 @@ app_ui <- function(request) {
         wellPanel(
           h3("Filter data"),
           # Filters go here
-          selectInput(inputId = "2w_input_year", "Survey Year"),
-          selectInput(inputId = "2w_input_county", "County"),
-          selectInput(inputId = "2w_input_city", "City*")
+          selectInput(inputId = "2w_input_year", "Survey Year", choices = c("2018-2019", "2020-2021")),
+          selectInput(inputId = "2w_input_geography", "County or City*"),
         ),
         wellPanel(
           h3("First variable"),
