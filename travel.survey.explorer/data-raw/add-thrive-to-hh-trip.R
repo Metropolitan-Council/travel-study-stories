@@ -8,7 +8,7 @@ thrive2040 <- dbGetQuery(
 ) %>%
   st_as_sf(wkt = "geometry", crs = "+init=epsg:26915") %>%
   select(COMDESNAME) %>%
-  rename(thriveCategory = COMDESNAME) %>%
+  rename(thrive_category = COMDESNAME) %>%
   st_transform(crs = 4326) %>%
   st_make_valid()
 
@@ -19,7 +19,7 @@ hh <- hh %>%
   st_as_sf(coords = c("home_lon", "home_lat"), crs = 4326) %>%
   st_join(thrive2040, join = st_within) %>%
   # Aggregate Thrive Geography Categories
-  mutate(thriveCatBroad = recode_factor(thriveCategory,
+  mutate(thriveCatBroad = recode_factor(thrive_category,
     "Agricultural" = "Rural",
     "Diversified Rural" = "Rural",
     "Rural Center" = "Rural",
@@ -48,10 +48,10 @@ trip_o_thrive <- trip %>%
   st_as_sf(coords = c("o_lon", "o_lat"), crs = 4326) %>%
   st_join(thrive2040, join = st_within) %>%
   # Aggregate Thrive Geography Categories
-  rename(o_thriveCategory = thriveCategory) %>%
+  rename(o_thrive_category = thrive_category) %>%
   mutate(
     o_thriveCatBroad = recode_factor(
-      o_thriveCategory,
+      o_thrive_category,
       "Agricultural" = "Rural",
       "Diversified Rural" = "Rural",
       "Rural Center" = "Rural",
@@ -84,10 +84,10 @@ trip_d_thrive <- trip %>%
   st_as_sf(coords = c("d_lon", "d_lat"), crs = 4326) %>%
   st_join(thrive2040, join = st_within) %>%
   # Aggregate Thrive Geography Categories
-  rename(d_thriveCategory = thriveCategory) %>%
+  rename(d_thrive_category = thrive_category) %>%
   mutate(
     d_thriveCatBroad = recode_factor(
-      d_thriveCategory,
+      d_thrive_category,
       "Agricultural" = "Rural",
       "Diversified Rural" = "Rural",
       "Rural Center" = "Rural",
