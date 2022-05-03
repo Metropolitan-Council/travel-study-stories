@@ -1,7 +1,7 @@
 # Get TBI survey data from database ---------
 source("data-raw/get-survey-data.R")
 
-# Append Geographic information -----------
+# Append geographic boundaries to  household, work, school, and trip -----------
 source("data-raw/add-geographic-boundaries.R")
 
 # Get EPA Efficiency Data -----------
@@ -10,11 +10,6 @@ source("data-raw/get-epa-vehicle-efficiency-data.R")
 # Get DPS Vehicle Weight Data -----------
 source("data-raw/get-dps-vehicle-weight-data.R")
 
-# Append Thrive Category -----------
-source("data-raw/add-thrive-to-hh-trip.R")
-
-# Append CTU to household, trip and person (work/school location) table -----------
-source("data-raw/add-var-hh-work-school-trip-ctu.R")
 
 
 # Re-format time
