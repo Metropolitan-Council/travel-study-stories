@@ -1,7 +1,7 @@
 # Get TBI survey data from database ---------
 source("data-raw/get-survey-data.R")
 
-# Trim survey data to MPO region -----------
+# Append Geographic information -----------
 source("data-raw/add-geographic-boundaries.R")
 
 # Get EPA Efficiency Data -----------
@@ -12,9 +12,6 @@ source("data-raw/get-dps-vehicle-weight-data.R")
 
 # Append Thrive Category -----------
 source("data-raw/add-thrive-to-hh-trip.R")
-
-# Append MPO boundary to trips ------------
-source("data-raw/add-mpo-boundary-to-trips.R")
 
 # Append CTU to household, trip and person (work/school location) table -----------
 source("data-raw/add-var-hh-work-school-trip-ctu.R")
