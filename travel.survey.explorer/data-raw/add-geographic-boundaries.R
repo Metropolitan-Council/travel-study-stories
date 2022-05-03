@@ -192,7 +192,10 @@ hh_ctu <-
 ##### Thrive: ----
 hh_thrive <-
   st_join(hh_sf, thrive_sf, join = st_within) %>%
-  st_drop_geometry()
+  st_drop_geometry() %>%
+  rename(hh_thrive_category = thrive_category,
+         hh_thrive_category_broad = thrive_category_broad,
+         hh_urban_rural_suburban = urban_rural_suburban)
 
 # additional information from urban/rural/suburban
 hh_thrive2 <-
@@ -200,18 +203,18 @@ hh_thrive2 <-
   select(hh_id, sample_segment) %>%
   left_join(hh_thrive) %>%
   mutate(
-    urban_rural_suburban =
+    hh_urban_rural_suburban =
       case_when(
         sample_segment %in% c("rural_ring", "core_rural") &
-          is.na(urban_rural_suburban) ~ "Rural",
+          is.na(hh_urban_rural_suburban) ~ "Rural",
         sample_segment == "core_urban" &
-          is.na(urban_rural_suburban) ~ "Urban",
-        TRUE ~ as.character(urban_rural_suburban)
+          is.na(hh_urban_rural_suburban) ~ "Urban",
+        TRUE ~ as.character(hh_urban_rural_suburban)
       )
   ) %>%
   mutate(
-    urban_rural_suburban = factor(
-      urban_rural_suburban,
+    hh_urban_rural_suburban = factor(
+      hh_urban_rural_suburban,
       levels = c("Urban", "Suburban","Rural")
     )
   )
@@ -281,11 +284,17 @@ message("... trip origin/destination thrive category...")
 
 trip_o_thrive <-
   st_join(trip_o_sf, thrive_sf, join = st_within) %>%
-  st_drop_geometry()
+  st_drop_geometry() %>%
+  rename(trip_o_thrive_category = thrive_category,
+         trip_o_thrive_category_broad = thrive_category_broad,
+         trip_o_urban_rural_suburban = urban_rural_suburban)
 
 trip_d_thrive <-
   st_join(trip_d_sf, thrive_sf, join = st_within) %>%
-  st_drop_geometry()
+  st_drop_geometry() %>%
+  rename(trip_d_thrive_category = thrive_category,
+         trip_d_thrive_category_broad = thrive_category_broad,
+         trip_d_urban_rural_suburban = urban_rural_suburban)
 
 ##### Compile: -----
 trip <- trip %>%
@@ -330,7 +339,10 @@ work_ctu <-
 ##### Thrive: ----
 work_thrive <-
   st_join(work_sf, thrive_sf, join = st_within) %>%
-  st_drop_geometry()
+  st_drop_geometry()%>%
+  rename(work_thrive_category = thrive_category,
+         work_thrive_category_broad = thrive_category_broad,
+         work_urban_rural_suburban = urban_rural_suburban)
 
 #### Compile: -----
 per <- per %>%
@@ -372,7 +384,11 @@ school_ctu <-
 ##### Thrive: ----
 school_thrive <-
   st_join(school_sf, thrive_sf, join = st_within) %>%
-  st_drop_geometry()
+  st_drop_geometry()%>%
+  rename(school_thrive_category = thrive_category,
+         school_thrive_category_broad = thrive_category_broad,
+         school_urban_rural_suburban = urban_rural_suburban)
+
 
 ##### Compile: -----
 per <- per %>%
