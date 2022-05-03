@@ -19,12 +19,16 @@ mod_plot_one_way_ui <- function(id){
 #' plot_one_way Server Functions
 #'
 #' @noRd
-mod_plot_one_way_server <- function(id, table_data){
+mod_plot_one_way_server <- function(id, one_way_inputs){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
     output$plot <- plotly::renderPlotly({
-     council_plot_ly() %>%
+      browser()
+
+      table_data <- one_way_inputs$table_data
+
+      council_plot_ly() %>%
         plotly::add_trace(type = "bar",
                           x = table_data[[1]],
                           y = table_data$estimated_prop) %>%
@@ -38,7 +42,6 @@ mod_plot_one_way_server <- function(id, table_data){
             ),
             tickfont = plotly_layout$tickfont
           ),
-
           yaxis = list(
             title = list(
               text = "Proportion",
@@ -51,9 +54,8 @@ mod_plot_one_way_server <- function(id, table_data){
           )
 
         )
-
     })
-
+    # bindEvent(table_data)
   })
 }
 

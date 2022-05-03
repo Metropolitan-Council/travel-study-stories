@@ -17,17 +17,21 @@ mod_table_one_way_ui <- function(id) {
 #' table_one_way Server Functions
 #'
 #' @noRd
-mod_table_one_way_server <- function(id, table_data, context_data) {
+mod_table_one_way_server <- function(id, one_way_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     output$table <- DT::renderDataTable({
       # browser()
+      # req(table_data)
+      context_data <- one_way_inputs$context_data
+      table_data <- one_way_inputs$table_data
+
       DT::datatable(table_data %>%
                       dplyr::select(1,
                                     estimated_prop,
                                     estimated_prop_se,
-                             group_N) %>%
+                                    group_N) %>%
                       mutate(estimated_prop_se = scales::percent(estimated_prop_se,
                                                                  accuracy = 0.01)),
                     rownames = F,
