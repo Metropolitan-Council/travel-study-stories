@@ -1,20 +1,14 @@
 # Get TBI survey data from database ---------
 source("data-raw/get-survey-data.R")
 
-# Work on the dictionary ------------------
-source("data-raw/create-dictionary.R")
-
-# Trim columns down for manageability ----------
-# source("data-raw/slim-survey-data-columns.R")
-
 # Trim survey data to MPO region -----------
-source("data-raw/trim-survey-data-to-mpo.R")
+source("data-raw/add-mpo-boundary-to-hh.R")
 
-# Get EPA and Vehicle Weight Data -----------
+# Get EPA Efficiency Data -----------
 source("data-raw/get-epa-vehicle-efficiency-data.R")
 
+# Get DPS Vehicle Weight Data -----------
 source("data-raw/get-dps-vehicle-weight-data.R")
-
 
 # Append Thrive Category -----------
 source("data-raw/add-thrive-to-hh-trip.R")
@@ -58,6 +52,11 @@ trip <-
 per <- per %>%
   select(-ethnicity_other_specify)
 
+# Trim columns down for manageability ----------
+# source("data-raw/slim-survey-data-columns.R")
+
+# Work on the dictionary ------------------
+source("data-raw/create-dictionary.R")
 
 
 # Write Data -------------------------
