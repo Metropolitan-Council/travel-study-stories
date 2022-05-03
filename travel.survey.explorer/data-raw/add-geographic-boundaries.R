@@ -105,6 +105,16 @@ ctu_sf <- DBI::dbGetQuery(db,
   st_transform(crs = 4326)%>%
   st_make_valid()
 
+##### Thrive: ----
+thrive2040 <- dbGetQuery(
+  db,
+  "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.THRIVEMSP2040COMMUNITYDESIGNATION;"
+) %>%
+  sst_as_sf(wkt = "geometry", crs = 26915) %>%
+  select(COMDESNAME) %>%
+  rename(thrive_category = COMDESNAME) %>%
+  st_transform(crs = 4326) %>%
+  st_make_valid()
 
 
 ### Household geographic Info ----------
