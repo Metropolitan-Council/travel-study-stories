@@ -23,6 +23,32 @@ mod_filter_data_1way_server <- function(id) {
 
     filtered_tbi_tables <- reactive({
       tbi_tables
+
+      # ### Trim veh: Vehicles owned by HHs in MPO----------
+      # veh <- veh %>%
+      #   left_join(hh %>% select(hh_id, hh_in_mpo)) %>%
+      #   filter(hh_in_mpo == "in_mpo") %>%
+      #   select(-hh_in_mpo)
+      #
+      # ### Trim per: people who live in MPO----------
+      # per <- per %>%
+      #   left_join(hh %>% select(hh_id, hh_in_mpo)) %>%
+      #   filter(hh_in_mpo == "in_mpo") %>%
+      #   select(-hh_in_mpo)
+      #
+      # ### Trim day: days for people that live in MPO----------
+      # day <- day %>%
+      #   left_join(hh %>% select(hh_id, hh_in_mpo)) %>%
+      #   filter(hh_in_mpo == "in_mpo") %>%
+      #   select(-hh_in_mpo)
+      #
+      # ### Trim trip: trips made by HHs in MPO ----------
+      # trip <- trip %>%
+      #   left_join(select(per, person_id, hh_id)) %>%
+      #   left_join(select(hh, hh_id, hh_in_mpo)) %>%
+      #   filter(hh_in_mpo == "in_mpo") %>%
+      #   select(-hh_in_mpo)
+
     })
 
     observeEvent(input$go_one_way,
