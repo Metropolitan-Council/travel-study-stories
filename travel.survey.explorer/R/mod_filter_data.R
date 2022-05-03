@@ -23,7 +23,8 @@ mod_filter_data_1way_server <- function(id) {
 
     filtered_tbi_tables <- reactive({
       tbi_tables
-
+      # hh <- hh %>%
+      # filter(hh_in_mpo == "in_mpo")
       # ### Trim veh: Vehicles owned by HHs in MPO----------
       # veh <- veh %>%
       #   left_join(hh %>% select(hh_id, hh_in_mpo)) %>%
