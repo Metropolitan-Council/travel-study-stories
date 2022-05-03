@@ -43,12 +43,16 @@ mod_input_utils_server <- function(id, user_inputs){
 
 
     observe({
+      # browser()
       vals$table_data <- table_return()
-    })
-
-    observe({
       vals$context_data <- context_return()
-    })
+
+      print(vals$table_data)
+
+      return(vals)
+    }) %>%
+      bindEvent(user_inputs$variable)
+
 
 
     return(vals)
