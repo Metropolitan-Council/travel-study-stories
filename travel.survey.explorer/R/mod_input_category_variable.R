@@ -34,6 +34,8 @@ mod_input_category_variable_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    vals <- reactiveValues()
+
     observeEvent(input$category,
                  {
                    # update variable input by fetching variables specific
@@ -57,11 +59,10 @@ mod_input_category_variable_server <- function(id) {
 
 
     # print the selected input$category and input$variable
-    observe({
-      print(paste0(id, "-", input$category, ":", input$variable))
-    })
+    # observe({
+    #   print(paste0(id, "-", input$category, ":", input$variable))
+    # })
 
-    vals <- reactiveValues()
 
     observeEvent(input$variable,{
       vals$variable <- input$variable

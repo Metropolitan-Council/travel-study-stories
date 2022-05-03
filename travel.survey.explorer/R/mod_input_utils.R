@@ -21,14 +21,13 @@ mod_input_utils_ui <- function(id){
 #' @return [shiny::reactiveValues()] `table_data` and `context_data`.
 #'
 mod_input_utils_server <- function(id, user_inputs){
-  moduleServer( id, function(input, output, session){
+  moduleServer(id, function(input, output, session){
     ns <- session$ns
 
     vals <- reactiveValues()
 
     # generate table
     table_return <- reactive({
-      # browser()
       create_one_way_table(user_inputs$variable)
     })
 
