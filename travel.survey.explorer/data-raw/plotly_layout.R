@@ -3,8 +3,12 @@ library(councilR)
 font_family_list <- "Roman, Helvetica, Tahoma, Geneva, Arial, sans-serif"
 
 plotly_layout <- list(
+  "hover_text" = list(
+    size = 16,
+    family = font_family_list
+  ),
   "axis_titlefont" = list(
-      size = 14,
+      size = 16,
       family = font_family_list,
       color = councilR::colors$suppBlack
   ),
