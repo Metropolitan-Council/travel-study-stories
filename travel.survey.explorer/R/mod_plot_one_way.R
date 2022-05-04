@@ -10,9 +10,7 @@
 mod_plot_one_way_ui <- function(id){
   ns <- NS(id)
   tagList(
-
     plotly::plotlyOutput(ns("plot"))
-
   )
 }
 
@@ -23,9 +21,12 @@ mod_plot_one_way_server <- function(id, one_way_inputs){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    output$plot <- plotly::renderPlotly({
-      browser()
 
+    w <- waiter::Waiter$new(ns("plot"), color = waiter::transparent(0.5))
+
+    output$plot <- plotly::renderPlotly({
+      # browser()
+      w$show()
       table_data <- one_way_inputs$table_data
 
       council_plot_ly() %>%
