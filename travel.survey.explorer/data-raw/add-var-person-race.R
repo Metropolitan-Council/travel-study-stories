@@ -31,4 +31,6 @@ per_race <-
 per <- per %>%
   left_join(per_race)
 
+rm(per_race)
+
 message("New variable added: a simple race category, race_ethnicity")
