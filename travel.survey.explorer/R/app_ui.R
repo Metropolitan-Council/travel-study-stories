@@ -24,7 +24,8 @@ app_ui <- function(request) {
           ),
           mainPanel = mainPanel(
             mod_table_one_way_ui("table_one_way_ui_1"),
-            mod_plot_one_way_ui("plot_one_way_ui_1")
+              mod_plot_one_way_ui("plot_one_way_ui_1"),
+              mod_table_one_way_ui("table_one_way_ui_1")
 
           )
         )
