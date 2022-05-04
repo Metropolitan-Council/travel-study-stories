@@ -45,7 +45,7 @@ purrr::map(
   function(x) {
     testthat::expect_equal(test_edu[x], expect_edu[x])
   }
-)%>%
+) %>%
   suppressMessages()
 
 # Test a numeric variable - trip distance ------------
@@ -97,6 +97,3 @@ purrr::map(
   }
 ) %>%
   suppressMessages()
-
-
-

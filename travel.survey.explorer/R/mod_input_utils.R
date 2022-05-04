@@ -7,11 +7,9 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_input_utils_ui <- function(id){
+mod_input_utils_ui <- function(id) {
   ns <- NS(id)
-  tagList(
-
-  )
+  tagList()
 }
 
 #' input_utils Server Functions
@@ -20,8 +18,8 @@ mod_input_utils_ui <- function(id){
 #'
 #' @return [shiny::reactiveValues()] `table_data` and `context_data`.
 #'
-mod_input_utils_server <- function(id, user_inputs){
-  moduleServer(id, function(input, output, session){
+mod_input_utils_server <- function(id, user_inputs) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     vals <- reactiveValues()
@@ -36,9 +34,8 @@ mod_input_utils_server <- function(id, user_inputs){
       # browser()
       tbi_dict %>%
         dplyr::filter(variable == user_inputs$variable) %>%
-        dplyr::select(variable_label, survey_question, variable_logic, which_table ,category, units) %>%
+        dplyr::select(variable_label, survey_question, variable_logic, which_table, category, units) %>%
         unique()
-
     })
 
 

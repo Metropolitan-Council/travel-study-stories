@@ -8,17 +8,19 @@
 #' @examples
 #' \dontrun{
 #' council_plot_ly()
-#'}
+#' }
 #' @importFrom plotly plot_ly config
-council_plot_ly <- function(...){
+council_plot_ly <- function(...) {
   plotly::plot_ly(...) %>%
-    plotly::config(displayModeBar = "hover",
-                   displaylogo = FALSE,
-                   showSendToCloud = FALSE,
-                   showEditInChartStudio = FALSE,
-                   modeBarButtonsToRemove = list("lasso2d",
-                                                 "zoomIn2d",
-                                                 "zoomOut2d"))
-
-
+    plotly::config(
+      displayModeBar = "hover",
+      displaylogo = FALSE,
+      showSendToCloud = FALSE,
+      showEditInChartStudio = FALSE,
+      modeBarButtonsToRemove = list(
+        "lasso2d",
+        "zoomIn2d",
+        "zoomOut2d"
+      )
+    )
 }

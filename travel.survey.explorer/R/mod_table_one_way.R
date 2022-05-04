@@ -21,34 +21,41 @@ mod_table_one_way_server <- function(id, one_way_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     w <- waiter::Waiter$new(ns("table"),
-                            color = waiter::transparent(0.5))
+      color = waiter::transparent(0.5)
+    )
 
 
     output$table <- DT::renderDataTable({
-
       w$show()
 
       context_data <- one_way_inputs$context_data
       table_data <- one_way_inputs$table_data
 
       DT::datatable(table_data %>%
-                      dplyr::select(1,
-                                    estimated_prop,
-                                    estimated_prop_se,
-                                    group_N) %>%
-                      mutate(estimated_prop_se = scales::percent(estimated_prop_se,
-                                                                 accuracy = 0.01)),
-                    rownames = F,
-                    colnames = c(context_data$variable_label,
-                                 "Estimated proportion",
-                                 "Standard error",
-                                 "Group size")) %>%
+        dplyr::select(
+          1,
+          estimated_prop,
+          estimated_prop_se,
+          group_N
+        ) %>%
+        mutate(estimated_prop_se = scales::percent(estimated_prop_se,
+          accuracy = 0.01
+        )),
+      rownames = F,
+      colnames = c(
+        context_data$variable_label,
+        "Estimated proportion",
+        "Standard error",
+        "Group size"
+      )
+      ) %>%
         DT::formatPercentage(columns = c(2), digits = 2) %>%
-        DT::formatString(columns = c(3),
-                         prefix = "+/-") %>%
+        DT::formatString(
+          columns = c(3),
+          prefix = "+/-"
+        ) %>%
         DT::formatRound(columns = c(4), digits = 0)
     })
-
   })
 }
 

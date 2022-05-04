@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_plot_one_way_ui <- function(id){
+mod_plot_one_way_ui <- function(id) {
   ns <- NS(id)
   tagList(
     plotly::plotlyOutput(ns("plot"))
@@ -17,8 +17,8 @@ mod_plot_one_way_ui <- function(id){
 #' plot_one_way Server Functions
 #'
 #' @noRd
-mod_plot_one_way_server <- function(id, one_way_inputs){
-  moduleServer( id, function(input, output, session){
+mod_plot_one_way_server <- function(id, one_way_inputs) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
 
@@ -30,13 +30,15 @@ mod_plot_one_way_server <- function(id, one_way_inputs){
       table_data <- one_way_inputs$table_data
 
       council_plot_ly() %>%
-        plotly::add_trace(type = "bar",
-                          x = table_data[[1]],
-                          y = table_data$estimated_prop,
-                          hovertemplate = paste0(
-                            "<b>", one_way_inputs$context_data$variable_label, "</b><br>",
-                            "%{x}: %{y:.0%}"
-                          )) %>%
+        plotly::add_trace(
+          type = "bar",
+          x = table_data[[1]],
+          y = table_data$estimated_prop,
+          hovertemplate = paste0(
+            "<b>", one_way_inputs$context_data$variable_label, "</b><br>",
+            "%{x}: %{y:.0%}"
+          )
+        ) %>%
         plotly::layout(
           # title = "one-way-title",
           hoverlabel = list(
@@ -60,7 +62,6 @@ mod_plot_one_way_server <- function(id, one_way_inputs){
             rangemode = "nonnegative",
             tickformat = ".0%"
           )
-
         )
     })
     # bindEvent(table_data)

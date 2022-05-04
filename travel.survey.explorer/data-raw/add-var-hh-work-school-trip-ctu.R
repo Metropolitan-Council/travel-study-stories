@@ -6,8 +6,10 @@ library(tidyverse)
 db <- DBI::dbConnect(odbc::odbc(), "GISLibrary")
 
 # CTU (Cities-Townships-Unincorporated)
-ctu_sf <- DBI::dbGetQuery(db,
-                          "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.CTUs;") %>%
+ctu_sf <- DBI::dbGetQuery(
+  db,
+  "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.CTUs;"
+) %>%
   st_as_sf(wkt = "geometry", crs = "+init=epsg:26915") %>%
   st_transform(crs = "+init=epsg:26915 +proj=longlat +datum=WGS84")
 ctu_sf <- st_transform(ctu_sf, crs = 4326) %>%
@@ -17,8 +19,10 @@ ctu_sf <- st_transform(ctu_sf, crs = 4326) %>%
 hh_sf <- hh %>%
   select(hh_id, home_lon, home_lat) %>%
   na.omit() %>%
-  st_as_sf(coords = c('home_lon', 'home_lat'),
-           crs = 4326)
+  st_as_sf(
+    coords = c("home_lon", "home_lat"),
+    crs = 4326
+  )
 #
 # trip_o_ctu <-
 #   st_join(trip_o_sf, ctu_sf, join = st_within) %>% # this takes TIME, especially with a lot of data.
@@ -47,10 +51,12 @@ hh_tally <-
   hh %>%
   group_by(hh_ctu) %>%
   filter(!is.na(hh_ctu)) %>%
-  summarize(n_hh = length(unique(hh_id)),
-            mean_wt = mean(hh_weight),
-            sd_wt = sd(hh_weight)) %>%
-  mutate(cv = sd_wt/mean_wt) %>%
+  summarize(
+    n_hh = length(unique(hh_id)),
+    mean_wt = mean(hh_weight),
+    sd_wt = sd(hh_weight)
+  ) %>%
+  mutate(cv = sd_wt / mean_wt) %>%
   filter(n_hh >= 100)
 
 # Get rid of cities with < 100 samples:
@@ -59,15 +65,17 @@ hh <-
   mutate(hh_ctu = ifelse(hh_ctu %in% hh_tally$hh_ctu, hh_ctu, NA))
 
 # Append to dictionary
-new_entry <- data.frame(which_table = "hh", variable = "hh_ctu", wt_field = "hh_weight", category = "Demographics", variable_label = "Household City/Township",
-                        value = unique(hh$hh_ctu))
+new_entry <- data.frame(
+  which_table = "hh", variable = "hh_ctu", wt_field = "hh_weight", category = "Demographics", variable_label = "Household City/Township",
+  value = unique(hh$hh_ctu)
+)
 
 tbi_dict <- bind_rows(tbi_dict, new_entry)
 
 usethis::use_data(tbi_dict,
-                  overwrite = TRUE,
-                  compress = "xz",
-                  internal = FALSE
+  overwrite = TRUE,
+  compress = "xz",
+  internal = FALSE
 )
 
 message("New column created in hh table: hh_ctu")
