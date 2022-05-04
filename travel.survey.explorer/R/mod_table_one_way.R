@@ -20,10 +20,14 @@ mod_table_one_way_ui <- function(id) {
 mod_table_one_way_server <- function(id, one_way_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    w <- waiter::Waiter$new(ns("table"),
+                            color = waiter::transparent(0.5))
+
 
     output$table <- DT::renderDataTable({
-      # browser()
-      # req(table_data)
+
+      w$show()
+
       context_data <- one_way_inputs$context_data
       table_data <- one_way_inputs$table_data
 
