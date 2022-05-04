@@ -135,15 +135,11 @@ nonhomebasedtrips_d <-
 #### Merge home-based and non-homebased trips ------------
 trip_purpose <- bind_rows(homebasedtrips, nonhomebasedtrips_o, nonhomebasedtrips_d) %>%
   select(-trip_type) %>%
-  left_join(trip, by = "trip_id", suffix = c("", "_old")) %>%
-  select(-contains("_old")) %>%
-  select(-"d_purpose_other",
-         -"d_purpose",
-         -"d_purpose_category",
-         -"d_purpose_category_imputed",
+  select(-"d_purpose_category_imputed",
          -"d_purpose_imputed",
          -"o_purpose_category_imputed",
-         -"o_purpose_imputed")
+         -"o_purpose_imputed") %>%
+  rename(trip_purpose_weight = trip_weight)
 
 setdiff(names(trip_purpose), names(trip))
 
