@@ -20,7 +20,8 @@ tbidb <- ROracle::dbConnect(
   dbDriver("Oracle"),
   dbname = connect_string,
   username = "mts_planning_data",
-  password = keyring::key_get("mts_planning_data_pw"))
+  password = keyring::key_get("mts_planning_data_pw")
+)
 
 dictionary <-
   ROracle::dbReadTable(tbidb, "TBI19_DICTIONARY") %>%
@@ -85,17 +86,16 @@ tbi_dict <- dictionary %>%
 
 
 # some work by hand occurred:
-tbi_dict_numeric <- read.csv('data-raw/dictionary_numeric_cols.csv')
+tbi_dict_numeric <- read.csv("data-raw/dictionary_numeric_cols.csv")
 
 tbi_dict <- bind_rows(tbi_dict_numeric, tbi_dict)
 
 
 usethis::use_data(tbi_dict,
-                  overwrite = TRUE,
-                  compress = "xz",
-                  internal = FALSE
+  overwrite = TRUE,
+  compress = "xz",
+  internal = FALSE
 )
 
 ## Clean up---------------
 rm(connect_string, tbi_dict_numeric, tbidb)
-

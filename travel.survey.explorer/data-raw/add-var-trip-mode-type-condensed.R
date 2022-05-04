@@ -22,7 +22,9 @@ tbi_tables$trip <-
   )
 
 # Append to dictionary
-new_entry <- data.frame(which_table = "trip", variable = "mode_type_cond", wt_field = "trip_weight", category = "Trips", variable_label = "Mode Type Category",
-                        value = unique(tbi_tables$trip$mode_type_cond))
+new_entry <- data.frame(
+  which_table = "trip", variable = "mode_type_cond", wt_field = "trip_weight", category = "Trips", variable_label = "Mode Type Category",
+  value = unique(tbi_tables$trip$mode_type_cond)
+)
 tbi_dict <- bind_rows(tbi_dict, new_entry)
 message("New column created in trip table: mode_type_cond")

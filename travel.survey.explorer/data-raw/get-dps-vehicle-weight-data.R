@@ -74,7 +74,7 @@ dps <- dps %>%
     model =
       case_when(
         make == "BMW" & grepl(pattern = "^[0-9]", model) ~
-        paste(substr(model, start = 1, stop = 1), "SERIES"),
+          paste(substr(model, start = 1, stop = 1), "SERIES"),
         TRUE ~ model
       )
   ) %>%
@@ -90,7 +90,7 @@ dps <- dps %>%
             grepl(pattern = "RAM", model) &
               combo_body_class == "Truck"
           ) ~
-        "RAM PICKUP",
+          "RAM PICKUP",
         TRUE ~ model
       )
   ) %>%
@@ -98,7 +98,7 @@ dps <- dps %>%
     model =
       case_when(
         make == "MAZDA" & grepl(pattern = "^[[:digit:]]+$", model) ~
-        paste0("MAZDA", substr(model, start = 1, stop = 1)),
+          paste0("MAZDA", substr(model, start = 1, stop = 1)),
         # WHY DOES THIS KEEP PUTTING A SPACE BETWEEN MAZDA and THE NUMBER?!?!
         TRUE ~ model
       )
@@ -107,7 +107,7 @@ dps <- dps %>%
     model =
       case_when(
         make == "SATURN" & grepl("^S", model) ~
-        "S SERIES",
+          "S SERIES",
         TRUE ~ model
       )
   ) %>%
@@ -115,7 +115,7 @@ dps <- dps %>%
     model =
       case_when(
         make == "SATURN" & grepl("^L", model) ~
-        "L SERIES",
+          "L SERIES",
         TRUE ~ model
       )
   )
@@ -133,7 +133,7 @@ new_veh <- veh %>%
     model =
       case_when(
         make == "Mercedes-Benz" ~
-        gsub(pattern = "-Class", "", model),
+          gsub(pattern = "-Class", "", model),
         TRUE ~ model
       )
   ) %>%
@@ -141,7 +141,7 @@ new_veh <- veh %>%
     model =
       case_when(
         make == "Lexus" ~
-        paste(substr(model, start = 1, stop = 2)),
+          paste(substr(model, start = 1, stop = 2)),
         TRUE ~ model
       )
   )

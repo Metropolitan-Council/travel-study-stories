@@ -13,7 +13,9 @@ app_ui <- function(request) {
     navbarPage(
       windowTitle = "Travel Survey Explorer",
       # collapsible = TRUE,
-      title = div(img(src = "www/main-logo.png", height = "60px", alt = "MetCouncil logo")),
+      title = div(img(src = "www/main-logo.png",
+                      height = "60px",
+                      alt = "MetCouncil logo")),
       id = "nav",
       tabPanel(
         title = "One-Way Table",
@@ -24,9 +26,8 @@ app_ui <- function(request) {
           ),
           mainPanel = mainPanel(
             mod_table_one_way_ui("table_one_way_ui_1"),
-              mod_plot_one_way_ui("plot_one_way_ui_1"),
-              mod_table_one_way_ui("table_one_way_ui_1")
-
+            mod_plot_one_way_ui("plot_one_way_ui_1"),
+            mod_table_one_way_ui("table_one_way_ui_1")
           )
         )
       ),

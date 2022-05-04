@@ -8,16 +8,15 @@ plotly_layout <- list(
     family = font_family_list
   ),
   "axis_titlefont" = list(
-      size = 16,
-      family = font_family_list,
-      color = councilR::colors$suppBlack
+    size = 16,
+    family = font_family_list,
+    color = councilR::colors$suppBlack
   ),
   "tickfont" = list(
     size = 12,
     family = font_family_list,
     color = councilR::colors$suppBlack
   )
-
 )
 
 

@@ -2,8 +2,10 @@
 #' @noRd
 #'
 font_family_list <- "Roman, Helvetica, Tahoma, Geneva, Arial, sans-serif"
-options(DT.options = list(dom = "t", pageLength = 20,
-                          rownames = FALSE))
+options(DT.options = list(
+  dom = "t", pageLength = 20,
+  rownames = FALSE
+))
 
 
 

@@ -20,7 +20,8 @@ app_server <- function(input, output, session) {
 
   # tables -----
   mod_table_one_way_server("table_one_way_ui_1",
-                           one_way_inputs = one_way_tab)
+    one_way_inputs = one_way_tab
+  )
 
   mod_table_two_way_server("table_two_way_ui_1")
 }

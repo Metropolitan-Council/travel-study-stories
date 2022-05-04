@@ -40,7 +40,7 @@ epa <- epa %>%
     model =
       case_when(
         make == "BMW" & grepl(pattern = "^[[:digit:]]", model) ~
-        paste(substr(model, start = 1, stop = 1), "Series"),
+          paste(substr(model, start = 1, stop = 1), "Series"),
         TRUE ~ model
       )
   ) %>%
@@ -48,7 +48,7 @@ epa <- epa %>%
     model =
       case_when(
         make == "BMW" & grepl(pattern = "^[A-Z|a-z]", model) ~
-        paste(substr(model, start = 1, stop = 2)),
+          paste(substr(model, start = 1, stop = 2)),
         TRUE ~ model
       )
   ) %>%
@@ -56,7 +56,7 @@ epa <- epa %>%
     model =
       case_when(
         make == "Mazda" & grepl(pattern = "^[[:digit:]] ", model) ~
-        paste0("Mazda", substr(model, start = 1, stop = 1)),
+          paste0("Mazda", substr(model, start = 1, stop = 1)),
         # WHY DOES THIS KEEP PUTTING A SPACE BETWEEN MAZDA and THE NUMBER?!?!
         TRUE ~ model
       )
@@ -65,7 +65,7 @@ epa <- epa %>%
     model =
       case_when(
         make == "Mazda" & grepl(pattern = "^[[:digit:]]+$", model) ~
-        paste0("Mazda", substr(model, start = 1, stop = 1)),
+          paste0("Mazda", substr(model, start = 1, stop = 1)),
         # WHY DOES THIS KEEP PUTTING A SPACE BETWEEN MAZDA and THE NUMBER?!?!
         TRUE ~ model
       )
@@ -78,7 +78,7 @@ epa <- epa %>%
             grepl(pattern = "Ram", model) &
               grepl(pattern = "Pickup", model)
           ) ~
-        "Ram Pickup",
+          "Ram Pickup",
         TRUE ~ model
       )
   ) %>%
@@ -86,7 +86,7 @@ epa <- epa %>%
     model =
       case_when(
         make == "Saturn" & grepl(pattern = "Vue", model) ~
-        "VUE",
+          "VUE",
         TRUE ~ model
       )
   ) %>%
@@ -94,7 +94,7 @@ epa <- epa %>%
     model =
       case_when(
         make == "Saturn" & grepl(pattern = "SKY", model) ~
-        "Sky",
+          "Sky",
         TRUE ~ model
       )
   ) %>%
@@ -102,7 +102,7 @@ epa <- epa %>%
     model =
       case_when(
         make == "Saturn" & grepl(pattern = "^L", model) ~
-        "L Series",
+          "L Series",
         TRUE ~ model
       )
   ) %>%
@@ -110,7 +110,7 @@ epa <- epa %>%
     model =
       case_when(
         make == "Saturn" & grepl(pattern = "^S", model) & (!model == "Sky") ~
-        "S Series",
+          "S Series",
         TRUE ~ model
       )
   ) %>%
@@ -118,7 +118,7 @@ epa <- epa %>%
     model =
       case_when(
         make == "Nissan" & grepl(pattern = "Leaf", model) ~
-        toupper(model),
+          toupper(model),
         TRUE ~ model
       )
   ) %>%
@@ -205,7 +205,7 @@ veh_epa <-
     model =
       case_when(
         make == "BMW" & grepl(pattern = "^[[:digit:]] series", model) ~
-        str_to_title(model),
+          str_to_title(model),
         TRUE ~ model
       )
   ) %>%
@@ -286,7 +286,7 @@ veh <-
     model =
       case_when(
         make == "BMW" & grepl(pattern = "^[[:digit:]] series", model) ~
-        str_to_title(model),
+          str_to_title(model),
         TRUE ~ model
       )
   ) %>%

@@ -28,8 +28,10 @@ source("data-raw/add-var-hh-work-school-trip-ctu.R")
 
 # Re-format time
 trip <- trip %>%
-  mutate(depart_time_imputed = as.ITime(depart_time_imputed),
-         arrive_time = as.ITime(arrive_time))
+  mutate(
+    depart_time_imputed = as.ITime(depart_time_imputed),
+    arrive_time = as.ITime(arrive_time)
+  )
 
 # check for any PII and remove
 # for vehicle table, remove make, model, year and name, and then round the numbers from DPS/EPA
@@ -70,9 +72,7 @@ tbi_tables <- list(
 )
 
 usethis::use_data(tbi_tables,
-                  overwrite = TRUE,
-                  compress = "xz",
-                  internal = FALSE
+  overwrite = TRUE,
+  compress = "xz",
+  internal = FALSE
 )
-
-
