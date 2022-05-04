@@ -15,7 +15,4 @@ day <- day %>% mutate(travel_date_season = getSeason(travel_date))
 trip <- trip %>%
   mutate(trip_season = getSeason(travel_date))
 
-trip_purpose <- trip_purpose %>%
-  mutate(trip_season = getSeason(travel_date))
-
 rm(getSeason)
