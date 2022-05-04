@@ -10,7 +10,7 @@
 mod_table_one_way_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    DT::DTOutput(ns("table"), width = "80%")
+    DT::DTOutput(ns("table"), width = "90%")
   )
 }
 
