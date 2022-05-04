@@ -32,9 +32,16 @@ mod_plot_one_way_server <- function(id, one_way_inputs){
       council_plot_ly() %>%
         plotly::add_trace(type = "bar",
                           x = table_data[[1]],
-                          y = table_data$estimated_prop) %>%
+                          y = table_data$estimated_prop,
+                          hovertemplate = paste0(
+                            "<b>", one_way_inputs$context_data$variable_label, "</b><br>",
+                            "%{x}: %{y:.0%}"
+                          )) %>%
         plotly::layout(
           # title = "one-way-title",
+          hoverlabel = list(
+            font = plotly_layout$hover_text
+          ),
           xaxis = list(
             title = list(
               text = "",
