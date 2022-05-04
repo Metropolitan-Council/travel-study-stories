@@ -1,5 +1,5 @@
-tbi$hh <-
-  tbi$hh %>%
+hh <-
+  hh %>%
   mutate(income_detailed = recode_factor(income_detailed,
     `Under $15,000` =     "<$15K",
     `$15,000-$24,999` =   "$15-25K",
