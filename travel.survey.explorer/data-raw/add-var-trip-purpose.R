@@ -107,26 +107,49 @@ homebasedtrips <- trip_type %>%
     -d_purpose_category_imputed,
     -d_purpose_imputed
   ) %>%
-  # filter(!purpose %in% c('Change mode', 'Home', 'Missing: Non-imputable'))%>%
   mutate(trip_type = "Home-based")
 
 ### Trip Weight Adjustment: 50% for each half of the trip ----------------
-nonhomebasedtrips <-
-  left_join(
-    trip_linked %>%
-      filter(home_based == "non-home-based") %>%
-      pivot_longer(cols = c("o_purpose_category_imputed", "d_purpose_category_imputed"), values_to = "purpose_category") %>%
-      select(-name),
-    # Detailed Purposes
-    trip_linked %>%
-      filter(home_based == "non-home-based") %>%
-      pivot_longer(cols = c("o_purpose_imputed", "d_purpose_imputed"), values_to = "purpose") %>%
-      select(-name)
+nonhomebasedtrips_o <-
+  trip_type %>%
+  filter(trip_type == "non-home-based") %>%
+  pivot_longer(
+    cols = c("o_purpose_category_imputed", "d_purpose_category_imputed"),
+    values_to = "purpose_category"
   ) %>%
+  select(-name) %>%
   mutate(trip_weight = 0.5 * trip_weight) %>%
-  # filter(!purpose %in% c('Change mode', 'Home', 'Missing: Non-imputable'))%>%
   mutate(trip_type = "Non-Home-based")
 
+nonhomebasedtrips_d <-
+  trip_type %>%
+  filter(trip_type == "non-home-based") %>%
+  pivot_longer(cols = c("o_purpose_imputed", "d_purpose_imputed"),
+               values_to = "purpose") %>%
+  select(-name) %>%
+  mutate(trip_weight = 0.5 * trip_weight) %>%
+  mutate(trip_type = "Non-Home-based")
+
+
+
 #### Merge home-based and non-homebased trips ------------
-tbi$trip_purpose <- bind_rows(homebasedtrips, nonhomebasedtrips)
-rm(homebasedtrips, nonhomebasedtrips, trip_linked, homecats, nonhomecats)
+trip_purpose <- bind_rows(homebasedtrips, nonhomebasedtrips_o, nonhomebasedtrips_d) %>%
+  select(-trip_type) %>%
+  left_join(trip, by = "trip_id", suffix = c("", "_old")) %>%
+  select(-contains("_old")) %>%
+  select(-"d_purpose_other",
+         -"d_purpose",
+         -"d_purpose_category",
+         -"d_purpose_category_imputed",
+         -"d_purpose_imputed",
+         -"o_purpose_category_imputed",
+         -"o_purpose_imputed")
+
+setdiff(names(trip_purpose), names(trip))
+
+rm(homebasedtrips,
+   nonhomebasedtrips_o,
+   nonhomebasedtrips_d,
+   trip_type,
+   homecats,
+   nonhomecats)
