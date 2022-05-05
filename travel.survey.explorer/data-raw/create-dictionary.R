@@ -1,94 +1,77 @@
-# Packages -------------
-packages <- list("bit64", "tidyverse", "data.table", "DBI", "ROracle", "keyring", "here")
-invisible(lapply(packages, library, character.only = TRUE))
-rm(packages)
-
-
-# Set wd-------------
-here::here()
-
-# Get data -----------
-# Configure database time zone
-Sys.setenv(TZ = "America/Chicago")
-Sys.setenv(ORA_SDTZ = "America/Chicago")
-
-# read connection string (git-ignored)
-source("data-raw/database-connect-string.R")
-
-## connect to database ------------
-tbidb <- ROracle::dbConnect(
-  dbDriver("Oracle"),
-  dbname = connect_string,
-  username = "mts_planning_data",
-  password = keyring::key_get("mts_planning_data_pw")
-)
-
-dictionary <-
-  ROracle::dbReadTable(tbidb, "TBI19_DICTIONARY") %>%
-  select(-table) %>%
-  unique() %>%
-  as.data.table()
-# code to compile dictionary, and add numeric column descriptors
-
-tbi_dict <- dictionary %>%
-  filter(category %in% c(
-    "Demographics",
-    "Attitudes toward autonomous vehicles",
-    "Shared mobility",
-    "Commute",
-    "Trips",
-    "Days without travel",
-    "Delivery & online shopping",
-    "Vehicle"
-  )) %>%
-  # we'll probably want to play with the ORDERING of this case-when command
-  # to assign variables to tables when they appear in multiple tables.
-  mutate(which_table = case_when(
-    variable %in% names(per) ~ "per",
-    variable %in% names(hh) ~ "hh",
-    variable %in% names(trip) ~ "trip",
-    variable %in% names(day) ~ "day",
-    variable %in% names(veh) ~ "veh"
-  )) %>%
-  # find the weighting field for each table:
-  mutate(wt_field = case_when(
-    which_table == "per" ~ "person_weight",
-    which_table == "hh" ~ "hh_weight",
-    which_table == "trip" ~ "trip_weight",
-    which_table == "day" ~ "day_weight",
-    which_table == "veh" ~ "hh_weight"
-  ))
-
-
+# # Packages -------------
+# packages <- list("bit64", "tidyverse", "data.table", "DBI", "ROracle", "keyring", "here")
+# invisible(lapply(packages, library, character.only = TRUE))
+# rm(packages)
+#
+#
+# # Set wd-------------
+# here::here()
+#
+# # Get data -----------
+# # Configure database time zone
+# Sys.setenv(TZ = "America/Chicago")
+# Sys.setenv(ORA_SDTZ = "America/Chicago")
+#
+# ## connect to database ------------
+# tbidb <- ROracle::dbConnect(
+#   dbDriver("Oracle"),
+#   dbname = keyring::key_get("mts_planning_database_string"),
+#   username = "mts_planning_data",
+#   password = keyring::key_get("mts_planning_data_pw"))
+#
+# db_dictionary <-
+#   ROracle::dbReadTable(tbidb, "TBI19_DICTIONARY") %>%
+#   select(-table) %>%
+#   unique() %>%
+#   as.data.table()
+#
 # # Appending missing variables to tbi_dict
 # missing_vars <-
-# lapply(tbi_tables, function(x) setdiff(names(x), dictionary$variable) %>% as.data.frame()) %>%
-#   rbindlist(idcol = "which_table")
-#
-# names(missing_vars) <- c("which_table", "variable")
-#
-# # trim out ID's and weights
-# missing_vars <-
-# missing_vars %>%
-#   filter(!grepl("_id", variable)) %>%
-#   filter(!grepl("_weight", variable)) %>%
-#   filter(!grepl("_num", variable)) %>%
-#   filter(!grepl("_date", variable)) %>%
+#   lapply(tbi_tables, function(x) setdiff(names(x), db_dictionary$variable) %>% as.data.frame()) %>%
+#   bind_rows(.id = "which_table") %>%
+#   rename(variable = ".") %>%
 #   mutate(wt_field = case_when(
 #     which_table == "per" ~ "person_weight",
 #     which_table == "hh" ~ "hh_weight",
 #     which_table == "trip" ~ "trip_weight",
 #     which_table == "day" ~ "day_weight",
-#     which_table == "veh" ~ "hh_weight"
+#     which_table == "veh" ~ "hh_weight",
+#     which_table == "trip_purpose" ~ "trip_purpose_weight"
 #   ))
 #
-# write.csv(full_join(missing_vars, dictionary), "data-raw/full_dictionary.csv")
+# full_dictionary <- db_dictionary %>%
+#   # we'll probably want to play with the ORDERING of this case-when command
+#   # to assign variables to tables when they appear in multiple tables.
+#   mutate(which_table = case_when(
+#     variable %in% names(per) ~ "per",
+#     variable %in% names(hh) ~ "hh",
+#     variable %in% names(trip) ~ "trip",
+#     variable %in% names(day) ~ "day",
+#     variable %in% names(veh) ~ "veh",
+#     variable %in% names(trip_purpose) ~ "trip_purpose"
+#   )) %>%
+#   # find the weighting field for each table:
+#   mutate(wt_field = case_when(
+#     which_table == "per" ~ "person_weight",
+#     which_table == "hh" ~ "hh_weight",
+#     which_table == "trip" ~ "trip_weight",
+#     which_table == "day" ~ "day_weight",
+#     which_table == "veh" ~ "hh_weight",
+#     which_table == "trip_purpose" ~ "trip_purpose_weight"
+#   )) %>%
+#   # join to our missing variables:
+#   full_join(missing_vars) %>%
+#   # remove survey metadata fields:
+#   filter(!category %in% c("Survey metadata"))
+#
+# write.csv(full_dictionary, "data-raw/full_dictionary_to_fill.csv")
 
 
 # some work by hand occurred:
-tbi_dict_numeric <- read.csv("data-raw/dictionary_numeric_cols.csv")
+tbi_dict <- read.csv('data-raw/full_dictionary_filled.csv')
 
-tbi_dict <- bind_rows(tbi_dict_numeric, tbi_dict)
+tbi_dict <- tbi_dict %>%
+  filter(!category %in% c("Survey metadata", "PII"))
 
 
 usethis::use_data(tbi_dict,
@@ -98,4 +81,4 @@ usethis::use_data(tbi_dict,
 )
 
 ## Clean up---------------
-rm(connect_string, tbi_dict_numeric, tbidb)
+# rm(db_dictionary, full_dictionary)

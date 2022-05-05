@@ -6,13 +6,14 @@
 # to weed out the (presumably) white people who answer as "human race", "none of your business" etc :/
 
 per_race <-
-  tbi$per %>%
+ per %>%
   select(person_id, starts_with("ethnicity")) %>%
   pivot_longer(cols = starts_with("ethnicity"), names_prefix = "ethnicity_") %>%
   filter(value == "Yes") %>%
   select(-value) %>%
   group_by(person_id) %>%
   add_tally(name = "num_races") %>%
+  ungroup() %>%
   mutate(race = recode(name,
     "afam" = "Black or African-American",
     "white" = "White",
@@ -23,6 +24,13 @@ per_race <-
     "hapi" = "Native Hawaiian or other Pacific Islander",
     "other" = "Other"
   )) %>%
-  mutate(race_ethnicity_simple = ifelse(num_races >= 2, "2 or more races", race)) %>%
-  select(-num_races, -name, -race) %>%
+  mutate(race_ethnicity = ifelse(num_races >= 2, "2 or more races", race)) %>%
+  select(person_id, race_ethnicity) %>%
   unique()
+
+per <- per %>%
+  left_join(per_race)
+
+rm(per_race)
+
+message("New variable added: a simple race category, race_ethnicity")

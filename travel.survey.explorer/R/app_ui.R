@@ -22,7 +22,11 @@ app_ui <- function(request) {
         sidebarLayout(
           sidebarPanel = sidebarPanel(
             width = 3,
-            mod_input_category_variable_ui("1w_input_1")
+            mod_input_category_variable_ui("1w_input_1"),
+            # Filters go here
+            selectInput(inputId = "1w_input_year", "Survey Year"),
+            selectInput(inputId = "1w_input_geography", "County or City*"),
+            actionButton("go_one_way", "Create Table")
           ),
           mainPanel = mainPanel(
             mod_plot_one_way_ui("plot_one_way_ui_1"),
@@ -33,12 +37,22 @@ app_ui <- function(request) {
       tabPanel(
         title = "Two-Way Table",
         wellPanel(
+          h3("Filter data"),
+          # Filters go here
+          selectInput(inputId = "2w_input_year", "Survey Year", choices = c("2018-2019", "2020-2021")),
+          selectInput(inputId = "2w_input_geography", "County or City*"),
+        ),
+        wellPanel(
           h3("First variable"),
           mod_input_category_variable_ui("2w_input_2")
         ),
         wellPanel(
           h3("Second variable"),
           mod_input_category_variable_ui("2w_input_1")
+        ),
+        wellPanel(
+          # go_two_way_button
+          actionButton("go_two_way", "Create Crosstab")
         ),
         mod_table_two_way_ui("table_two_way_ui_1")
       ),

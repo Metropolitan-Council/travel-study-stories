@@ -25,7 +25,7 @@
 #' @importFrom purrr pluck
 #' @importFrom data.table as.ITime
 #'
-create_one_way_table <- function(variable_row) {
+create_one_way_table <- function(variable_row, tbi_tables) {
 
   this_table <-
     tbi_dict %>%
