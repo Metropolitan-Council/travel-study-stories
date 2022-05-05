@@ -24,8 +24,20 @@ app_ui <- function(request) {
             width = 3,
             mod_input_category_variable_ui("1w_input_1"),
             # Filters go here
-            selectInput(inputId = "1w_input_year", "Survey Year"),
-            selectInput(inputId = "1w_input_geography", "County or City*"),
+            selectInput(inputId = "1w_input_year", "Survey Year",
+                        choices = c("2018-2019", "2020-2021")),
+            selectInput(inputId = "1w_input_geography", "County or City*",
+                        choices =
+                          c(
+                            "Hennepin MN",
+                            "Ramsey MN",
+                            "Dakota MN",
+                            "Anoka MN",
+                            "Washington MN",
+                            "Wright MN",
+                            "Scott MN",
+                            "Ring Counties"
+                          )),
             actionButton("go_one_way", "Create Table")
           ),
           mainPanel = mainPanel(
@@ -40,7 +52,19 @@ app_ui <- function(request) {
           h3("Filter data"),
           # Filters go here
           selectInput(inputId = "2w_input_year", "Survey Year", choices = c("2018-2019", "2020-2021")),
-          selectInput(inputId = "2w_input_geography", "County or City*"),
+          selectInput(inputId = "2w_input_geography", "County or City*",
+                      choices =
+                        c(
+                          "Hennepin MN",
+                          "Ramsey MN",
+                          "Dakota MN",
+                          "Anoka MN",
+                          "Washington MN",
+                          "Wright MN",
+                          "Scott MN",
+                          "Ring Counties"
+                        )
+          ),
         ),
         wellPanel(
           h3("First variable"),
