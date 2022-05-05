@@ -51,6 +51,9 @@ usethis::use_data(tbi_tables,
 # Work on the dictionary ------------------
 source("data-raw/create-dictionary.R")
 
-
+# Create additional outputs for app --------------
+source("data-raw/histogram_breaks.R")
+source("data-raw/input_list.R")
+source("data-raw/missing_codes.R")
 
 
