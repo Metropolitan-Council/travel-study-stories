@@ -12,7 +12,7 @@ mod_input_utils_ui <- function(id) {
   tagList()
 }
 
-#' input_utils Server Functions
+#' @title input_utils Server Functions
 #'
 #' @noRd
 #'
@@ -26,7 +26,7 @@ mod_input_utils_server <- function(id, user_inputs) {
 
     # generate table
     table_return <- reactive({
-      create_one_way_table(user_inputs$variable)
+      create_one_way_table(user_inputs$variable, tbi_tables = tbi_tables)
     })
 
     # find contextual data, like variable names, question text, etc.
@@ -34,7 +34,7 @@ mod_input_utils_server <- function(id, user_inputs) {
       # browser()
       tbi_dict %>%
         dplyr::filter(variable == user_inputs$variable) %>%
-        dplyr::select(variable_label, survey_question, variable_logic, which_table, category, units) %>%
+        dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
         unique()
     })
 
