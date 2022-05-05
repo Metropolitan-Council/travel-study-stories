@@ -25,7 +25,6 @@ app_ui <- function(request) {
             mod_input_category_variable_ui("1w_input_1")
           ),
           mainPanel = mainPanel(
-            mod_table_one_way_ui("table_one_way_ui_1"),
             mod_plot_one_way_ui("plot_one_way_ui_1"),
             mod_table_one_way_ui("table_one_way_ui_1")
           )
