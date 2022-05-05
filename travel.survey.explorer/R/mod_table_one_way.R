@@ -14,7 +14,7 @@ mod_table_one_way_ui <- function(id) {
   )
 }
 
-#' table_one_way Server Functions
+#'  @title table_one_way Server Functions
 #'
 #' @noRd
 mod_table_one_way_server <- function(id, one_way_inputs) {

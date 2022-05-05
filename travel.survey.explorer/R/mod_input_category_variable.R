@@ -27,7 +27,7 @@ mod_input_category_variable_ui <- function(id) {
   )
 }
 
-#' input_category_variable Server Functions
+#'  @title input_category_variable Server Functions
 #'
 #' @noRd
 mod_input_category_variable_server <- function(id) {

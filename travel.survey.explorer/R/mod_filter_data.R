@@ -13,7 +13,7 @@
 #   )
 # }
 
-#' filter_data_1way Server Functions
+#' @title filter_data_1way Server Functions
 #'
 #' @noRd
 mod_filter_data_1way_server <- function(id) {
@@ -79,7 +79,7 @@ mod_filter_data_1way_server <- function(id) {
 }
 
 
-#' filter_data_2way Server Functions
+#' @title filter_data_2way Server Functions
 #'
 #' @noRd
 mod_filter_data_2way_server <- function(id) {
