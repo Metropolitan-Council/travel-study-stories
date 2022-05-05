@@ -1,7 +1,7 @@
 ## code to prepare `input_list` dataset goes here
 
 library(dplyr)
-library(travel.survey.explorer)
+# library(travel.survey.explorer)
 
 input_list <- purrr::map(unique(tbi_dict$category), function(x) {
   tb <- tbi_dict %>%
@@ -27,9 +27,9 @@ usethis::use_data(input_list, overwrite = TRUE)
 ## code to prepare `input_list` dataset goes here
 
 library(dplyr)
-library(travel.survey.explorer)
+# library(travel.survey.explorer)
 
-input_list_question <- purrr::map(unique(tbi_dict$variable), function(x) {
+input_question_list <- purrr::map(unique(tbi_dict$variable), function(x) {
   tb <- tbi_dict %>%
     dplyr::filter(variable == x)
 
