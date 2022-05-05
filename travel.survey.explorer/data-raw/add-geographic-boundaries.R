@@ -15,6 +15,7 @@ county_list <-
   "Scott MN"
 )
 
+
 ### List of Cities ----------
 city_list <- c("Minneapolis", "St. Paul")
 
@@ -176,7 +177,8 @@ hh_cty <-
   st_join(hh_sf, cty_sf, join = st_within) %>%
   st_drop_geometry() %>%
   mutate(hh_county = case_when(
-    county %in% county_list ~ county
+    county %in% county_list ~ county,
+    TRUE ~ "Ring Counties"
   )) %>%
   select(-county)
 
