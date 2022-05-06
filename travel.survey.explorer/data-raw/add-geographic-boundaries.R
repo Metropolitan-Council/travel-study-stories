@@ -247,34 +247,28 @@ trip_o_cty <-
   st_join(trip_o_sf, cty_sf, join = st_within) %>%
   st_drop_geometry() %>%
   rename(trip_o_county = county) %>%
-  mutate(trip_o_county = case_when(
-    trip_o_county %in% county_list ~ trip_o_county
-  ))
+  mutate(trip_o_county = ifelse(
+    trip_o_county %in% county_list, trip_o_county, "Outside study area"))
 
 trip_d_cty <-
   st_join(trip_d_sf, cty_sf, join = st_within) %>%
   st_drop_geometry() %>%
   rename(trip_d_county = county) %>%
-  mutate(trip_d_county = case_when(
-    trip_d_county %in% county_list ~ trip_d_county
-  ))
+  mutate(trip_d_county = ifelse(
+    trip_d_county %in% county_list, trip_d_county, "Outside study area"))
 
 ##### City: ----
 message("... trip origin/destination city...")
 trip_o_ctu <-
   st_join(trip_o_sf, ctu_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(trip_o_city = case_when(
-    community_name %in% city_list ~ community_name
-  )) %>%
+  mutate(trip_o_city =ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
   select(-community_name)
 
 trip_d_ctu <-
   st_join(trip_d_sf, ctu_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(trip_d_city = case_when(
-    community_name %in% city_list ~ community_name
-  )) %>%
+  mutate(trip_d_city =ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
   select(-community_name)
 
 ##### Thrive: -----
@@ -321,7 +315,8 @@ work_cty <-
   st_join(work_sf, cty_sf, join = st_within) %>%
   st_drop_geometry() %>%
   mutate(work_county = case_when(
-    county %in% county_list ~ county
+    county %in% county_list ~ county,
+    TRUE ~ "Outside study area"
   )) %>%
   select(-county)
 
@@ -329,9 +324,7 @@ work_cty <-
 work_ctu <-
   st_join(work_sf, ctu_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(work_city = case_when(
-    community_name %in% city_list ~ community_name
-  )) %>%
+  mutate(work_city =ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
   select(-community_name)
 
 ##### Thrive: ----
@@ -365,7 +358,8 @@ school_cty <-
   st_join(school_sf, cty_sf, join = st_within) %>%
   st_drop_geometry() %>%
   mutate(school_county = case_when(
-    county %in% county_list ~ county
+    county %in% county_list ~ county,
+    TRUE ~ "Outside study area"
   )) %>%
   select(-county)
 
@@ -373,9 +367,7 @@ school_cty <-
 school_ctu <-
   st_join(school_sf, ctu_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(school_city = case_when(
-    community_name %in% city_list ~ community_name
-  )) %>%
+  mutate(school_city =ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
   select(-community_name)
 
 
@@ -399,7 +391,7 @@ per <- per %>%
 
 # Clean up:
 rm(
-  "city_list",
+  # "city_list",
   "county_list",
   "ctu_sf",
   "cty_sf",
