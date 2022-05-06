@@ -18,7 +18,7 @@ mod_about_ui <- function(id) {
   )
 }
 
-#' about Server Functions
+#' @title about Server Functions
 #'
 #' @noRd
 mod_about_server <- function(id) {

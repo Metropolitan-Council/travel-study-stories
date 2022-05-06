@@ -14,7 +14,7 @@ mod_table_two_way_ui <- function(id) {
   )
 }
 
-#' table_two_way Server Functions
+#' @title table_two_way Server Functions
 #'
 #' @noRd
 mod_table_two_way_server <- function(id) {
