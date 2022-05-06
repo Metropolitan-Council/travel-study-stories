@@ -51,9 +51,6 @@ mod_filter_data_1way_server <- function(id) {
 
 
     })
-
-    # return a filtered version of tbi_tables
-    return(filtered_tbi_tables)
   })
 }
 
@@ -96,8 +93,5 @@ mod_filter_data_2way_server <- function(id) {
 
 
     })
-
-    # return a filtered version of tbi_tables
-    return(filtered_tbi_tables)
   })
 }
