@@ -5,22 +5,18 @@ library(dplyr)
 
 ### List of Counties ----------
 county_list <-
-  c(
-  "Hennepin MN",
-  "Ramsey MN",
-  "Dakota MN",
-  "Anoka MN",
-  "Washington MN",
-  "Wright MN",
-  "Scott MN"
-)
+  c("Anoka MN", "Carver MN", "Chisago MN", "Dakota MN", "Goodhue MN",
+    "Hennepin MN", "Isanti MN", "Le Sueur MN", "McLeod MN", "Pierce WI",
+    "Polk WI", "Ramsey MN", "Rice MN", "Scott MN", "Sherburne MN",
+    "Sibley MN", "St. Croix WI", "Washington MN", "Wright MN")
 
 
 ### List of Cities ----------
-city_list <- c("Minneapolis", "St. Paul")
+# city_list <- c("Minneapolis", "St. Paul")
 
 ### Create SF objects from TBI tables ------------
 message("Creating SF objects from TBI Tables")
+
 ##### households -----
 hh_sf <- hh %>%
   select(hh_id, home_lon, home_lat) %>%
