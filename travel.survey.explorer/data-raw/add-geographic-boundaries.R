@@ -25,6 +25,7 @@ hh_sf <- hh %>%
     coords = c("home_lon", "home_lat"),
     crs = 4326
   )
+
 ##### trip origins/destinations -----
 trip_d_sf <- trip %>%
   select(trip_id, d_lon, d_lat) %>%
@@ -172,20 +173,19 @@ hh_mpo <-
 hh_cty <-
   st_join(hh_sf, cty_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(hh_county = case_when(
-    county %in% county_list ~ county,
-    TRUE ~ "Ring Counties"
-  )) %>%
-  select(-county)
+  group_by(county) %>% add_tally() %>% ungroup() %>%
+  mutate(hh_county = case_when(!is.na(county) ~ paste0(county, " (n = ", n , ")"))) %>%
+  select(-county, -n)
 
 ##### City: ----
 hh_ctu <-
   st_join(hh_sf, ctu_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(hh_city = case_when(
-    community_name %in% city_list ~ community_name
-  )) %>%
-  select(-community_name)
+  group_by(community_name) %>%
+  add_tally() %>%
+  ungroup() %>%
+  mutate(hh_city = case_when(!is.na(community_name) ~ paste0(community_name, " (n = ", n , ")"))) %>%
+  select(-community_name, -n)
 
 ##### Thrive: ----
 hh_thrive <-
