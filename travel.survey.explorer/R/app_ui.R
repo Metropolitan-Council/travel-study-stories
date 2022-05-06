@@ -27,53 +27,7 @@ app_ui <- function(request) {
           sidebarPanel = sidebarPanel(
             width = 3,
             mod_input_category_variable_ui("oneway_input_1"),
-            # Filters go here
-            checkboxInput(
-              inputId = "oneway_input_mpo",
-              label = "Restrict to Households in Twin Cities region (MPO)",
-              value = FALSE
-            ),
-            selectInput(
-              inputId = "oneway_input_year",
-              "Survey Year",
-              choices = c("2018-2019", "2020-2021")
-            ),
-            selectInput(
-              inputId = "oneway_input_counties",
-              "Household County",
-              multiple = T,
-              choices =
-                c(
-                  "Hennepin MN",
-                  "Ramsey MN",
-                  "Dakota MN",
-                  "Anoka MN",
-                  "Washington MN",
-                  "Wright MN",
-                  "Scott MN",
-                  "Ring Counties"
-                ),
-              selected =
-                c(
-                  "Hennepin MN",
-                  "Ramsey MN",
-                  "Dakota MN",
-                  "Anoka MN",
-                  "Washington MN",
-                  "Wright MN",
-                  "Scott MN",
-                  "Ring Counties"
-                )
-            ),
-            selectInput(
-              inputId = "oneway_input_cities",
-              "Household City/Township",
-              multiple = T,
-              choices =
-                c("Minneapolis", "St. Paul"),
-              selected = ""
-            ),
-            actionButton("go_one_way", "Create Table")
+            mod_filters_oneway_ui("oneway_filters")
           ),
           mainPanel = mainPanel(
             mod_plot_one_way_ui("plot_one_way_ui_1"),
@@ -86,63 +40,15 @@ app_ui <- function(request) {
         wellPanel(
           h3("Filter data"),
           # Filters go here
-          checkboxInput(
-            inputId = "twoway_input_mpo",
-            label = "Filter to households in Twin Cities region (MPO)",
-            value = FALSE
-          ),
-          selectInput(
-            inputId = "twoway_input_year",
-            "Survey Year",
-            choices = c("2018-2019", "2020-2021"),
-            multiple = F,
-            selected = "2018-2019"
-          ),
-          selectInput(
-            inputId = "twoway_input_counties",
-            "Household County",
-            multiple = T,
-            choices =
-              c(
-                "Hennepin MN",
-                "Ramsey MN",
-                "Dakota MN",
-                "Anoka MN",
-                "Washington MN",
-                "Wright MN",
-                "Scott MN",
-                "Ring Counties"
-              ),
-            selected =
-              c(
-                "Hennepin MN",
-                "Ramsey MN",
-                "Dakota MN",
-                "Anoka MN",
-                "Washington MN",
-                "Wright MN",
-                "Scott MN",
-                "Ring Counties"
-              )
-          ),
-          selectInput(
-            inputId = "twoway_input_cities",
-            "Household City/Township",
-            multiple = T,
-            choices =
-              c("Minneapolis", "St. Paul"),
-            selected = ""
-          )
 
-          )
         ),
         wellPanel(
           h3("First variable"),
-          mod_input_category_variable_ui("2w_input_2")
+          mod_input_category_variable_ui("twoway_input_2")
         ),
         wellPanel(
           h3("Second variable"),
-          mod_input_category_variable_ui("2w_input_1")
+          mod_input_category_variable_ui("twoway_input_1")
         ),
         wellPanel(# go_two_way_button
           actionButton("go_two_way", "Create Crosstab")),
