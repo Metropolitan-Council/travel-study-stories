@@ -47,7 +47,7 @@ create_one_way_table <- function(variable_row, tbi_tables) {
     dplyr::summarize_all(class) %>%
     purrr::pluck(1)
 
-  tab <- tbi_tables[[this_table]] %>%
+  tab <- filtered_tbi_tables_1way()[[this_table]] %>%
     dplyr::filter(!(get(variable_row) %in% missing_codes))
 
   if (vartype == "numeric") {

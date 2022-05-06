@@ -19,59 +19,38 @@
 mod_filter_data_1way_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    # go_button
 
-    filtered_tbi_tables <- reactive({
-      tbi_tables
-      # hh <- hh %>%
-      # filter(hh_in_mpo == "in_mpo")
-      # ### Trim veh: Vehicles owned by HHs in MPO----------
-      # veh <- veh %>%
-      #   left_join(hh %>% select(hh_id, hh_in_mpo)) %>%
-      #   filter(hh_in_mpo == "in_mpo") %>%
-      #   select(-hh_in_mpo)
-      #
-      # ### Trim per: people who live in MPO----------
-      # per <- per %>%
-      #   left_join(hh %>% select(hh_id, hh_in_mpo)) %>%
-      #   filter(hh_in_mpo == "in_mpo") %>%
-      #   select(-hh_in_mpo)
-      #
-      # ### Trim day: days for people that live in MPO----------
-      # day <- day %>%
-      #   left_join(hh %>% select(hh_id, hh_in_mpo)) %>%
-      #   filter(hh_in_mpo == "in_mpo") %>%
-      #   select(-hh_in_mpo)
-      #
-      # ### Trim trip: trips made by HHs in MPO ----------
-      # trip <- trip %>%
-      #   left_join(select(per, person_id, hh_id)) %>%
-      #   left_join(select(hh, hh_id, hh_in_mpo)) %>%
-      #   filter(hh_in_mpo == "in_mpo") %>%
-      #   select(-hh_in_mpo)
+    ### Default value for filtered_tables == tbi_tables ---
+    filtered_tbi_tables_1way <- reactive(tbi_tables)
+
+    ### Default list of hh_ids == hh$hh_ids ----------
+    filtered_hh_ids_1way <- reactive(tbi_tables$hh$hh_id)
+
+    # On go_one_way button, filter
+    observeEvent(input$go_one_way, {
+
+      ### Filter to hh_ids within MPO ----------
+      if(input$twoway_input_mpo == TRUE){
+        filtered_hh_ids() <-
+          tbi_tables$hh %>%
+          filter(hh_in_mpo == "Household in Twin Cities region") %>%
+          # keep only the household ids in the existing filtered subset:
+          right_join(filtered_hh_ids()) %>%
+          select(hh_id)
+      } else{}
+
+      ### Filter to hh_ids within selected counties ----------
+      filtered_hh_ids_1way() <-
+          tbi_tables$hh %>%
+          filter(hh_cty %in% input$oneway_input_counties) %>%
+          right_join(filtered_hh_ids_1way()) %>%
+          select(hh_id)
+
+      ### Filter datasets: ----------
+      filtered_tbi_tables_1way() <- purrr::map(tbi_tables, ~ dplyr::filter(., hh_id %in% filtered_hh_ids_1way()))
+
 
     })
-
-    # observeEvent(input$go_one_way,
-    #              {
-    #
-    #                # Survey year: Filter all tables to appropriate survey year 1w_input_year
-    #
-    #                # Did the user filter to geography?
-    #                # if no, nothing
-    #                # if yes -
-    #                   # figure out if the user has selected a county or a city in 1w_input_geography
-    #                   # if county,
-    #                       # filter hh to those that are in the selected county
-    #                       # then filter the per, trip, day, and veh of the filtered households
-    #                   # if city,
-    #                        # filter hh to those that are in the selected city
-    #                        # then filter the per, trip, day, and veh of the filtered households
-    #
-    #                filtered_tbi_tables() <- # put filtered data here
-    #              },
-    #              ignoreInit = TRUE
-    # )
 
     # return a filtered version of tbi_tables
     return(filtered_tbi_tables)
@@ -85,32 +64,38 @@ mod_filter_data_1way_server <- function(id) {
 mod_filter_data_2way_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    # go_button
 
-    filtered_tbi_tables <- reactive({
-      tbi_tables
+    ### Default value for filtered_tables == tbi_tables ---
+    filtered_tbi_tables_2way <- reactive(tbi_tables)
+
+    ### Default list of hh_ids == hh$hh_ids ----------
+    filtered_hh_ids_2way <- reactive(tbi_tables$hh$hh_id)
+
+    # On go_one_way button, filter
+    observeEvent(input$go_one_way, {
+
+      ### Filter to hh_ids within MPO ----------
+      if(input$twoway_input_mpo == TRUE){
+        filtered_hh_ids() <-
+          tbi_tables$hh %>%
+          filter(hh_in_mpo == "Household in Twin Cities region") %>%
+          # keep only the household ids in the existing filtered subset:
+          right_join(filtered_hh_ids()) %>%
+          select(hh_id)
+      } else{}
+
+      ### Filter to hh_ids within selected counties ----------
+      filtered_hh_ids_2way() <-
+        tbi_tables$hh %>%
+        filter(hh_cty %in% input$oneway_input_counties) %>%
+        right_join(filtered_hh_ids_2way()) %>%
+        select(hh_id)
+
+      ### Filter datasets: ----------
+      filtered_tbi_tables_2way() <- purrr::map(tbi_tables, ~ dplyr::filter(., hh_id %in% filtered_hh_ids_2way()))
+
+
     })
-
-    # observeEvent(input$go_two_way,
-    #              {
-    #
-    #                # Survey year: Filter all tables to appropriate survey year
-    #
-    #                # Did the user filter to geography?
-    #                # if no, nothing
-    #                # if yes -
-    #                # figure out if the user has selected a county or a city in 2w_input_geography
-    #                # if county,
-    #                # filter hh to those that are in the selected county
-    #                # then filter the per, trip, day, and veh of the filtered households
-    #                # if city,
-    #                # filter hh to those that are in the selected city
-    #                # then filter the per, trip, day, and veh of the filtered households
-    #
-    #                filtered_tbi_tables() <- # put filtered data here
-    #              },
-    #              ignoreInit = TRUE
-    # )
 
     # return a filtered version of tbi_tables
     return(filtered_tbi_tables)

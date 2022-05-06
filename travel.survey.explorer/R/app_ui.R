@@ -22,12 +22,29 @@ app_ui <- function(request) {
         sidebarLayout(
           sidebarPanel = sidebarPanel(
             width = 3,
-            mod_input_category_variable_ui("1w_input_1")
+            mod_input_category_variable_ui("oneway_input_1"),
             # Filters go here
-            selectInput(inputId = "1w_input_year", "Survey Year",
+            checkboxInput(inputId = "oneway_input_mpo",
+                          label = "Filter to households in Twin Cities region (MPO)",
+                          value = FALSE),
+            selectInput(inputId = "oneway_input_year",
+                        "Survey Year",
                         choices = c("2018-2019", "2020-2021")),
-            selectInput(inputId = "1w_input_geography", "County or City*",
+            selectInput(inputId = "oneway_input_counties",
+                        "County",
+                        multiple = T,
                         choices =
+                          c(
+                            "Hennepin MN",
+                            "Ramsey MN",
+                            "Dakota MN",
+                            "Anoka MN",
+                            "Washington MN",
+                            "Wright MN",
+                            "Scott MN",
+                            "Ring Counties"
+                          ),
+                        selected =
                           c(
                             "Hennepin MN",
                             "Ramsey MN",
@@ -51,8 +68,16 @@ app_ui <- function(request) {
         wellPanel(
           h3("Filter data")
           # Filters go here
-          selectInput(inputId = "2w_input_year", "Survey Year", choices = c("2018-2019", "2020-2021")),
-          selectInput(inputId = "2w_input_geography", "County or City*",
+          checkboxInput(inputId = "twoway_input_mpo",
+                        label = "Filter to households in Twin Cities region (MPO)",
+                        value = FALSE),
+          selectInput(inputId = "twoway_input_year",
+                      "Survey Year",
+                      choices = c("2018-2019", "2020-2021"),
+                      multiple = F,
+                      selected = "2018-2019"),
+          selectInput(inputId = "twoway_input_county",
+                      "County",
                       choices =
                         c(
                           "Hennepin MN",
@@ -63,7 +88,19 @@ app_ui <- function(request) {
                           "Wright MN",
                           "Scott MN",
                           "Ring Counties"
-                        )
+                        ),
+                      multiple = T,
+                      selected = c(
+                        "Hennepin MN",
+                        "Ramsey MN",
+                        "Dakota MN",
+                        "Anoka MN",
+                        "Washington MN",
+                        "Wright MN",
+                        "Scott MN",
+                        "Ring Counties"
+                      ),
+
           ),
         ),
         wellPanel(
