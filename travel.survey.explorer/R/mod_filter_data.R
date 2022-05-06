@@ -41,10 +41,24 @@ mod_filter_data_1way_server <- function(id) {
 
       ### Filter to hh_ids within selected counties ----------
       filtered_hh_ids_1way() <-
-          tbi_tables$hh %>%
-          filter(hh_cty %in% input$oneway_input_counties) %>%
-          right_join(filtered_hh_ids_1way()) %>%
-          select(hh_id)
+        tbi_tables$hh %>%
+        filter(hh_cty %in% input$oneway_input_counties) %>%
+        right_join(filtered_hh_ids_1way()) %>%
+        select(hh_id)
+
+      ### Filter to hh_ids in selected city ----------
+      filtered_hh_ids_1way() <-
+        tbi_tables$hh %>%
+        filter(hh_ctu %in% input$oneway_input_cities) %>%
+        right_join(filtered_hh_ids_1way()) %>%
+        select(hh_id)
+
+      ### Filter to hh_ids in selected survey year ----------
+      filtered_hh_ids_1way() <-
+        tbi_tables$hh %>%
+        filter(hh_ctu %in% input$oneway_input_year) %>%
+        right_join(filtered_hh_ids_1way()) %>%
+        select(hh_id)
 
       ### Filter datasets: ----------
       filtered_tbi_tables_1way() <- purrr::map(tbi_tables, ~ dplyr::filter(., hh_id %in% filtered_hh_ids_1way()))
@@ -84,7 +98,21 @@ mod_filter_data_2way_server <- function(id) {
       ### Filter to hh_ids within selected counties ----------
       filtered_hh_ids_2way() <-
         tbi_tables$hh %>%
-        filter(hh_cty %in% input$oneway_input_counties) %>%
+        filter(hh_cty %in% input$twoway_input_counties) %>%
+        right_join(filtered_hh_ids_2way()) %>%
+        select(hh_id)
+
+      ### Filter to hh_ids in selected city ----------
+      filtered_hh_ids_2way() <-
+        tbi_tables$hh %>%
+        filter(hh_ctu %in% input$twoway_input_cities) %>%
+        right_join(filtered_hh_ids_2way()) %>%
+        select(hh_id)
+
+      ### Filter to hh_ids in selected survey year ----------
+      filtered_hh_ids_2way() <-
+        tbi_tables$hh %>%
+        filter(hh_ctu %in% input$twoway_input_year) %>%
         right_join(filtered_hh_ids_2way()) %>%
         select(hh_id)
 
