@@ -14,7 +14,7 @@ mod_plot_one_way_ui <- function(id) {
   )
 }
 
-#' plot_one_way Server Functions
+#' @title plot_one_way Server Functions
 #'
 #' @noRd
 mod_plot_one_way_server <- function(id, one_way_inputs) {

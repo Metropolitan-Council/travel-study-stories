@@ -22,7 +22,7 @@ app_ui <- function(request) {
         sidebarLayout(
           sidebarPanel = sidebarPanel(
             width = 3,
-            mod_input_category_variable_ui("1w_input_1"),
+            mod_input_category_variable_ui("1w_input_1")
             # Filters go here
             selectInput(inputId = "1w_input_year", "Survey Year",
                         choices = c("2018-2019", "2020-2021")),
@@ -49,7 +49,7 @@ app_ui <- function(request) {
       tabPanel(
         title = "Two-Way Table",
         wellPanel(
-          h3("Filter data"),
+          h3("Filter data")
           # Filters go here
           selectInput(inputId = "2w_input_year", "Survey Year", choices = c("2018-2019", "2020-2021")),
           selectInput(inputId = "2w_input_geography", "County or City*",
