@@ -31,11 +31,11 @@ mod_filter_data_1way_server <- function(id) {
 
       ### Filter to hh_ids within MPO ----------
       if(input$twoway_input_mpo == TRUE){
-        filtered_hh_ids() <-
+        filtered_hh_ids_1way() <-
           tbi_tables$hh %>%
           filter(hh_in_mpo == "Household in Twin Cities region") %>%
           # keep only the household ids in the existing filtered subset:
-          right_join(filtered_hh_ids()) %>%
+          right_join(filtered_hh_ids_1way()) %>%
           select(hh_id)
       } else{}
 
@@ -76,11 +76,11 @@ mod_filter_data_2way_server <- function(id) {
 
       ### Filter to hh_ids within MPO ----------
       if(input$twoway_input_mpo == TRUE){
-        filtered_hh_ids() <-
+        filtered_hh_ids_2way() <-
           tbi_tables$hh %>%
           filter(hh_in_mpo == "Household in Twin Cities region") %>%
           # keep only the household ids in the existing filtered subset:
-          right_join(filtered_hh_ids()) %>%
+          right_join(filtered_hh_ids_2way()) %>%
           select(hh_id)
       } else{}
 
