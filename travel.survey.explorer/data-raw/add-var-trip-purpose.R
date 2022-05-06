@@ -139,9 +139,8 @@ trip_purpose <- bind_rows(homebasedtrips, nonhomebasedtrips_o, nonhomebasedtrips
          -"d_purpose_imputed",
          -"o_purpose_category_imputed",
          -"o_purpose_imputed") %>%
-  rename(trip_purpose_weight = trip_weight)
-
-setdiff(names(trip_purpose), names(trip))
+  rename(trip_purpose_weight = trip_weight) %>%
+  left_join(trip %>% select(trip_id, hh_id), by = "trip_id")
 
 rm(homebasedtrips,
    nonhomebasedtrips_o,
