@@ -25,7 +25,7 @@
 #' @importFrom purrr pluck
 #' @importFrom data.table as.ITime
 #'
-create_one_way_table <- function(variable_row, tbi_tables = tbi_tables) {
+create_one_way_table <- function(variable_row, user_hhs) {
 
   this_table <-
     tbi_dict %>%
@@ -58,6 +58,8 @@ create_one_way_table <- function(variable_row, tbi_tables = tbi_tables) {
       tab %>%
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
       filter(!get(variable_row) == Inf) %>%
+      # get our households:
+      filter(hh_id %in% user_hhs) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_row)),
                        median = srvyr::survey_median(get(variable_row))) %>%
@@ -70,6 +72,8 @@ create_one_way_table <- function(variable_row, tbi_tables = tbi_tables) {
 
 
     tab <- tab %>%
+      # get our households:
+      filter(hh_id %in% user_hhs) %>%
       dplyr::mutate(cuts = cut(
         get(variable_row),
         breaks = brks,
@@ -84,6 +88,8 @@ create_one_way_table <- function(variable_row, tbi_tables = tbi_tables) {
 
     tab_mean <-
       tab %>%
+      # get our households:
+      filter(hh_id %in% user_hhs) %>%
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
       filter(!get(variable_row) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
@@ -100,6 +106,8 @@ create_one_way_table <- function(variable_row, tbi_tables = tbi_tables) {
 
 
     tab <- tab %>%
+      # get our households:
+      filter(hh_id %in% user_hhs) %>%
       dplyr::mutate(cuts = cut(
         get(variable_row),
         breaks = brks,
@@ -124,6 +132,8 @@ create_one_way_table <- function(variable_row, tbi_tables = tbi_tables) {
   }
 
   rt_tab <- tab %>%
+    # get our households:
+    filter(hh_id %in% user_hhs) %>%
     # clean up:
     droplevels() %>%
     # big N sample size - for the whole data frame:
