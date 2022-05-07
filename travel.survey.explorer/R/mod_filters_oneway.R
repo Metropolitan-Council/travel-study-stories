@@ -10,26 +10,31 @@
 mod_filters_oneway_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    # Filters go here
-    checkboxInput(
-      inputId = ns("oneway_input_mpo"),
-      label = "Restrict to Households in Twin Cities region (MPO)",
-      value = FALSE
-    ),
+    # Dropdown for Survey Year ----
     selectInput(
       inputId = ns("oneway_input_year"),
-      "Survey Year",
+      "Survey year",
       choices = c("2018-2019", "2020-2021"),
       multiple = FALSE
     ),
+
+    # Checkbox for HHs in MPO ----
+    checkboxInput(
+      inputId = ns("oneway_input_mpo"),
+      label = "Filter to households in Twin Cities region (MPO)",
+      value = FALSE
+    ),
+
+    # Dropdown for HH County ----
     selectInput(
       inputId = ns("oneway_input_counties"),
-      "Household County",
+      "Household county",
       multiple = TRUE,
       selected = unique(tbi_tables$hh$hh_county),
       choices = unique(tbi_tables$hh$hh_county)
     ),
 
+    # Dropdown for HH City -----
     selectInput(
       inputId = ns("oneway_input_cities"),
       "Household City/Township",
@@ -37,6 +42,7 @@ mod_filters_oneway_ui <- function(id) {
       choices = unique(tbi_tables$hh$hh_city),
       selected = NULL),
 
+    # Button: Go One Way, Create Table ----
     actionButton(inputId = ns("go_one_way"), "Create Table")
   )
 }
@@ -48,9 +54,10 @@ mod_filters_oneway_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    # Init reactive values -----
     vals <- reactiveValues()
 
-    # update list of cities available to filter when a county is selected
+    # Update cities dropdown when a county is selected ----
     observeEvent(input$oneway_input_counties,
                  {
                    filtered_cities <- tbi_tables$hh %>%
@@ -70,14 +77,15 @@ mod_filters_oneway_server <- function(id) {
     )
 
 
-    ### Default list of hh_ids == hh$hh_ids ----------
+    # Default list of hh_ids == hh$hh_ids ----------
     filtered_hh_ids_1way <- tbi_tables$hh$hh_id
 
-    # On go_one_way button, filter tables:
+    # On go_one_way button, filter tables: ----
     observeEvent(input$go_one_way, {
 
-      ### Filter to hh_ids within MPO ----------
-      if (input$twoway_input_mpo == TRUE) {
+      # Filter to hh_ids within MPO ----------
+      # only if the checkbox has been set to "TRUE"
+      if (input$oneway_input_mpo == TRUE) {
         filtered_hh_ids_1way <-
           tbi_tables$hh %>%
           filter(hh_in_mpo == "Household in Twin Cities region") %>%
@@ -87,7 +95,8 @@ mod_filters_oneway_server <- function(id) {
       } else{
       }
 
-      ### Filter to hh_ids within selected counties ----------
+      # Filter to hh_ids within selected counties ----------
+      # only if counties are not null
       if(!is.null(input$oneway_input_counties)){
         filtered_hh_ids_1way <-
           tbi_tables$hh %>%
@@ -97,14 +106,14 @@ mod_filters_oneway_server <- function(id) {
       } else {
       }
 
-      # ### Filter to hh_ids in selected city ----------
-      # filtered_hh_ids_1way() <-
-      #   tbi_tables$hh %>%
-      #   filter(hh_ctu %in% input$oneway_input_cities) %>%
-      #   right_join(filtered_hh_ids_1way()) %>%
-      #   select(hh_id)
+      # Filter to hh_ids in selected city ----------
+      filtered_hh_ids_1way() <-
+        tbi_tables$hh %>%
+        filter(hh_ctu %in% input$oneway_input_cities) %>%
+        right_join(filtered_hh_ids_1way()) %>%
+        select(hh_id)
 
-      ### Filter to hh_ids in selected survey year ----------
+      # Filter to hh_ids in selected survey year ----------
       filtered_hh_ids_1way <-
         tbi_tables$hh %>%
         filter(survey == input$oneway_input_year) %>%
