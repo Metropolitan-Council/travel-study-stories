@@ -63,20 +63,30 @@ mod_filters_oneway_server <- function(id) {
     ## update cities dropdown to include only cities within that county ----
     observeEvent(input$oneway_input_counties,
                  {
-                   filtered_cities <- tbi_tables$hh %>%
-                     filter(hh_county %in% input$oneway_input_counties) %>%
-                     select(hh_city) %>%
-                     unique()
+                   if (!is.null(input$oneway_input_counties))
+                   {
+                     filtered_cities <- tbi_tables$hh %>%
+                       filter(hh_county %in% input$oneway_input_counties) %>%
+                       select(hh_city) %>%
+                       unique()
 
-                   updateSelectInput(
-                     session = session,
-                     inputId = "oneway_input_cities",
-                     label = "Household City/Township",
-                     choices = filtered_cities,
-                     selected = NULL,
-                     multiple = TRUE
-                   )
-                 },
+                     updateSelectInput(
+                       session = session,
+                       inputId = "oneway_input_cities",
+                       label = "Household City/Township",
+                       choices = filtered_cities,
+                       selected = NULL,
+                       multiple = TRUE
+                     )
+                   } else {
+                     selectInput(
+                       session = session,
+                       inputId = ns("oneway_input_cities"),
+                       "Household City/Township",
+                       choices = unique(na.omit(tbi_tables$hh$hh_city)),
+                       multiple = TRUE,
+                       selected = NULL)
+                   }},
                  ignoreInit = TRUE
     )
 
