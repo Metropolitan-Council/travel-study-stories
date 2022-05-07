@@ -27,7 +27,7 @@ app_ui <- function(request) {
           sidebarPanel = sidebarPanel(
             width = 3,
             mod_input_category_variable_ui("oneway_input_1"),
-            mod_filters_oneway_ui("oneway_filters")
+            mod_filters_oneway_ui("filters_oneway_1")
           ),
           mainPanel = mainPanel(
             mod_plot_one_way_ui("plot_one_way_ui_1"),
