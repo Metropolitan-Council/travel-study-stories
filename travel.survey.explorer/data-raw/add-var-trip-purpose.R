@@ -108,10 +108,12 @@ nonhomebasedtrips_d <-
 #### Merge home-based and non-homebased trips ------------
 trip_purpose <- bind_rows(homebasedtrips, nonhomebasedtrips_o, nonhomebasedtrips_d) %>%
   select(-trip_type) %>%
-  select(-"d_purpose_category_imputed",
-         -"d_purpose_imputed",
-         -"o_purpose_category_imputed",
-         -"o_purpose_imputed")
+  select(-d_purpose_category_imputed,
+         -d_purpose_imputed,
+         -d_purpose_category,
+         -d_purpose,
+         -o_purpose_category_imputed,
+         -o_purpose_imputed)
 
 rm(homebasedtrips,
    nonhomebasedtrips_o,
