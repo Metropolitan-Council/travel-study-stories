@@ -25,7 +25,7 @@
 #' @importFrom purrr pluck
 #' @importFrom data.table as.ITime
 #'
-create_one_way_table <- function(variable_row, user_hhs) {
+create_one_way_table <- function(variable_row, hh_id_list = tbi_tables$hh$hh_id) {
 
   this_table <-
     tbi_dict %>%
@@ -47,7 +47,7 @@ create_one_way_table <- function(variable_row, user_hhs) {
     dplyr::summarize_all(class) %>%
     purrr::pluck(1)
 
-  tab <- filtered_tbi_tables_1way()[[this_table]] %>%
+  tab <- tbi_tables[[this_table]] %>%
     dplyr::filter(!(get(variable_row) %in% missing_codes))
 
   if (vartype == "numeric") {
@@ -59,7 +59,7 @@ create_one_way_table <- function(variable_row, user_hhs) {
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
       filter(!get(variable_row) == Inf) %>%
       # get our households:
-      filter(hh_id %in% user_hhs) %>%
+      filter(hh_id %in% hh_id_list) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_row)),
                        median = srvyr::survey_median(get(variable_row))) %>%
@@ -73,7 +73,7 @@ create_one_way_table <- function(variable_row, user_hhs) {
 
     tab <- tab %>%
       # get our households:
-      filter(hh_id %in% user_hhs) %>%
+      filter(hh_id %in% hh_id_list) %>%
       dplyr::mutate(cuts = cut(
         get(variable_row),
         breaks = brks,
@@ -89,7 +89,7 @@ create_one_way_table <- function(variable_row, user_hhs) {
     tab_mean <-
       tab %>%
       # get our households:
-      filter(hh_id %in% user_hhs) %>%
+      filter(hh_id %in% hh_id_list) %>%
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
       filter(!get(variable_row) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
@@ -107,7 +107,7 @@ create_one_way_table <- function(variable_row, user_hhs) {
 
     tab <- tab %>%
       # get our households:
-      filter(hh_id %in% user_hhs) %>%
+      filter(hh_id %in% hh_id_list) %>%
       dplyr::mutate(cuts = cut(
         get(variable_row),
         breaks = brks,
@@ -133,7 +133,7 @@ create_one_way_table <- function(variable_row, user_hhs) {
 
   rt_tab <- tab %>%
     # get our households:
-    filter(hh_id %in% user_hhs) %>%
+    filter(hh_id %in% hh_id_list) %>%
     # clean up:
     droplevels() %>%
     # big N sample size - for the whole data frame:

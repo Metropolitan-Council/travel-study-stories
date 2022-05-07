@@ -56,8 +56,6 @@ mod_filters_oneway_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Init reactive values -----
-    vals <- reactiveValues()
 
     # When county/counties selected, ----
     ## update cities dropdown to include only cities within that county ----
@@ -90,9 +88,13 @@ mod_filters_oneway_server <- function(id) {
     #                }},
     #              ignoreInit = TRUE
     # )
+    # Init reactive values -----
+    vals <- reactiveValues()
 
     # Default list of hh_ids == hh$hh_ids ----------
-    # all_hh_ids <- tbi_tables$hh %>% select(hh_id)
+    all_hh_ids <- tbi_tables$hh %>% select(hh_id)
+    vals$user_hhs <- all_hh_ids %>% purrr::pluck(1)
+
 
     # On go_one_way button, filter tables: ----
     observeEvent(input$go_one_way, {
@@ -142,10 +144,6 @@ mod_filters_oneway_server <- function(id) {
         inner_join(mpo_ids) %>%
         purrr::pluck(1)
 
-      ### Filter datasets: ----------
-      # vals$filtered_tbi_tables_1way <-
-      #   purrr::map(tbi_tables,
-      #              ~ dplyr::filter(., hh_id %in% filtered_ids$hh_id))
     })
     return(vals)
   })
