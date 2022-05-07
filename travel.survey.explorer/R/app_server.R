@@ -11,7 +11,7 @@ app_server <- function(input, output, session) {
 
   # inputId inside the server needs to match ui inputId
   one_way_input <- mod_input_category_variable_server("oneway_input_1")
-  one_way_data <- mod_filters_oneway_server()
+  one_way_data <- mod_filters_oneway_server("filters_oneway_1")
   one_way_tab <- mod_input_utils_server(
     "input_utils_ui_1",
     user_inputs = one_way_input,
