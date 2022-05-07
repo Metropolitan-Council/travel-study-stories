@@ -1,55 +1,36 @@
 ### Fix "Change Mode" -----
-# change_mode_trips <-
-#   trip %>%
-#   filter(d_purpose_category_imputed == "Change mode") %>%
-#   select(
-#     person_id,
-#     linked_trip_num,
-#     mode_type,
-#     mode_type_detailed,
-#     d_purpose_category_imputed,
-#     d_purpose_imputed
-#   ) %>%
-#   rename_with(
-#     ~ paste0(.x, "_1"),
-#     c(
-#       mode_type,
-#       mode_type_detailed,
-#       d_purpose_category_imputed,
-#       d_purpose_imputed
-#     )
-#   ) %>%
-#   left_join(
-#     trip %>% filter(!d_purpose_category_imputed == "Change mode") %>%
-#       select(
-#         person_id,
-#         linked_trip_num,
-#         mode_type,
-#         mode_type_detailed,
-#         d_purpose_category_imputed,
-#         d_purpose_imputed
-#       )
-#   ) %>%
-#   mutate()
-#   # key for aggregation of linked trips -- person and trip_linked #
-#   group_by(person_id, linked_trip_num) %>%
-#   # summarize for each linked trip:
-#   summarize(
-#     trip_id = first(trip_id),
-#     n_links = length(trip_id),
-#     across(c(trip_weight), ~ max(., na.rm = T)),
-#     across(
-#       c(
-#         mode_type_id,
-#         mode_type_detailed_id,
-#         o_purpose_category_imputed_id,
-#         d_purpose_category_imputed_id,
-#         o_purpose_imputed_id,
-#         d_purpose_imputed_id
-#       ),
-#       ~ suppressWarnings(min(., na.rm = T))
-#     )) %>%
-#   ungroup()
+linked_trips <-
+  trip %>%
+  mutate(linked_trip_id = paste0(person_id, "_", linked_trip_num)) %>%
+  select(-linked_trip_num) %>%
+  group_by(linked_trip_id, person_id, hh_id) %>%
+  summarize(
+    o_purpose_category_imputed = first(o_purpose_category_imputed),
+    o_purpose_imputed = first(o_purpose_imputed),
+    d_purpose_category = first(d_purpose_category),
+    d_purpose = first(d_purpose),
+    d_purpose_category_imputed = first(d_purpose_category_imputed),
+    d_purpose_imputed = first(d_purpose_imputed),
+    trip_purpose_weight = first(trip_weight))
+
+# add linked trip id to trip table for crosstabs:
+trip <- trip %>%
+  mutate(linked_trip_id = paste0(person_id, "_", linked_trip_num))
+
+# any "Change mode" trips remaining?
+# linked_trips %>%
+#   filter(trip_purpose_weight > 0) %>%
+#   filter(o_purpose_category_imputed == "Change mode")
+
+# get rid of these
+linked_trips <- linked_trips %>% filter(!o_purpose_category_imputed %in% c("Change mode"))
+
+# linked_trips %>%
+#   filter(trip_purpose_weight > 0) %>%
+#   filter(d_purpose_category_imputed == "Change mode")
+
+# get rid of these
+linked_trips <- linked_trips %>% filter(!d_purpose_category_imputed %in% c("Change mode"))
 
 
 ### Trip Purpose Table ------------
@@ -63,19 +44,11 @@ nonhomecats <- c(
   "Errand/Other",
   "Work-related",
   "Escort",
-  "School-related",
-  "Change mode"
+  "School-related"
+  # "Change mode"
 )
 
-trip_type <- trip %>%
-  select(
-    trip_id,
-    trip_weight,
-    o_purpose_category_imputed,
-    d_purpose_category_imputed,
-    o_purpose_imputed,
-    d_purpose_imputed
-  ) %>%
+trip_type <- linked_trips %>%
   mutate(
     trip_type = case_when(
       o_purpose_category_imputed %in% homecats |
@@ -118,7 +91,7 @@ nonhomebasedtrips_o <-
     values_to = "purpose_category"
   ) %>%
   select(-name) %>%
-  mutate(trip_weight = 0.5 * trip_weight) %>%
+  mutate(trip_purpose_weight = 0.5 * trip_purpose_weight) %>%
   mutate(trip_type = "Non-Home-based")
 
 nonhomebasedtrips_d <-
@@ -127,7 +100,7 @@ nonhomebasedtrips_d <-
   pivot_longer(cols = c("o_purpose_imputed", "d_purpose_imputed"),
                values_to = "purpose") %>%
   select(-name) %>%
-  mutate(trip_weight = 0.5 * trip_weight) %>%
+  mutate(trip_purpose_weight = 0.5 * trip_purpose_weight) %>%
   mutate(trip_type = "Non-Home-based")
 
 
@@ -138,9 +111,7 @@ trip_purpose <- bind_rows(homebasedtrips, nonhomebasedtrips_o, nonhomebasedtrips
   select(-"d_purpose_category_imputed",
          -"d_purpose_imputed",
          -"o_purpose_category_imputed",
-         -"o_purpose_imputed") %>%
-  rename(trip_purpose_weight = trip_weight) %>%
-  left_join(trip %>% select(trip_id, hh_id), by = "trip_id")
+         -"o_purpose_imputed")
 
 rm(homebasedtrips,
    nonhomebasedtrips_o,
