@@ -39,8 +39,7 @@ app_ui <- function(request) {
         title = "Two-Way Table",
         wellPanel(
           h3("Filter data"),
-          # Filters go here
-
+          mod_filters_twoway_ui("twoway_filters")
         ),
         wellPanel(
           h3("First variable"),
