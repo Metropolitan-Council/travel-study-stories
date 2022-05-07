@@ -18,7 +18,7 @@ mod_input_utils_ui <- function(id) {
 #'
 #' @return [shiny::reactiveValues()] `table_data` and `context_data`.
 #'
-mod_input_utils_server <- function(id, user_inputs, data_inputs) {
+mod_input_utils_server <- function(id, user_inputs, user_data) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -26,7 +26,7 @@ mod_input_utils_server <- function(id, user_inputs, data_inputs) {
 
     # generate table
     table_return <- reactive({
-      create_one_way_table(user_inputs$variable, tbi_tables = tbi_tables)
+      create_one_way_table(user_inputs$variable, user_data$filtered_tbi_tables_1way)
     })
 
     # find contextual data, like variable names, question text, etc.
