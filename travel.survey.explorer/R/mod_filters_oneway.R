@@ -61,37 +61,38 @@ mod_filters_oneway_server <- function(id) {
 
     # When county/counties selected, ----
     ## update cities dropdown to include only cities within that county ----
-    observeEvent(input$oneway_input_counties,
-                 {
-                   if (!is.null(input$oneway_input_counties))
-                   {
-                     filtered_cities <- tbi_tables$hh %>%
-                       filter(hh_county %in% input$oneway_input_counties) %>%
-                       select(hh_city) %>%
-                       unique()
-
-                     updateSelectInput(
-                       session = session,
-                       inputId = "oneway_input_cities",
-                       label = "Household City/Township",
-                       choices = filtered_cities,
-                       selected = NULL,
-                       multiple = TRUE
-                     )
-                   } else {
-                     selectInput(
-                       session = session,
-                       inputId = ns("oneway_input_cities"),
-                       "Household City/Township",
-                       choices = unique(na.omit(tbi_tables$hh$hh_city)),
-                       multiple = TRUE,
-                       selected = NULL)
-                   }},
-                 ignoreInit = TRUE
-    )
+    # observeEvent(input$oneway_input_counties,
+    #              {
+    #                if (!is.null(input$oneway_input_counties))
+    #                {
+    #                  filtered_cities <- tbi_tables$hh %>%
+    #                    filter(hh_county %in% input$oneway_input_counties) %>%
+    #                    select(hh_city) %>%
+    #                    unique() %>%
+    #                    na.omit()
+    #
+    #                  updateSelectInput(
+    #                    session = session,
+    #                    inputId = "oneway_input_cities",
+    #                    label = "Household City/Township",
+    #                    choices = filtered_cities$hh_city,
+    #                    selected = NULL,
+    #                    multiple = TRUE
+    #                  )
+    #                } else {
+    #                  selectInput(
+    #                    session = session,
+    #                    inputId = ns("oneway_input_cities"),
+    #                    "Household City/Township",
+    #                    choices = unique(na.omit(tbi_tables$hh$hh_city)),
+    #                    multiple = TRUE,
+    #                    selected = NULL)
+    #                }},
+    #              ignoreInit = TRUE
+    # )
 
     # Default list of hh_ids == hh$hh_ids ----------
-    all_hh_ids <- tbi_tables$hh$hh_id
+    # all_hh_ids <- tbi_tables$hh %>% select(hh_id)
 
     # On go_one_way button, filter tables: ----
     observeEvent(input$go_one_way, {
@@ -109,24 +110,24 @@ mod_filters_oneway_server <- function(id) {
 
       # Filter to hh_ids within selected counties ----------
       # only if counties are not null
-      if(!is.null(input$oneway_input_counties)){
-        cty_ids <-
-          tbi_tables$hh %>%
-          filter(hh_cty %in% input$oneway_input_counties) %>%
-          select(hh_id)
-      } else {
-        cty_ids <- all_hh_ids
-      }
+      # if(!is.null(input$oneway_input_counties)){
+      #   cty_ids <-
+      #     tbi_tables$hh %>%
+      #     filter(hh_cty %in% input$oneway_input_counties) %>%
+      #     select(hh_id)
+      # } else {
+      #   cty_ids <- all_hh_ids
+      # }
 
       # Filter to hh_ids in selected city ----------
-      if(!is.null(input$oneway_input_city)){
-        ctu_ids <-
-          tbi_tables$hh %>%
-          filter(hh_ctu %in% input$oneway_input_city) %>%
-          select(hh_id)
-      } else {
-        ctu_ids <- all_hh_ids
-      }
+      # if(!is.null(input$oneway_input_city)){
+      #   ctu_ids <-
+      #     tbi_tables$hh %>%
+      #     filter(hh_ctu %in% input$oneway_input_city) %>%
+      #     select(hh_id)
+      # } else {
+      #   ctu_ids <- all_hh_ids
+      # }
 
       # Filter to hh_ids in selected survey year ----------
       # year_ids <-
@@ -134,16 +135,17 @@ mod_filters_oneway_server <- function(id) {
       #   filter(survey == input$oneway_input_year) %>%
       #   select(hh_id)
 
-      filtered_ids <- all_hh_ids %>%
+      vals$user_hhs <- all_hh_ids %>%
         # inner_join(year_ids) %>%
-        inner_join(ctu_ids) %>%
-        inner_join(cty_ids) %>%
-        inner_join(mpo_ids)
+        # inner_join(ctu_ids) %>%
+        # inner_join(cty_ids) %>%
+        inner_join(mpo_ids) %>%
+        purrr::pluck(1)
 
       ### Filter datasets: ----------
-      vals$filtered_tbi_tables_1way <-
-        purrr::map(tbi_tables,
-                   ~ dplyr::filter(., hh_id %in% filtered_ids))
+      # vals$filtered_tbi_tables_1way <-
+      #   purrr::map(tbi_tables,
+      #              ~ dplyr::filter(., hh_id %in% filtered_ids$hh_id))
     })
     return(vals)
   })
