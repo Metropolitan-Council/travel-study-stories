@@ -24,8 +24,9 @@
 #' @importFrom srvyr survey_total survey_prop
 #' @importFrom purrr pluck
 #' @importFrom data.table as.ITime
+#' @import bit64
 #'
-create_one_way_table <- function(variable_row, hh_id_list = tbi_tables$hh$hh_id) {
+create_one_way_table <- function(variable_row, hh_ids = tbi_tables$hh$hh_id) {
 
   this_table <-
     tbi_dict %>%
@@ -50,6 +51,7 @@ create_one_way_table <- function(variable_row, hh_id_list = tbi_tables$hh$hh_id)
   tab <- tbi_tables[[this_table]] %>%
     dplyr::filter(!(get(variable_row) %in% missing_codes))
 
+  # numeric data -----
   if (vartype == "numeric") {
 
 
@@ -59,7 +61,7 @@ create_one_way_table <- function(variable_row, hh_id_list = tbi_tables$hh$hh_id)
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
       filter(!get(variable_row) == Inf) %>%
       # get our households:
-      filter(hh_id %in% hh_id_list) %>%
+      filter(hh_id %in% hh_ids) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_row)),
                        median = srvyr::survey_median(get(variable_row))) %>%
@@ -73,7 +75,7 @@ create_one_way_table <- function(variable_row, hh_id_list = tbi_tables$hh$hh_id)
 
     tab <- tab %>%
       # get our households:
-      filter(hh_id %in% hh_id_list) %>%
+      filter(hh_id %in% hh_ids) %>%
       dplyr::mutate(cuts = cut(
         get(variable_row),
         breaks = brks,
@@ -83,13 +85,14 @@ create_one_way_table <- function(variable_row, hh_id_list = tbi_tables$hh$hh_id)
       dplyr::select(-rlang::sym(variable_row)) %>%
       dplyr::rename(!!rlang::enquo(variable_row) := cuts)
 
+    # time data -----
   } else if (vartype == "ITime") {
 
 
     tab_mean <-
       tab %>%
       # get our households:
-      filter(hh_id %in% hh_id_list) %>%
+      filter(hh_id %in% hh_ids) %>%
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
       filter(!get(variable_row) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
@@ -107,7 +110,7 @@ create_one_way_table <- function(variable_row, hh_id_list = tbi_tables$hh$hh_id)
 
     tab <- tab %>%
       # get our households:
-      filter(hh_id %in% hh_id_list) %>%
+      filter(hh_id %in% hh_ids) %>%
       dplyr::mutate(cuts = cut(
         get(variable_row),
         breaks = brks,
@@ -118,7 +121,7 @@ create_one_way_table <- function(variable_row, hh_id_list = tbi_tables$hh$hh_id)
       dplyr::select(-rlang::sym(variable_row)) %>%
       dplyr::rename(!!rlang::enquo(variable_row) := cuts)
 
-
+    # factor data -----
   } else {
 
     # empty table of median and means for numeric data:
@@ -131,9 +134,9 @@ create_one_way_table <- function(variable_row, hh_id_list = tbi_tables$hh$hh_id)
       )
   }
 
-  rt_tab <- tab %>%
+    rt_tab <- tab %>%
     # get our households:
-    filter(hh_id %in% hh_id_list) %>%
+    filter(hh_id %in% hh_ids)%>%
     # clean up:
     droplevels() %>%
     # big N sample size - for the whole data frame:
