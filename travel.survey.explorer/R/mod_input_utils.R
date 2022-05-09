@@ -27,7 +27,7 @@ mod_input_utils_server <- function(id, user_inputs, user_hhs) {
     # generate table
     table_return <- reactive({
       create_one_way_table(variable_row = user_inputs$variable,
-                           hh_ids = user_hhs$user_hhs)
+                           hh_ids = user_hhs$hh_ids)
     })
 
     # find contextual data, like variable names, question text, etc.
