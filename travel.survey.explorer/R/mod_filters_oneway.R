@@ -105,7 +105,7 @@ mod_filters_oneway_server <- function(id) {
 
 
     # Filter tables as we go (not reacting to button): ----
-    reactive({
+    observe({
 
       # Filter to hh_ids within MPO ----------
       # only if the checkbox has been set to "TRUE"
