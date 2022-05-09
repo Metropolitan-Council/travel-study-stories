@@ -69,6 +69,9 @@ mod_filters_oneway_server <- function(id) {
     # vals$hh_ids <- all_hh_ids %>%
     #   purrr::pluck(1)
 
+    # When "Restrict HHs to MPO region" is checked, ----
+    ## update counties/cities to include only those within the MPO boundary ----
+
     # When county/counties selected, ----
     # update cities dropdown to include only cities within that county ----
     observeEvent(input$oneway_input_counties,
