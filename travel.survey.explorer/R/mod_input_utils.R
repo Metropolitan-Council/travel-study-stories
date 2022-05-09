@@ -49,9 +49,8 @@ mod_input_utils_server <- function(id, user_inputs, user_hhs) {
 
       return(vals)
     }) %>%
-      bindEvent(user_inputs$variable)
-
-
+      # bindCache(user_inputs$variable, user_hhs$hh_ids) %>%
+      bindEvent(user_inputs$variable, user_hhs$hh_ids)
 
     return(vals)
   })
