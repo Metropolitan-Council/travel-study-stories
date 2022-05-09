@@ -40,18 +40,19 @@ app_ui <- function(request) {
         sidebarLayout(
           sidebarPanel = sidebarPanel(
             width = 3,
-            h3("First variable"),
-            mod_input_category_variable_ui("twoway_input_2"),
-            h3("Second variable"),
-            mod_input_category_variable_ui("twoway_input_2"),
+            h3("First variable (rows)"),
+            mod_input_category_variable_ui("twoway_input_rows"),
+
+            h3("Second variable (columns)"),
+            mod_input_category_variable_ui("twoway_input_cols"),
+
             h3("Filter households by geography"),
             mod_filters_twoway_ui("filters_twoway_1")
           ),
-          mainPanel = mainPanel(
-            # plot goes here
-            mod_table_two_way_ui("table_two_way_ui_1")
-          ),
+          mainPanel = mainPanel(# plot goes here
+            mod_table_two_way_ui("table_two_way_ui_1"))
 
+        )
       ),
       tabPanel(title = "About",
                mod_about_ui("about_ui_1"))
