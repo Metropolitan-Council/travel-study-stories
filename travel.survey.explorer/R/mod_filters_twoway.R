@@ -108,7 +108,7 @@ mod_filters_twoway_server <- function(id){
       if(!is.null(input$twoway_input_counties)){
         cty_ids <-
           tbi_tables$hh %>%
-          filter(hh_cty %in% input$twoway_input_counties) %>%
+          filter(hh_county %in% input$twoway_input_counties) %>%
           select(hh_id)
       } else {
         cty_ids <- all_hh_ids
@@ -118,7 +118,7 @@ mod_filters_twoway_server <- function(id){
       if(!is.null(input$twoway_input_city)){
         ctu_ids <-
           tbi_tables$hh %>%
-          filter(hh_ctu %in% input$twoway_input_city) %>%
+          filter(hh_city %in% input$twoway_input_city) %>%
           select(hh_id)
       } else {
         ctu_ids <- all_hh_ids
