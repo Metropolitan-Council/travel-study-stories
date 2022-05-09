@@ -66,8 +66,8 @@ mod_filters_oneway_server <- function(id) {
     all_hh_ids <- tbi_tables$hh %>%
       dplyr::select(hh_id)
 
-    vals$user_hhs <- all_hh_ids %>%
-      purrr::pluck(1)
+    # vals$hh_ids <- all_hh_ids %>%
+    #   purrr::pluck(1)
 
     # When county/counties selected, ----
     # update cities dropdown to include only cities within that county ----
