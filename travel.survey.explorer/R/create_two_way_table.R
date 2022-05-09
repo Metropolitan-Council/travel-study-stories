@@ -24,7 +24,7 @@
 #' @importFrom srvyr survey_total survey_prop
 #' @importFrom purrr pluck
 #'
-create_two_way_table <- function(variable_row, variable_col){
+create_two_way_table <- function(variable_row, variable_col, hh_ids){
 
   print("reading in data")
 
@@ -65,10 +65,12 @@ create_two_way_table <- function(variable_row, variable_col){
     summarize_all(class) %>%
     purrr::pluck(1)
 
-  tab_0 <- filtered_tbi_tables_2way()[[this_table_row]] %>%
-    dplyr::left_join(filtered_tbi_tables_2way()[[this_table_col]]) %>%
+  tab_0 <- tbi_tables[[this_table_row]] %>%
+    dplyr::left_join(tbi_tables[[this_table_col]]) %>%
     dplyr::filter(!(get(variable_row) %in% missing_codes)) %>%
-    dplyr::filter(!(get(variable_col) %in% missing_codes))
+    dplyr::filter(!(get(variable_col) %in% missing_codes)) %>%
+    # get our households:
+    filter(hh_id %in% hh_ids)
 
   # Bin row variable ----------------------------
   if (vartype_row == "numeric") {
