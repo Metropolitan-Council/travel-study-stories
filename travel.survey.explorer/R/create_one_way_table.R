@@ -26,7 +26,7 @@
 #' @importFrom data.table as.ITime
 #' @import bit64
 #'
-create_one_way_table <- function(variable_row, hh_ids = tbi_tables$hh$hh_id) {
+create_one_way_table <- function(variable_row, hh_ids) {
 
   this_table <-
     tbi_dict %>%
