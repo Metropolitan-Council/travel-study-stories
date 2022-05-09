@@ -37,21 +37,21 @@ app_ui <- function(request) {
       ),
       tabPanel(
         title = "Two-Way Table",
-        wellPanel(
-          h3("Filter data"),
-          mod_filters_twoway_ui("twoway_filters")
-        ),
-        wellPanel(
-          h3("First variable"),
-          mod_input_category_variable_ui("twoway_input_2")
-        ),
-        wellPanel(
-          h3("Second variable"),
-          mod_input_category_variable_ui("twoway_input_1")
-        ),
-        wellPanel(# go_two_way_button
-          actionButton("go_two_way", "Create Crosstab")),
-        mod_table_two_way_ui("table_two_way_ui_1")
+        sidebarLayout(
+          sidebarPanel = sidebarPanel(
+            width = 3,
+            h3("First variable"),
+            mod_input_category_variable_ui("twoway_input_2"),
+            h3("Second variable"),
+            mod_input_category_variable_ui("twoway_input_2"),
+            h3("Filter households by geography"),
+            mod_filters_twoway_ui("filters_twoway_1")
+          ),
+          mainPanel = mainPanel(
+            # plot goes here
+            mod_table_two_way_ui("table_two_way_ui_1")
+          ),
+
       ),
       tabPanel(title = "About",
                mod_about_ui("about_ui_1"))

@@ -10,6 +10,7 @@
 mod_filters_twoway_ui <- function(id){
   ns <- NS(id)
   tagList(
+
     # Dropdown for Survey Year ----
     # selectInput(
     #   inputId = ns("twoway_input_year"),
@@ -43,6 +44,8 @@ mod_filters_twoway_ui <- function(id){
       multiple = TRUE,
       selected = NULL),
 
+    # Button: Go two Way, Create Table ----
+    actionButton(inputId = ns("go_two_way"), "Create Crosstabs")
   )
 }
 
@@ -50,30 +53,32 @@ mod_filters_twoway_ui <- function(id){
 #'
 #' @noRd
 mod_filters_twoway_server <- function(id){
-  moduleServer( id, function(input, output, session){
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Init reactive values -----
-    vals <- reactiveValues()
+    # Update Select Inputs----
 
-    # When county/counties selected, ----
-    ## update cities dropdown to include only cities within that county ----
+    ## When "Restrict HHs to MPO region" is checked, ----
+    # update counties/cities to include only those within the MPO boundary ----
+
+    ## When county/counties selected, ----
+    # update cities dropdown to include only cities within that county ----
     observeEvent(input$twoway_input_counties,
                  {
                    if (!is.null(input$twoway_input_counties))
                    {
                      filtered_cities <- tbi_tables$hh %>%
-                       filter(hh_county %in% input$twoway_input_counties) %>%
-                       select(hh_city) %>%
-                       unique()
+                       dplyr::filter(hh_county %in% input$twoway_input_counties) %>%
+                       dplyr::select(hh_city) %>%
+                       unique() %>%
+                       na.omit()
 
                      updateSelectInput(
                        session = session,
                        inputId = "twoway_input_cities",
                        label = "Household City/Township",
-                       choices = filtered_cities,
-                       selected = NULL,
-                       multiple = TRUE
+                       choices = filtered_cities$hh_city,
+                       selected = NULL
                      )
                    } else {
                      selectInput(
@@ -81,65 +86,75 @@ mod_filters_twoway_server <- function(id){
                        inputId = ns("twoway_input_cities"),
                        "Household City/Township",
                        choices = unique(na.omit(tbi_tables$hh$hh_city)),
-                       multiple = TRUE,
                        selected = NULL)
                    }},
                  ignoreInit = TRUE
     )
-    # Default list of hh_ids == hh$hh_ids ----------
-    all_hh_ids <- tbi_tables$hh$hh_id
 
-    # On go_one_way button, filter tables: ----
-    observeEvent(input$go_one_way, {
 
-      # Filter to hh_ids within MPO ----------
+
+    # Create HH ID list----
+
+    ## Init reactive values -----
+    vals <- reactiveValues()
+
+    ## Init HH ID list----
+    all_hh_ids <- tbi_tables$hh %>%
+      dplyr::select(hh_id)
+
+    observe({
+      # using "observe" rather than "observeEvent" - calculating as we go
+
+      ## Filter to MPO----
       # only if the checkbox has been set to "TRUE"
       if (input$twoway_input_mpo == TRUE) {
         mpo_ids <-
           tbi_tables$hh %>%
-          filter(hh_in_mpo == "Household in Twin Cities region") %>%
-          select(hh_id)
+          dplyr::filter(hh_in_mpo == "Household in Twin Cities region") %>%
+          dplyr::select(hh_id)
       } else{
         mpo_ids <- all_hh_ids
       }
 
-      # Filter to hh_ids within selected counties ----------
+      ## Filter to County----
       # only if counties are not null
       if(!is.null(input$twoway_input_counties)){
         cty_ids <-
           tbi_tables$hh %>%
-          filter(hh_county %in% input$twoway_input_counties) %>%
-          select(hh_id)
+          dplyr::filter(hh_county %in% input$twoway_input_counties) %>%
+          dplyr::select(hh_id)
       } else {
         cty_ids <- all_hh_ids
       }
 
-      # Filter to hh_ids in selected city ----------
-      if(!is.null(input$twoway_input_city)){
+      ## Filter to City----
+      if(!is.null(input$twoway_input_cities)){
         ctu_ids <-
           tbi_tables$hh %>%
-          filter(hh_city %in% input$twoway_input_city) %>%
-          select(hh_id)
+          dplyr::filter(hh_city %in% input$twoway_input_cities) %>%
+          dplyr::select(hh_id)
       } else {
         ctu_ids <- all_hh_ids
       }
 
-      # Filter to hh_ids in selected survey year ----------
+      ## Filter to Year----
       # year_ids <-
       #   tbi_tables$hh %>%
-      #   filter(survey == input$twoway_input_year) %>%
-      #   select(hh_id)
+      #   dplyr::filter(survey == input$twoway_input_year) %>%
+      #   dplyr::select(hh_id)
 
-      filtered_ids <- all_hh_ids %>%
-        # inner_join(year_ids) %>%
-        inner_join(ctu_ids) %>%
-        inner_join(cty_ids) %>%
-        inner_join(mpo_ids)
+      ## Final HH ID list----
+      # inner join is the key here: gets the intersecting set.
+      vals$hh_ids <- all_hh_ids %>%
+        #  dplyr::inner_join(year_ids, by = "hh_id") %>%
+        dplyr::inner_join(ctu_ids, by = "hh_id") %>%
+        dplyr::inner_join(cty_ids, by = "hh_id") %>%
+        dplyr::inner_join(mpo_ids, by = "hh_id") %>%
+        # you need to use "innerjoin" on a data frame,
+        # but we want a list of hh ids in the end --
+        # so we use pluck to get it
+        purrr::pluck(1)
 
-      ### Filter datasets: ----------
-      vals$filtered_tbi_tables_2way <-
-        purrr::map(tbi_tables,
-                   ~ dplyr::filter(., hh_id %in% filtered_ids))
     })
     return(vals)
   })
