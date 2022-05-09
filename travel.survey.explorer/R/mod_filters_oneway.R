@@ -120,24 +120,24 @@ mod_filters_oneway_server <- function(id) {
 
       # Filter to hh_ids within selected counties ----------
       # only if counties are not null
-      # if(!is.null(input$oneway_input_counties)){
-      #   cty_ids <-
-      #     tbi_tables$hh %>%
-      #     dplyr::filter(hh_cty %in% input$oneway_input_counties) %>%
-      #     dplyr::select(hh_id)
-      # } else {
-      #   cty_ids <- all_hh_ids
-      # }
+      if(!is.null(input$oneway_input_counties)){
+        cty_ids <-
+          tbi_tables$hh %>%
+          dplyr::filter(hh_county %in% input$oneway_input_counties) %>%
+          dplyr::select(hh_id)
+      } else {
+        cty_ids <- all_hh_ids
+      }
 
       # Filter to hh_ids in selected city ----------
-      # if(!is.null(input$oneway_input_city)){
-      #   ctu_ids <-
-      #     tbi_tables$hh %>%
-      #     dplyr::filter(hh_ctu %in% input$oneway_input_city) %>%
-      #     dplyr::select(hh_id)
-      # } else {
-      #   ctu_ids <- all_hh_ids
-      # }
+      if(!is.null(input$oneway_input_cities)){
+        ctu_ids <-
+          tbi_tables$hh %>%
+          dplyr::filter(hh_city %in% input$oneway_input_cities) %>%
+          dplyr::select(hh_id)
+      } else {
+        ctu_ids <- all_hh_ids
+      }
 
       # Filter to hh_ids in selected survey year ----------
       # year_ids <-
@@ -145,10 +145,10 @@ mod_filters_oneway_server <- function(id) {
       #   dplyr::filter(survey == input$oneway_input_year) %>%
       #   dplyr::select(hh_id)
 
-      vals$user_hhs <- all_hh_ids %>%
-        # inner_join(year_ids, by = "hh_id") %>%
-        # inner_join(ctu_ids, by = "hh_id") %>%
-        # inner_join(cty_ids, by = "hh_id") %>%
+      vals$hh_ids <- all_hh_ids %>%
+        #  dplyr::inner_join(year_ids, by = "hh_id") %>%
+        dplyr::inner_join(ctu_ids, by = "hh_id") %>%
+        dplyr::inner_join(cty_ids, by = "hh_id") %>%
         dplyr::inner_join(mpo_ids, by = "hh_id") %>%
         purrr::pluck(1)
 
