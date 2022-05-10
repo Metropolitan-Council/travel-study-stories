@@ -16,39 +16,39 @@ app_server <- function(input, output, session) {
   ## list of hh ids-----
   user_hhs_1way <- mod_filters_oneway_server("filters_oneway_1")
 
-  ## raw table data------
+  ## raw table data------ this is where it seems to break!
   one_way_rts <- mod_input_utils_server(
     "input_utils_ui_1",
     user_var = user_var_1way$variable,
     user_hhs = user_hhs_1way$hh_ids)
 
   ## formatted table -----
-  mod_table_one_way_server("table_one_way_ui_1",
-                           one_way_inputs = one_way_tab
-  )
-
-  ## plot--------
-  mod_plot_one_way_server("plot_one_way_ui_1", one_way_inputs = one_way_tab)
-
-  # Two-way tab -------
-
-  ## input category and variable-----
-  twoway_var_rows <- mod_input_category_row_server("input_category_row_1")
-  twoway_var_cols <- mod_input_category_col_server("input_category_col_1")
-
-  ## list of hh ids-----
-  two_way_hhs <- mod_filters_oneway_server("filters_twoway_1")
-
-  ## raw table data------
-  two_way_tab <- mod_input_utils_two_way_server(
-    "input_utils_ui_1",
-    variable_row = twoway_var_rows,
-    variable_col = twoway_var_cols,
-    hh_ids = two_way_hhs)
-
-  ## formatted table -----
-  mod_table_two_way_server("table_two_way_ui_1")
-
-  ## plot--------
+  # mod_table_one_way_server("table_one_way_ui_1",
+  #                          one_way_table_inputs = one_way_rts
+  # )
+  #
+  # ## plot--------
+  # mod_plot_one_way_server("plot_one_way_ui_1", one_way_plot_inputs = one_way_rts)
+  #
+  # # Two-way tab -------
+  #
+  # ## input category and variable-----
+  # user_row_var <- mod_input_category_row_server("input_category_row_1")
+  # user_col_var <- mod_input_category_col_server("input_category_col_1")
+  #
+  # ## list of hh ids-----
+  # user_hhs_2way <- mod_filters_oneway_server("filters_twoway_1")
+  #
+  # ## raw table data------
+  # two_way_tab <- mod_input_utils_two_way_server(
+  #   "input_utils_ui_1",
+  #   util_variable_row = user_row_var$variable,
+  #   util_variable_col = user_col_var$variable,
+  #   util_hh_ids = user_hhs_2way$hh_ids)
+  #
+  # ## formatted table -----
+  # mod_table_two_way_server("table_two_way_ui_1") # atm, just some random numbers
+  #
+  # ## plot--------
 
 }
