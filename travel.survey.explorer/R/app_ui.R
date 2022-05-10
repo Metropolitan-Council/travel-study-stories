@@ -41,10 +41,10 @@ app_ui <- function(request) {
           sidebarPanel = sidebarPanel(
             width = 3,
             h3("First variable (rows)"),
-            mod_input_category_variable_ui("twoway_input_rows"),
+            mod_input_category_row_ui("input_category_row_1"),
 
             h3("Second variable (columns)"),
-            mod_input_category_variable_ui("twoway_input_cols"),
+            mod_input_category_col_ui("input_category_col_1"),
 
             h3("Filter households by geography"),
             mod_filters_twoway_ui("filters_twoway_1")
