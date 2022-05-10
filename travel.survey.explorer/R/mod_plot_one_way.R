@@ -27,7 +27,7 @@ mod_plot_one_way_server <- function(id, one_way_plot_inputs) {
     output$plot <- plotly::renderPlotly({
       # browser()
       w$show()
-      table_data <- one_way_plot_inputs$table_data
+      table_data <- one_way_plot_inputs$table_return
 
       council_plot_ly() %>%
         plotly::add_trace(

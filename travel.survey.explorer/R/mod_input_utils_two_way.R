@@ -37,18 +37,23 @@ mod_input_utils_two_way_server <- function(id, util_variable_row, util_variable_
       two_way_rt <- two_way_rt_list()
 
       vals$table_return <- two_way_rt$table
-      vals$context_return <- two_way_rt$definitions
-      vals$summary_return <- two_way_rt$tab_mean
+      vals$context_row_return <- two_way_rt$definition_row
+      vals$context_col_return <- two_way_rt$definition_col
+      vals$summary_return <- two_way_rt$summary
+
+      print(vals$table_return) # eventually comment out
+
+      return(vals)
 
     }) %>%
-      bindEvent(util_variable_row$variable, util_variable_col$variable_col, util_hh_ids$hh_ids)
+      bindEvent(util_variable_row$variable, util_variable_col$variable, util_hh_ids$hh_ids)
 
     return(vals)
   })
 }
 
 ## To be copied in the UI
-# mod_input_utils_two_way_ui("input_utils_ui_1")
+# mod_input_utils_two_way_ui("input_utils_two_way_ui_1")
 
 ## To be copied in the server
-# mod_input_utils_two_way_server("input_utils_ui_1")
+# mod_input_utils_two_way_server("input_utils_two_way_ui_1")

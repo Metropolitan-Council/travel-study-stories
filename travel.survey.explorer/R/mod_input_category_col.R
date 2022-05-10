@@ -59,9 +59,9 @@ mod_input_category_col_server <- function(id){
 
 
     # print the selected input$category and input$variable
-    # observe({
-    #   print(paste0(id, "-", input$category, ":", input$variable))
-    # })
+    observe({
+      print(paste0(id, "-", input$category, ":", input$variable))
+    })
 
 
     observeEvent(input$variable, {
