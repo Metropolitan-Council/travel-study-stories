@@ -26,11 +26,6 @@
 #'
 create_two_way_table <- function(variable_row, variable_col, hh_ids){
 
-  print("reading in data")
-
-  variable_row <- "d_purpose_category_imputed"
-  variable_col <- "depart_time_imputed"
-
   this_table_row <-
     tbi_dict %>%
     dplyr::filter(variable == variable_row) %>%
@@ -55,22 +50,30 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
 
   vartype_row <-
     tbi_tables[[this_table_row]] %>%
-    select(sym(variable_row)) %>%
-    summarize_all(class) %>%
+    dplyr::select(rlang::sym(variable_row)) %>%
+    dplyr::summarize_all(class) %>%
     purrr::pluck(1)
 
   vartype_col <-
     tbi_tables[[this_table_col]] %>%
-    select(sym(variable_col)) %>%
-    summarize_all(class) %>%
+    dplyr::select(rlang::sym(variable_col)) %>%
+    dplyr::summarize_all(class) %>%
     purrr::pluck(1)
 
-  tab_0 <- tbi_tables[[this_table_row]] %>%
-    dplyr::left_join(tbi_tables[[this_table_col]]) %>%
-    dplyr::filter(!(get(variable_row) %in% missing_codes)) %>%
-    dplyr::filter(!(get(variable_col) %in% missing_codes)) %>%
+  table_row <- tbi_tables[[this_table_row]] %>%
+    dplyr::select(dplyr::contains("_id"), dplyr::contains("_num"), dplyr::contains("weight"), rlang::sym(variable_row)) %>%
+    dplyr::filter(!(get(variable_row) %in% missing_codes))
+
+  table_col <- tbi_tables[[this_table_col]] %>%
+    dplyr::select(dplyr::contains("_id"), dplyr::contains("_num"), dplyr::contains("weight"), rlang::sym(variable_col)) %>%
+    dplyr::filter(!(get(variable_col) %in% missing_codes))
+
+  tab_0 <- table_row %>%
+    dplyr::left_join(table_col) %>%
     # get our households:
-    filter(hh_id %in% hh_ids)
+    dplyr::filter(hh_id %in% hh_ids) %>%
+    # get rid of NA weights:
+    dplyr::filter(!is.na(get(this_weight)))
 
   # Bin row variable ----------------------------
   if (vartype_row == "numeric") {
@@ -128,10 +131,10 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       dplyr::rename(!!rlang::enquo(variable_col) := cuts)
 
     # table of median and means for numeric data:
-    tab_mean <-
+    summary <-
       tab_1 %>%
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
-      filter(!get(variable_col) == Inf) %>%
+      dplyr::filter(!get(variable_col) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
       dplyr::group_by(get(variable_row)) %>%
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
@@ -154,10 +157,10 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       dplyr::select(-rlang::sym(variable_col)) %>%
       dplyr::rename(!!rlang::enquo(variable_col) := cuts)
 
-    tab_mean <-
+    summary <-
       tab_1 %>%
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
-      filter(!get(variable_col) == Inf) %>%
+      dplyr::filter(!get(variable_col) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
       dplyr::group_by(get(variable_row)) %>%
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
@@ -171,7 +174,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
   } else {
     tab_2 <- tab_1
 
-    tab_mean <-
+    summary <-
       data.frame(
         mean = NA,
         mean_se = NA,
@@ -181,7 +184,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     }
 
   # Final Crosstab ----------------------------
-  rt_tab <- tab_2 %>%
+  table <- tab_2 %>%
     # clean up:
     droplevels() %>%
     # big N sample size - for the whole data frame:
@@ -190,7 +193,8 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     srvyr::as_survey_design(weights = !!this_weight) %>%
     dplyr::group_by(# grouping by number of samples, number of households to keep this info
       total_N, total_N_hh,
-      get(variable_row)) %>%
+      get(variable_row),
+      get(variable_col)) %>%
     dplyr::summarize(
       group_N = length(hh_id),
       # raw sample size - number of people, trips, households, days (by group)
@@ -200,10 +204,13 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       # expanded total and SE
       estimated_prop = srvyr::survey_prop() # estimated proportion (0.0 - 1.0) and SE; multiply by 100 for percentages.
     ) %>%
+    ungroup() %>%
     # rename the column back to the original name - it gets weird for some reason
     dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`) %>%
+    dplyr::rename(!!rlang::quo_name(variable_col) := `get(variable_col)`) %>%
     dplyr::select(
       all_of(variable_row),
+      all_of(variable_col),
       "total_N",
       "total_N_hh",
       "group_N",
@@ -213,7 +220,6 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       "estimated_prop",
       "estimated_prop_se"
     ) %>%
-    dplyr::ungroup() %>%
     dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
 
 
@@ -230,8 +236,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
     unique()
 
-
-  two_way_rt_list <- c(rt_tab, definition_row, definition_col, tab_mean)
+  two_way_rt_list <- list(table = table, definition_row = definition_row, definition_col = definition_col, summary = summary)
 
   return(two_way_rt_list)
 
