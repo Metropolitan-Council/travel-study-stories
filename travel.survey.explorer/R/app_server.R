@@ -33,8 +33,8 @@ app_server <- function(input, output, session) {
   # Two-way tab -------
 
   ## input category and variable-----
-  twoway_var_rows <- mod_input_category_variable_server("twoway_input_rows")
-  twoway_var_cols <- mod_input_category_variable_server("twoway_input_cols")
+  twoway_var_rows <- mod_input_category_row_server("input_category_row_1")
+  twoway_var_cols <- mod_input_category_col_server("input_category_col_1")
 
   ## list of hh ids-----
   two_way_hhs <- mod_filters_oneway_server("filters_twoway_1")
