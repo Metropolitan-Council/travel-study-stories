@@ -216,7 +216,23 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     dplyr::ungroup() %>%
     dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
 
-  return(rt_tab)
-  return(tab_mean)
+
+  # Dictionary -------------
+  definition_row <-
+    tbi_dict %>%
+    dplyr::filter(variable == variable_row) %>%
+    dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
+    unique()
+
+  definition_col <-
+    tbi_dict %>%
+    dplyr::filter(variable == variable_col) %>%
+    dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
+    unique()
+
+
+  two_way_rt_list <- c(rt_tab, definition_row, definition_col, tab_mean)
+
+  return(two_way_rt_list)
 
 }
