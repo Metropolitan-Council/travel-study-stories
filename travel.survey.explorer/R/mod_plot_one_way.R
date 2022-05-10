@@ -17,7 +17,7 @@ mod_plot_one_way_ui <- function(id) {
 #' @title plot_one_way Server Functions
 #'
 #' @noRd
-mod_plot_one_way_server <- function(id, one_way_inputs) {
+mod_plot_one_way_server <- function(id, one_way_plot_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -27,7 +27,7 @@ mod_plot_one_way_server <- function(id, one_way_inputs) {
     output$plot <- plotly::renderPlotly({
       # browser()
       w$show()
-      table_data <- one_way_inputs$table_data
+      table_data <- one_way_plot_inputs$table_data
 
       council_plot_ly() %>%
         plotly::add_trace(
@@ -35,7 +35,7 @@ mod_plot_one_way_server <- function(id, one_way_inputs) {
           x = table_data[[1]],
           y = table_data$estimated_prop,
           hovertemplate = paste0(
-            "<b>", one_way_inputs$context_data$variable_label, "</b><br>",
+            "<b>", one_way_plot_inputs$context_data$variable_label, "</b><br>",
             "%{x}: %{y:.0%}"
           )
         ) %>%

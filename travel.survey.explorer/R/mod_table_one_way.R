@@ -17,7 +17,7 @@ mod_table_one_way_ui <- function(id) {
 #'  @title table_one_way Server Functions
 #'
 #' @noRd
-mod_table_one_way_server <- function(id, one_way_inputs) {
+mod_table_one_way_server <- function(id, one_way_table_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     w <- waiter::Waiter$new(ns("table"),
@@ -28,8 +28,9 @@ mod_table_one_way_server <- function(id, one_way_inputs) {
     output$table <- DT::renderDataTable({
       w$show()
 
-      context_data <- one_way_inputs$context_data
-      table_data <- one_way_inputs$table_data
+      context_data <- one_way_table_inputs$context_return
+      summary_data <- one_way_table_inputs$summary_return
+      table_data <- one_way_table_inputs$table_return
 
       DT::datatable(table_data %>%
         dplyr::select(
