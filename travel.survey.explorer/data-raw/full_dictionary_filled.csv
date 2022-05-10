@@ -375,47 +375,47 @@ trip,Trips,bus_payment_type,How did you pay the bus fare?,If used bus mode; if a
 trip,Trips,bus_payment_type,How did you pay the bus fare?,If used bus mode; if adult for participation groups 1 and 3,Bus fare payment method,3,"Cash, credit card, token(s), or ticket(s)",NA,trip_weight
 trip,Trips,bus_payment_type,How did you pay the bus fare?,If used bus mode; if adult for participation groups 1 and 3,Bus fare payment method,4,Don't know,NA,trip_weight
 trip,Trips,bus_payment_type,How did you pay the bus fare?,If used bus mode; if adult for participation groups 1 and 3,Bus fare payment method,995,Missing: Skip logic,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,-9998,Missing: Non-response,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,1,Went home,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,10,Primary workplace,If employed,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,11,"Work-related activity (e.g., meeting, delivery, worksite)",If employed,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,12,"Traveling for work (e.g., going to airport)",If employed,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,13,Volunteering,If employed,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,14,Other work-related,If employed,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,21,K-12 school,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,22,College/university,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,23,"Other type of class (e.g., cooking class)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,24,"Other education-related (e.g., field trip)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,25,Vocational education,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,26,Daycare or preschool,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,30,Grocery shopping,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,31,Get gas,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,32,"Other routine shopping (e.g., pharmacy)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,33,"Errand without appointment (e.g., post office, dry cleaning)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,34,"Medical visit (e.g., doctor, dentist)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,36,"Shopping for major item (e.g., furniture, car)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,37,"Errand with appointment (e.g., haircut, accountant)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,40,Pick-up/drop-off to/from childcare/preschool/adult care,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,41,Pick-up/drop-off to/from K-12 school or college,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,42,Pick-up/drop-off to/from other person's workplace,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,43,"Pick-up/drop-off to/from other person's scheduled activity (e.g., lesson, appointment)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,44,Other place to pick-up/drop-off,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,45,Pick-up/drop-off to/from other person's home,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,50,Dine out/get coffee or take-out,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,51,"Exercise (e.g., gym, jog, bike, walk dog)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,52,"Social (e.g., visit friends/relatives)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,53,"Leisure/entertain/cultural (e.g., cinema, museum)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,54,Religious/civic/volunteer activity,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,55,Vacation/traveling,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,56,"Family activity (e.g., watch child's game)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,60,"Change/transfer mode (e.g., wait for bus, change planes)",NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,61,Other errand,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,62,Other social/leisure/vacation activity,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,99,Other reason,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,100,To/from other person's home,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,101,Split loop purpose,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,995,Missing: Skip logic,NA,trip_weight
-trip,Trips,d_purpose,Why did you stop here (at destination)?,NA,Destination purpose,997,Other purpose,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,-9998,Missing: Non-response,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,1,Went home,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,10,Primary workplace,If employed,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,11,"Work-related activity (e.g., meeting, delivery, worksite)",If employed,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,12,"Traveling for work (e.g., going to airport)",If employed,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,13,Volunteering,If employed,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,14,Other work-related,If employed,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,21,K-12 school,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,22,College/university,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,23,"Other type of class (e.g., cooking class)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,24,"Other education-related (e.g., field trip)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,25,Vocational education,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,26,Daycare or preschool,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,30,Grocery shopping,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,31,Get gas,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,32,"Other routine shopping (e.g., pharmacy)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,33,"Errand without appointment (e.g., post office, dry cleaning)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,34,"Medical visit (e.g., doctor, dentist)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,36,"Shopping for major item (e.g., furniture, car)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,37,"Errand with appointment (e.g., haircut, accountant)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,40,Pick-up/drop-off to/from childcare/preschool/adult care,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,41,Pick-up/drop-off to/from K-12 school or college,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,42,Pick-up/drop-off to/from other person's workplace,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,43,"Pick-up/drop-off to/from other person's scheduled activity (e.g., lesson, appointment)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,44,Other place to pick-up/drop-off,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,45,Pick-up/drop-off to/from other person's home,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,50,Dine out/get coffee or take-out,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,51,"Exercise (e.g., gym, jog, bike, walk dog)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,52,"Social (e.g., visit friends/relatives)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,53,"Leisure/entertain/cultural (e.g., cinema, museum)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,54,Religious/civic/volunteer activity,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,55,Vacation/traveling,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,56,"Family activity (e.g., watch child's game)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,60,"Change/transfer mode (e.g., wait for bus, change planes)",NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,61,Other errand,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,62,Other social/leisure/vacation activity,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,99,Other reason,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,100,To/from other person's home,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,101,Split loop purpose,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,995,Missing: Skip logic,NA,trip_weight
+trip,Survey metadata,d_purpose,Why did you stop here (at destination)?,NA,NA,997,Other purpose,NA,trip_weight
 trip,Survey metadata,d_purpose_category,Destination purpose category ,NA,Destination purpose category ,14,School-related,NA,trip_weight
 trip,Survey metadata,d_purpose_category,Destination purpose category ,NA,Destination purpose category ,-9998,Missing: Non-response,NA,trip_weight
 trip,Survey metadata,d_purpose_category,Destination purpose category ,NA,Destination purpose category ,1,Home,NA,trip_weight
@@ -430,6 +430,7 @@ trip,Survey metadata,d_purpose_category,Destination purpose category ,NA,Destina
 trip,Survey metadata,d_purpose_category,Destination purpose category ,NA,Destination purpose category ,10,Change mode,NA,trip_weight
 trip,Survey metadata,d_purpose_category,Destination purpose category ,NA,Destination purpose category ,995,Missing: Skip logic,NA,trip_weight
 trip,Survey metadata,d_purpose_category,Destination purpose category ,NA,Destination purpose category ,997,Other,NA,trip_weight
+trip,Trips,d_purpose_category_broad,"What type of place were you going to? Derived from respondent's answer, and verified against location data.",NA,Destination place type - very broad categories,NA,NA,NA,trip_weight
 trip,Trips,d_purpose_category_imputed,"What type of place were you going to? Derived from respondent's answer, and verified against location data.",NA,Destination place type - broad categories,-9998,Missing: Non-response,NA,trip_weight
 trip,Trips,d_purpose_category_imputed,"What type of place were you going to? Derived from respondent's answer, and verified against location data.",NA,Destination place type - broad categories,-1,Missing: Non-imputable,NA,trip_weight
 trip,Trips,d_purpose_category_imputed,"What type of place were you going to? Derived from respondent's answer, and verified against location data.",NA,Destination place type - broad categories,1,Home,NA,trip_weight
@@ -490,7 +491,6 @@ trip,Trips,d_purpose_imputed,"What type of place were you going to? Derived from
 trip,Trips,d_purpose_imputed,"What type of place were you going to? Derived from respondent's answer, and verified against location data.",NA,Destination place type - detailed categories,81,Spent the night at non-home location in region,NA,trip_weight
 trip,Trips,d_purpose_imputed,"What type of place were you going to? Derived from respondent's answer, and verified against location data.",NA,Destination place type - detailed categories,100,To/from other person's home,NA,trip_weight
 trip,Trips,d_purpose_imputed,"What type of place were you going to? Derived from respondent's answer, and verified against location data.",NA,Destination place type - detailed categories,101,Split loop purpose,NA,trip_weight
-trip,Trips,d_purpose_imputed,"What type of place were you going to? Derived from respondent's answer, and verified against location data.",NA,Destination place type - detailed categories,997,Other purpose,NA,trip_weight
 trip,Survey metadata,hh_member_1,Which household members traveled with you on this trip? Select all that apply. Please include anyone that started the trip with you and traveled with you.,NA,Member 1 was on trip,-9998,Missing: Non-response,NA,trip_weight
 trip,Survey metadata,hh_member_1,Which household members traveled with you on this trip? Select all that apply. Please include anyone that started the trip with you and traveled with you.,NA,Member 1 was on trip,0,No,NA,trip_weight
 trip,Survey metadata,hh_member_1,Which household members traveled with you on this trip? Select all that apply. Please include anyone that started the trip with you and traveled with you.,NA,Member 1 was on trip,1,Yes,NA,trip_weight
@@ -814,6 +814,9 @@ trip,Trips,num_travelers,How many [non-household and household members] traveled
 trip,Trips,num_travelers,How many [non-household and household members] traveled with you? Please include anyone that started the trip with you and traveled with you.,NA,Number of people in travel party,10,10 people,NA,trip_weight
 trip,Trips,num_travelers,How many [non-household and household members] traveled with you? Please include anyone that started the trip with you and traveled with you.,NA,Number of people in travel party,11,11 people,NA,trip_weight
 trip,Trips,num_travelers,How many [non-household and household members] traveled with you? Please include anyone that started the trip with you and traveled with you.,NA,Number of people in travel party,995,Missing: Skip logic,NA,trip_weight
+trip,Trips,d_purpose_imputed,"What type of place were you going to? Derived from respondent's answer, and verified against location data.",NA,Destination place type - detailed categories,997,Other purpose,NA,trip_weight
+trip,PII,d_purpose_other,NA,NA,NA,NA,NA,NA,trip_weight
+trip,Trips,o_purpose_category_broad,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - very broad categories,NA,NA,NA,trip_weight
 trip,Trips,o_purpose_category_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - broad categories,-9998,Missing: Non-response,NA,trip_weight
 trip,Trips,o_purpose_category_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - broad categories,-1,Missing: Non-imputable,NA,trip_weight
 trip,Trips,o_purpose_category_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - broad categories,1,Home,NA,trip_weight
@@ -838,9 +841,6 @@ trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived f
 trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,7,Social/leisure/vacation activity,NA,trip_weight
 trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,10,Primary workplace,NA,trip_weight
 trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,11,"Work-related activity (e.g., meeting, delivery, worksite)",NA,trip_weight
-trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,12,"Traveling for work (e.g., going to airport)",NA,trip_weight
-trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,13,Volunteering,NA,trip_weight
-trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,14,Other work-related,NA,trip_weight
 day,Days without travel,no_travel_kids_break,Why didn't you go anywhere on [this date]? Select all that apply.,If made no trips; all members in group 2 and adults only in participation groups 1 & 3; if any household members are <= age 18,Reason for no travel on travel day: Kids were on school vacation/break,995,Missing: Skip logic,NA,day_weight
 day,Days without travel,no_travel_no_transport,Why didn't you go anywhere on [this date]? Select all that apply.,If made no trips; all members in group 2 and adults only in participation groups 1 & 3,"Reason for no travel on travel day: No available transportation (e.g., no car, no bus)",-9998,Missing: Non-response,NA,day_weight
 day,Days without travel,no_travel_no_transport,Why didn't you go anywhere on [this date]? Select all that apply.,If made no trips; all members in group 2 and adults only in participation groups 1 & 3,"Reason for no travel on travel day: No available transportation (e.g., no car, no bus)",0,No,NA,day_weight
@@ -878,6 +878,9 @@ trip,Trips,travel_dow,Day of week,NA,Day of week,4,Thursday,NA,trip_weight
 trip,Trips,travel_dow,Day of week,NA,Day of week,5,Friday,NA,trip_weight
 trip,Trips,travel_dow,Day of week,NA,Day of week,6,Saturday,NA,trip_weight
 trip,Trips,travel_dow,Day of week,NA,Day of week,7,Sunday,NA,trip_weight
+trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,12,"Traveling for work (e.g., going to airport)",NA,trip_weight
+trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,13,Volunteering,NA,trip_weight
+trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,14,Other work-related,NA,trip_weight
 trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,21,K-12 school,NA,trip_weight
 trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,22,College/university,NA,trip_weight
 trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,23,"Other type of class (e.g., cooking class)",NA,trip_weight
@@ -909,9 +912,6 @@ trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived f
 trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,62,Other social/leisure/vacation activity,NA,trip_weight
 trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,80,Spent the night at non-home location out of region,NA,trip_weight
 trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,81,Spent the night at non-home location in region,NA,trip_weight
-trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,100,To/from other person's home,NA,trip_weight
-trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,101,Split loop trip,NA,trip_weight
-trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,997,Other purpose,NA,trip_weight
 trip,Trips,rail_payment_type,How did you pay the rail fare?,If used rail mode; if adult for participation groups 1 and 3,Rail fare payment method,-9998,Missing: Non-response,NA,trip_weight
 trip,Trips,rail_payment_type,How did you pay the rail fare?,If used rail mode; if adult for participation groups 1 and 3,Rail fare payment method,1,Free (no cost at all),NA,trip_weight
 trip,Trips,rail_payment_type,How did you pay the rail fare?,If used rail mode; if adult for participation groups 1 and 3,Rail fare payment method,2,Used transit Go-To card or pass (any type),NA,trip_weight
@@ -1217,7 +1217,7 @@ trip,Survey metadata,o_state,Inferred from trip origin coordinates (lat/long).,N
 trip,PII,d_bg,NA,NA,NA,NA,NA,NA,trip_weight
 trip,Survey metadata,d_county,Inferred from trip destination coordinates (lat/long).,NA,Trip Destination County,NA,NA,NA,trip_weight
 trip,Survey metadata,d_state,Inferred from trip destination coordinates (lat/long).,NA,Trip Destination State,NA,NA,NA,trip_weight
-trip,PII,d_purpose_other,NA,NA,NA,NA,NA,NA,trip_weight
+trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,100,To/from other person's home,NA,trip_weight
 trip,Survey metadata,duration,NA,NA,NA,NA,NA,NA,trip_weight
 trip,Trips,duration_imputed,"Duration of trip (minutes), imputed from survey response and verified against trip data.",NA,Trip Duration (Minutes),NA,NA,NA,trip_weight
 trip,Trips,distance,Trip distance,NA,Trip Distance (Miles),NA,NA,NA,trip_weight
@@ -1247,10 +1247,10 @@ trip,Trips,trip_d_thrive_category,Inferred from trip destination coordinates (la
 trip,Trips,trip_d_thrive_category_broad,Inferred from trip destination coordinates (lat/long).,NA,Broad Community Type of Trip Destination,NA,NA,NA,trip_weight
 trip,Trips,trip_d_urban_rural_suburban,Inferred from trip destination coordinates (lat/long).,NA,Broad Community Type (3 Categories) of Trip Destination,NA,NA,NA,trip_weight
 trip,Trips,mode_group,Broad groups of modes,NA,Mode type (broad groups),NA,NA,NA,trip_weight
-trip,Trips,d_purpose_category_broad,Destination place type - broad categories,NA,Destination place type - broad categories,NA,NA,NA,trip_weight
-trip,Trips,o_purpose_category_broad,Origin place type - broad categories,NA,Origin place type - broad categories,NA,NA,NA,trip_weight
+trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,101,Split loop trip,NA,trip_weight
+trip,Trips,o_purpose_imputed,"What type of place were you coming from? Derived from respondent's answer, and verified against location data.",NA,Origin place type - detailed categories,997,Other purpose,NA,trip_weight
 trip,Trips,trip_season,Inferred from travel date - meterological season.,NA,Season of Trip,NA,NA,NA,trip_weight
 trip_purpose,Survey metadata,trip_id,NA,NA,NA,NA,NA,NA,trip_purpose_weight
-trip_purpose,Survey metadata,trip_purpose_weight,NA,NA,NA,NA,NA,NA,trip_purpose_weight
-trip_purpose,Trips,purpose_category,Inferred from the origin and destination reported by the respondent.,NA,Trip purpose - broad categories,NA,NA,NA,trip_purpose_weight
 trip_purpose,Trips,purpose,Inferred from the origin and destination reported by the respondent.,NA,Trip purpose - detailed categories,NA,NA,NA,trip_purpose_weight
+trip_purpose,Trips,purpose_category,Inferred from the origin and destination reported by the respondent.,NA,Trip purpose - broad categories,NA,NA,NA,trip_purpose_weight
+trip_purpose,Survey metadata,trip_purpose_weight,NA,NA,NA,NA,NA,NA,trip_purpose_weight
