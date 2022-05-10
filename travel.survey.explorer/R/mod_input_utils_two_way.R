@@ -18,7 +18,7 @@ mod_input_utils_two_way_ui <- function(id) {
 #'
 #' @return [shiny::reactiveValues()] `table_data` and `context_data`.
 #'
-mod_input_utils_two_way_server <- function(id, variable_row, variable_col, hh_ids) {
+mod_input_utils_two_way_server <- function(id, util_variable_row, util_variable_col, util_hh_ids) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -26,9 +26,9 @@ mod_input_utils_two_way_server <- function(id, variable_row, variable_col, hh_id
 
     # generate table
     two_way_rt_list <- reactive({
-      create_two_way_table(variable_row = variable_row$variable_row,
-                           variable_col = variable_col$variable_col,
-                           hh_ids = hh_ids$hh_ids)
+      create_two_way_table(variable_row = util_variable_row$variable,
+                           variable_col = util_variable_col$variable,
+                           hh_ids = util_hh_ids$hh_ids)
     })
 
 
@@ -41,8 +41,7 @@ mod_input_utils_two_way_server <- function(id, variable_row, variable_col, hh_id
       vals$summary_return <- two_way_rt$tab_mean
 
     }) %>%
-      # bindCache(user_inputs$variable, user_hhs$hh_ids) %>%
-      bindEvent(variable_row$variable_row, variable_col$variable_col, hh_ids$hh_ids)
+      bindEvent(util_variable_row$variable, util_variable_col$variable_col, util_hh_ids$hh_ids)
 
     return(vals)
   })

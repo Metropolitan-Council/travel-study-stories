@@ -18,7 +18,7 @@ mod_input_utils_ui <- function(id) {
 #'
 #' @return [shiny::reactiveValues()] `table_data` and `context_data`.
 #'
-mod_input_utils_server <- function(id, user_inputs, user_hhs) {
+mod_input_utils_server <- function(id, user_var, user_hhs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -26,7 +26,7 @@ mod_input_utils_server <- function(id, user_inputs, user_hhs) {
 
     # generate table
     one_way_rt_list <- reactive({
-      create_one_way_table(variable_row = user_inputs$variable,
+      create_one_way_table(variable_row = user_var$variable,
                            hh_ids = user_hhs$hh_ids)
     })
 
@@ -42,7 +42,7 @@ mod_input_utils_server <- function(id, user_inputs, user_hhs) {
 
       return(vals)
     }) %>%
-      bindEvent(user_inputs$variable, user_hhs$hh_ids)
+      bindEvent(user_var$variable, user_hhs$hh_ids)
 
     return(vals)
   })
