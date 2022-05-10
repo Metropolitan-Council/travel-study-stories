@@ -4,7 +4,7 @@
 \alias{create_two_way_table}
 \title{Create a two-way cross table}
 \usage{
-create_two_way_table(variable_row, variable_col)
+create_two_way_table(variable_row, variable_col, hh_ids)
 }
 \arguments{
 \item{variable}{character, variable name. Must be one of \code{tbi_dict$variable}.}
