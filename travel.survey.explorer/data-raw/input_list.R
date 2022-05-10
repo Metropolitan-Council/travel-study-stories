@@ -4,7 +4,7 @@ library(dplyr)
 # library(travel.survey.explorer)
 
 input_list <- purrr::map(unique(tbi_dict$category), function(x) {
-  x <- "Trips"
+
   tb <- tbi_dict %>%
     dplyr::filter(category == x)
 
@@ -32,12 +32,14 @@ library(dplyr)
 # library(travel.survey.explorer)
 
 input_question_list <- purrr::map(unique(tbi_dict$variable), function(x) {
-  tb <- tbi_dict %>%
+
+    tb <- tbi_dict %>%
     dplyr::filter(variable == x)
 
   variab <- tb$variable %>%
     unique() %>%
     as.list()
+
   variab_name <- tb$survey_question %>%
     unique() %>%
     as.list()
