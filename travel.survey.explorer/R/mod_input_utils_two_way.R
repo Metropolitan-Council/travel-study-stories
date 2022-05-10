@@ -25,33 +25,24 @@ mod_input_utils_two_way_server <- function(id, variable_row, variable_col, hh_id
     vals <- reactiveValues()
 
     # generate table
-    table_return <- reactive({
+    two_way_rt_list <- reactive({
       create_two_way_table(variable_row = variable_row$variable_row,
                            variable_col = variable_col$variable_col,
                            hh_ids = hh_ids$hh_ids)
     })
 
-    # find contextual data, like variable names, question text, etc.
-    context_return <- reactive({
-      # browser()
-      tbi_dict %>%
-        dplyr::filter(variable %in% c(variable_row$variable_row, variable_col$variable_col)) %>%
-        dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
-        unique()
-    })
-
 
     observe({
       # browser()
-      vals$table_data <- table_return()
-      vals$context_data <- context_return()
+      two_way_rt <- two_way_rt_list()
 
-      print(vals$table_data)
+      vals$table_return <- two_way_rt$table
+      vals$context_return <- two_way_rt$definitions
+      vals$summary_return <- two_way_rt$tab_mean
 
-      return(vals)
     }) %>%
       # bindCache(user_inputs$variable, user_hhs$hh_ids) %>%
-      bindEvent(variable_row$variable_row, variable_col$variable_col, user_two_way_hhs$two_way_hhs)
+      bindEvent(variable_row$variable_row, variable_col$variable_col, hh_ids$hh_ids)
 
     return(vals)
   })

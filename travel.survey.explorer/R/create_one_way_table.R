@@ -125,6 +125,7 @@ create_one_way_table <- function(variable_row, hh_ids) {
   } else {
 
     # empty table of median and means for numeric data:
+    # TODO - add column for mode?
     tab_mean <-
       data.frame(
         mean = NA,
@@ -171,6 +172,15 @@ create_one_way_table <- function(variable_row, hh_ids) {
     dplyr::ungroup() %>%
     dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
 
-  return(rt_tab)
-  return(tab_mean)
+
+    # Dictionary -------------
+    definitions <-
+    tbi_dict %>%
+      dplyr::filter(variable == user_inputs$variable) %>%
+      dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
+      unique()
+
+    one_way_rt_list <- c(rt_tab, definitions, tab_mean)
+
+  return(one_way_rt_list)
 }
