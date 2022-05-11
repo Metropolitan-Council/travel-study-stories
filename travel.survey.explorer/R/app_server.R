@@ -47,8 +47,12 @@ app_server <- function(input, output, session) {
     util_variable_col = user_col_var,
     util_hh_ids = user_hhs_2way)
 
+
+  mod_table_two_way_server("table_two_way_ui_1", two_way_table_inputs = two_way_tab)
+  mod_plot_two_way_server("plot_two_way_ui_1", two_way_plot_inputs = two_way_tab)
+
+
   # ## formatted table -----
-  # mod_table_two_way_server("table_two_way_ui_1") # atm, just some random numbers
   #
   # ## plot--------
 
