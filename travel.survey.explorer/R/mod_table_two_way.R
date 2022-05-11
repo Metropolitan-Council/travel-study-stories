@@ -17,15 +17,28 @@ mod_table_two_way_ui <- function(id) {
 #' @title table_two_way Server Functions
 #'
 #' @noRd
-mod_table_two_way_server <- function(id) {
+mod_table_two_way_server <- function(id, two_way_table_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
+    w <- waiter::Waiter$new(ns("table"),
+                            color = waiter::transparent(0.5)
+    )
     output$table <- DT::renderDataTable({
-      shinipsum::random_DT(
-        nrow = 40,
-        ncol = 14
-      )
+      w$show()
+
+      table_data <- two_way_table_inputs$table_return
+      context_row <- two_way_table_inputs$context_row_return
+      context_col <- two_way_table_inputs$context_col_return
+
+      summary_data <- two_way_table_inputs$summary_return
+      display_data <- two_way_table_inputs$table_display
+
+      # browser()
+
+      DT::datatable(display_data,
+                    rownames = display_data[1]) %>%
+        DT::formatPercentage(columns = c(2:ncol(display_data)), digits = 2)
+
     })
   })
 }
