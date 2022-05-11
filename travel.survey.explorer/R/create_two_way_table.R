@@ -69,7 +69,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     dplyr::filter(!(get(variable_col) %in% missing_codes))
 
   tab_0 <- table_row %>%
-    dplyr::left_join(table_col) %>%
+    dplyr::inner_join(table_col) %>%
     # get our households:
     dplyr::filter(hh_id %in% hh_ids) %>%
     # get rid of NA weights:
