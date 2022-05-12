@@ -181,7 +181,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
         median = NA,
         median_se = NA
       )
-    }
+  }
 
   # Final Crosstab ----------------------------
   table <- tab_2 %>%
@@ -220,7 +220,8 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       "estimated_prop",
       "estimated_prop_se"
     ) %>%
-    dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
+    dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric),
+                                round, digits = 5))
 
 
   # Dictionary -------------
@@ -236,7 +237,11 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
     unique()
 
-  two_way_rt_list <- list(table = table, definition_row = definition_row, definition_col = definition_col, summary = summary)
+  # return -----
+  two_way_rt_list <- list(table = table,
+                          definition_row = definition_row,
+                          definition_col = definition_col,
+                          summary = summary)
 
   return(two_way_rt_list)
 
