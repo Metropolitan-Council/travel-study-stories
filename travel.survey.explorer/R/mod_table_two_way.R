@@ -27,18 +27,25 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
       w$show()
 
       table_data <- two_way_table_inputs$table_return
-      context_row <- two_way_table_inputs$context_row_return
-      context_col <- two_way_table_inputs$context_col_return
+      # context_row <- two_way_table_inputs$context_row_return
+      # context_col <- two_way_table_inputs$context_col_return
+      # summary_data <- two_way_table_inputs$summary_return
 
-      summary_data <- two_way_table_inputs$summary_return
-      display_data <- two_way_table_inputs$table_display
+
+      dt_items <- create_datatable_container(two_way_table_inputs$two_way_list,
+                                             type = "proportion_w_se")
 
       # browser()
 
-      DT::datatable(display_data,
-                    rownames = display_data[1]) %>%
-        DT::formatPercentage(columns = c(2:ncol(display_data)), digits = 2)
-
+      DT::datatable(dt_items$dt_data,container = dt_items$container,
+                    rownames = F) %>%
+        DT::formatPercentage(columns = which(sapply(dt_items$dt_data,
+                                                    is.numeric),
+                                             TRUE), digits = 1) %>%
+        DT::formatString(columns = which(sapply(dt_items$dt_data,
+                                                is.character),
+                                         TRUE),
+                         prefix = "+/-")
     })
   })
 }
