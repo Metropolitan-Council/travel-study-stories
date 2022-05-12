@@ -2,6 +2,7 @@
 
 export("%>%")
 export(council_plot_ly)
+export(create_datatable_container)
 export(create_one_way_table)
 export(create_two_way_table)
 export(render_guides)
