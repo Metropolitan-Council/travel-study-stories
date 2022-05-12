@@ -29,23 +29,6 @@ mod_input_utils_two_way_server <- function(id, util_variable_row, util_variable_
       t <- create_two_way_table(variable_row = util_variable_row$variable,
                            variable_col = util_variable_col$variable,
                            hh_ids = util_hh_ids$hh_ids)
-
-      t$table_display <- t$table %>%
-        dplyr::select(1:2,
-                      # col_var = 2,
-                      proportion = estimated_prop
-                      # se = estimated_prop_se,
-                      # sample = group_N
-                      ) %>%
-        tidyr::pivot_wider(names_from = 2,
-                           values_from = c(proportion
-                                           # se,
-                                           # sample
-                                           )
-                           # names_vary = "slowest",
-                           # names_glue = "{col_var} ({.value})"
-        )
-
       return(t)
     })
 
@@ -53,12 +36,12 @@ mod_input_utils_two_way_server <- function(id, util_variable_row, util_variable_
     observe({
       two_way_rt <- two_way_rt_list()
 
+      vals$two_way_list <- two_way_rt
       vals$table_return <- two_way_rt$table
       vals$context_row_return <- two_way_rt$definition_row
       vals$context_col_return <- two_way_rt$definition_col
 
       vals$summary_return <- two_way_rt$summary
-      vals$table_display <- two_way_rt$table_display
 
       print(vals$table_return) # eventually comment out
 
