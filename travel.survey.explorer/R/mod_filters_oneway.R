@@ -9,7 +9,6 @@
 #' @importFrom shiny NS tagList
 #' @importFrom dplyr filter select inner_join
 #' @importFrom purrr pluck
-#' @import bit64
 mod_filters_oneway_ui <- function(id) {
   ns <- NS(id)
   tagList(

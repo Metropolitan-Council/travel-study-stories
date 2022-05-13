@@ -24,7 +24,6 @@
 #' @importFrom srvyr survey_total survey_prop
 #' @importFrom purrr pluck
 #' @importFrom data.table as.ITime
-#' @import bit64
 #'
 create_one_way_table <- function(variable_row, hh_ids) {
 
