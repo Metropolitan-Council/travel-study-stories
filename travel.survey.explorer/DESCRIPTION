@@ -14,19 +14,23 @@ License: MIT + file LICENSE
 Depends: 
     R (>= 2.10)
 Imports: 
+    bit64 (>= 4.0.5),
     config (>= 0.3.1),
     data.table (>= 1.14.2),
     DT (>= 0.20),
     golem (>= 0.3.1),
     magrittr (>= 2.0.2),
+    markdown (>= 1.1),
+    pkgload (>= 1.2.4),
     processx (>= 3.5.2),
     purrr (>= 0.3.4),
     rlang (>= 1.0.1),
+    rmarkdown (>= 2.13),
     shinipsum (>= 0.1.0),
     shiny (>= 1.7.1),
     srvyr (>= 1.1.1),
     stringr (>= 1.4.0),
-    waiter (>= 0.2.5),
+    waiter (>= 0.2.5)
 Suggests: 
     spelling (>= 2.2),
     testthat (>= 3.0.0)
