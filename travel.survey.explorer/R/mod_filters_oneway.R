@@ -54,6 +54,7 @@ mod_filters_oneway_ui <- function(id) {
 #' filters_oneway Server Functions
 #'
 #' @noRd
+#' @import bit64
 mod_filters_oneway_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns

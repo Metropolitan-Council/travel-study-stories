@@ -74,7 +74,6 @@ mod_filters_twoway_server <- function(id){
                        na.omit()
 
                      updateSelectInput(
-                       session = session,
                        inputId = "twoway_input_cities",
                        label = "Household City/Township",
                        choices = filtered_cities$hh_city,
@@ -82,7 +81,6 @@ mod_filters_twoway_server <- function(id){
                      )
                    } else {
                      selectInput(
-                       session = session,
                        inputId = ns("twoway_input_cities"),
                        "Household City/Township",
                        choices = unique(na.omit(tbi_tables$hh$hh_city)),
