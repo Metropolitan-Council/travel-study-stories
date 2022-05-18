@@ -22,11 +22,12 @@ mod_plot_two_way_server <- function(id, two_way_plot_inputs) {
     ns <- session$ns
 
 
-    w <- waiter::Waiter$new(ns("plot"), color = waiter::transparent(0.5))
+    w_two_way <- waiter::Waiter$new(ns("plot"),
+                            color = waiter::transparent(0.5))
 
     output$plot <- plotly::renderPlotly({
       # browser()
-      w$show()
+      w_two_way$show()
       table_data <- two_way_plot_inputs$table_return
 
       council_plot_ly() %>%
