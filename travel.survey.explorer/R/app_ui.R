@@ -50,9 +50,15 @@ app_ui <- function(request) {
             mod_filters_twoway_ui("filters_twoway_1")
           ),
           mainPanel = mainPanel(# plot goes here
-            mod_plot_two_way_ui("plot_two_way_ui_1"),
-            mod_table_two_way_ui("table_two_way_ui_1")
-          )
+            tabsetPanel(
+              tabPanel(
+                title = "Table",
+                mod_table_two_way_ui("table_two_way_ui_1")),
+              tabPanel(
+                title = "Plot",
+                mod_plot_two_way_ui("plot_two_way_ui_1"))
+
+            ))
 
         )
       ),
