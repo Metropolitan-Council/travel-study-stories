@@ -9,6 +9,8 @@
 #' @importFrom shiny NS tagList
 #' @importFrom dplyr filter select inner_join
 #' @importFrom purrr pluck
+#' @importFrom knitr combine_words
+#'
 mod_filters_oneway_ui <- function(id) {
   ns <- NS(id)
   tagList(
@@ -157,6 +159,38 @@ mod_filters_oneway_server <- function(id) {
         # but we want a list of hh ids in the end --
         # so we use pluck to get it
         purrr::pluck(1)
+
+
+      vals$filter_text <- knitr::combine_words(
+        ifelse(
+          input$oneway_input_mpo == TRUE,
+          "the Twin Cities Region (MPO boundary)",
+          ""
+        ),
+
+        ifelse(
+          is.null(input$oneway_input_counties),
+          "",
+          paste0(knitr::combine_words(
+            gsub(
+              "\\s*\\([^\\)]+\\)",
+              "",
+              as.character(input$oneway_input_counties)
+            )),
+            ifelse(length(input$oneway_input_counties > 1, "counties", "county"))
+          )),
+
+          ifelse(
+            is.null(input$oneway_input_cities),
+            "",
+            paste0(knitr::combine_words(
+              gsub(
+                "\\s*\\([^\\)]+\\)",
+                "",
+                as.character(input$oneway_input_cities)
+              ))
+            )),
+          )
 
     })
     return(vals)

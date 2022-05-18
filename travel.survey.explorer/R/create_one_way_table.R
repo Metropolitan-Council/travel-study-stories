@@ -172,8 +172,13 @@ create_one_way_table <- function(variable_row, hh_ids) {
       "estimated_prop_se"
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
-
+    dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5)) %>%
+    mutate(units = !!this_table) %>%
+    mutate(units = dplyr::case_when(units == "per" ~ "people",
+                             units == "day" ~ "days",
+                             units == "hh" ~ "households",
+                             units == "veh" ~ "vehicles",
+                             units == "trip" ~ "trips"))
 
     # Dictionary -------------
     definitions <-
