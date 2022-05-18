@@ -25,10 +25,11 @@ mod_table_one_way_server <- function(id, one_way_table_inputs) {
     )
 
 
+
     output$table <- DT::renderDataTable({
       w$show()
 
-      context_data <- one_way_table_inputs$context_return
+      definitions_data <- one_way_table_inputs$definitions_return
       summary_data <- one_way_table_inputs$summary_return
       table_data <- one_way_table_inputs$table_return
 
@@ -44,7 +45,7 @@ mod_table_one_way_server <- function(id, one_way_table_inputs) {
         )),
       rownames = F,
       colnames = c(
-        context_data$variable_label,
+        definitions_data$variable_label,
         "Estimated proportion",
         "Standard error",
         "Group size"

@@ -35,7 +35,7 @@ mod_input_utils_server <- function(id, user_var, user_hhs) {
       one_way_rt <- one_way_rt_list()
 
       vals$table_return <- one_way_rt$table
-      vals$context_return <- one_way_rt$definitions
+      vals$definitions_return <- one_way_rt$definitions
       vals$summary_return <- one_way_rt$summary
 
       print(vals$table_return) # eventually comment out
