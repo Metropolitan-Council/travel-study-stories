@@ -10,8 +10,8 @@ travel.survey.explorer::run_app() # add parameters here (if any)
 # rsconnect::deployApp(appDir = ".",
 #                      account = "metrotransitmn",
 #                      server = "shinyapps.io",
-#                      appName = "travel-study-stories",
-#                      appId = 6298674,
+#                      appName = "travel-survey-explorer",
+#                      appId = 6297984,
 #                      launch.browser = function(url) {
 #                        message("Deployment completed: ", url)     },
 #                      lint = FALSE,
