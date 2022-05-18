@@ -28,7 +28,9 @@ app_server <- function(input, output, session) {
   )
 
   ## plot--------
-  mod_plot_one_way_server("plot_one_way_ui_1", one_way_plot_inputs = one_way_rts)
+  mod_plot_one_way_server("plot_one_way_ui_1",
+                          one_way_plot_inputs = one_way_rts,
+                          filter_info = user_hhs_1way)
 
   # Two-way tab -------
 
