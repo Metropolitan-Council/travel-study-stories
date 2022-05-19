@@ -160,40 +160,58 @@ mod_filters_oneway_server <- function(id) {
         # so we use pluck to get it
         purrr::pluck(1)
 
+      ## Text string about households in the set ----
+      citystring <-
+        paste0(knitr::combine_words(
+          gsub(
+            "\\s*\\([^\\)]+\\)",
+            "",
+            as.character(input$oneway_input_cities)
+          )))
 
-      vals$filter_text <- knitr::combine_words(
-        ifelse(
-          input$oneway_input_mpo == TRUE,
-          "the Twin Cities Region (MPO boundary)",
-          ""
-        ),
-
-        ifelse(
-          is.null(input$oneway_input_counties),
-          "",
-          paste0(knitr::combine_words(
-            gsub(
-              "\\s*\\([^\\)]+\\)",
-              "",
-              as.character(input$oneway_input_counties)
-            )),
-            ifelse(length(input$oneway_input_counties > 1, "counties", "county"))
+      countystring_1 <-
+        paste0(knitr::combine_words(
+          gsub(
+            "\\s*\\([^\\)]+\\)|[[:space:]]MN|[[:space:]]WI",
+            "",
+            as.character(input$oneway_input_counties)
           )),
+          ifelse(length(input$oneway_input_counties) > 1, " Counties", " County")
+        )
+
+      countystring_withMPO <-
+        ifelse(
+          any(grepl("St. Croix|Sherburne|Wright", x = input$oneway_input_counties)) & input$oneway_input_mpo == T,
+
+          paste0(countystring_1, ", restricted to areas within MPO boundary"),
 
           ifelse(
-            is.null(input$oneway_input_cities),
-            "",
-            paste0(knitr::combine_words(
-              gsub(
-                "\\s*\\([^\\)]+\\)",
-                "",
-                as.character(input$oneway_input_cities)
-              ))
-            )),
-          )
+            any(grepl("St. Croix|Sherburne|Wright", x = input$oneway_input_counties)) & input$oneway_input_mpo == F,
 
+            paste0(countystring_1, ", includes some areas outside MPO boundary"),
+
+            countystring_1
+          )
+        )
+
+      vals$filter_text <- ifelse(# if there is a city/cities, print that:
+        length(input$oneway_input_cities) > 0,
+        citystring,
+        # OTHERWISE if there is a county/counties, print that:
+        ifelse(
+          length(input$oneway_input_counties) > 0,
+          countystring_withMPO,
+          # OTHERWISE, print the MPO boundary:
+          ifelse(input$oneway_input_mpo == T, " the Twin Cities region (MPO Boundary)", "")
+        ))
+
+
+
+      print(vals$filter_text)
     })
+
     return(vals)
+
   })
 }
 
