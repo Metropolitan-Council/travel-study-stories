@@ -38,17 +38,18 @@ mod_plot_one_way_server <- function(id, one_way_plot_inputs, filter_info) {
     })
 
     output$filter_and_n <- shiny::renderText({
+
       table_data <- one_way_plot_inputs$table_return
       n <- table_data$total_N[[1]]
       n_hh <-table_data$total_N_hh[[1]]
       units <- table_data$units[[1]]
 
-      area_filter <-filter_info$filter_text
+      area_filter <- filter_info$filter_text
 
       if(units == "households"){
-        paste0("Showing data for ", n_hh, " households", ifelse(area_filter == "", ".", paste0(" from", area_filter, ".")))
+        paste0("Showing data for ", n_hh, " households", ifelse(area_filter == "", ".", paste0(" from ", area_filter, ".")))
       }else{
-        paste0("Showing data for ", n, " ", units, " from ", n_hh, " households", ifelse(area_filter == "", ".", paste0(" from", area_filter, ".")))
+        paste0("Showing data for ", n, " ", units, " from ", n_hh, " households", ifelse(area_filter == "", ".", paste0(" from ", area_filter, ".")))
       }
 
     })
