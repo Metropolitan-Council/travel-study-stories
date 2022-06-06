@@ -42,28 +42,29 @@ app_ui <- function(request) {
             width = 3,
             h3("First variable (rows)"),
             mod_input_category_row_ui("input_category_row_1"),
-
             h3("Second variable (columns)"),
             mod_input_category_col_ui("input_category_col_1"),
-
             h3("Filter households by geography"),
             mod_filters_twoway_ui("filters_twoway_1")
           ),
-          mainPanel = mainPanel(# plot goes here
+          mainPanel = mainPanel( # plot goes here
             tabsetPanel(
               tabPanel(
                 title = "Table",
-                mod_table_two_way_ui("table_two_way_ui_1")),
+                mod_table_two_way_ui("table_two_way_ui_1")
+              ),
               tabPanel(
                 title = "Plot",
-                mod_plot_two_way_ui("plot_two_way_ui_1"))
-
-            ))
-
+                mod_plot_two_way_ui("plot_two_way_ui_1")
+              )
+            )
+          )
         )
       ),
-      tabPanel(title = "About",
-               mod_about_ui("about_ui_1"))
+      tabPanel(
+        title = "About",
+        mod_about_ui("about_ui_1")
+      )
     )
   )
 }
@@ -82,9 +83,10 @@ golem_add_external_resources <- function() {
   tags$head(
     waiter::useWaiter(),
     favicon(),
-    bundle_resources(# shiny::includeHTML(paste0(app_sys("app/www"), "/google-analytics.html")),
+    bundle_resources( # shiny::includeHTML(paste0(app_sys("app/www"), "/google-analytics.html")),
       path = app_sys("app/www"),
-      app_title = "Travel Survey Explorer")
+      app_title = "Travel Survey Explorer"
+    )
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
   )

@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_filters_twoway_ui <- function(id){
+mod_filters_twoway_ui <- function(id) {
   ns <- NS(id)
   tagList(
 
@@ -42,7 +42,8 @@ mod_filters_twoway_ui <- function(id){
       "Household City/Township",
       choices = unique(na.omit(tbi_tables$hh$hh_city)),
       multiple = TRUE,
-      selected = NULL),
+      selected = NULL
+    ),
 
     # Button: Go two Way, Create Table ----
     actionButton(inputId = ns("go_two_way"), "Create Crosstabs")
@@ -52,7 +53,7 @@ mod_filters_twoway_ui <- function(id){
 #' filters_twoway Server Functions
 #'
 #' @noRd
-mod_filters_twoway_server <- function(id){
+mod_filters_twoway_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -64,29 +65,30 @@ mod_filters_twoway_server <- function(id){
     ## When county/counties selected, ----
     # update cities dropdown to include only cities within that county ----
     observeEvent(input$twoway_input_counties,
-                 {
-                   if (!is.null(input$twoway_input_counties))
-                   {
-                     filtered_cities <- tbi_tables$hh %>%
-                       dplyr::filter(hh_county %in% input$twoway_input_counties) %>%
-                       dplyr::select(hh_city) %>%
-                       unique() %>%
-                       na.omit()
+      {
+        if (!is.null(input$twoway_input_counties)) {
+          filtered_cities <- tbi_tables$hh %>%
+            dplyr::filter(hh_county %in% input$twoway_input_counties) %>%
+            dplyr::select(hh_city) %>%
+            unique() %>%
+            na.omit()
 
-                     updateSelectInput(
-                       inputId = "twoway_input_cities",
-                       label = "Household City/Township",
-                       choices = filtered_cities$hh_city,
-                       selected = NULL
-                     )
-                   } else {
-                     selectInput(
-                       inputId = ns("twoway_input_cities"),
-                       "Household City/Township",
-                       choices = unique(na.omit(tbi_tables$hh$hh_city)),
-                       selected = NULL)
-                   }},
-                 ignoreInit = TRUE
+          updateSelectInput(
+            inputId = "twoway_input_cities",
+            label = "Household City/Township",
+            choices = filtered_cities$hh_city,
+            selected = NULL
+          )
+        } else {
+          selectInput(
+            inputId = ns("twoway_input_cities"),
+            "Household City/Township",
+            choices = unique(na.omit(tbi_tables$hh$hh_city)),
+            selected = NULL
+          )
+        }
+      },
+      ignoreInit = TRUE
     )
 
 
@@ -110,13 +112,13 @@ mod_filters_twoway_server <- function(id){
           tbi_tables$hh %>%
           dplyr::filter(hh_in_mpo == "Household in Twin Cities region") %>%
           dplyr::select(hh_id)
-      } else{
+      } else {
         mpo_ids <- all_hh_ids
       }
 
       ## Filter to County----
       # only if counties are not null
-      if(!is.null(input$twoway_input_counties)){
+      if (!is.null(input$twoway_input_counties)) {
         cty_ids <-
           tbi_tables$hh %>%
           dplyr::filter(hh_county %in% input$twoway_input_counties) %>%
@@ -126,7 +128,7 @@ mod_filters_twoway_server <- function(id){
       }
 
       ## Filter to City----
-      if(!is.null(input$twoway_input_cities)){
+      if (!is.null(input$twoway_input_cities)) {
         ctu_ids <-
           tbi_tables$hh %>%
           dplyr::filter(hh_city %in% input$twoway_input_cities) %>%
@@ -152,7 +154,6 @@ mod_filters_twoway_server <- function(id){
         # but we want a list of hh ids in the end --
         # so we use pluck to get it
         purrr::pluck(1)
-
     })
     return(vals)
   })

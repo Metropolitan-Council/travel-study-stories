@@ -5,10 +5,12 @@ library(dplyr)
 
 ### List of Counties ----------
 county_list <-
-  c("Anoka MN", "Carver MN", "Chisago MN", "Dakota MN", "Goodhue MN",
+  c(
+    "Anoka MN", "Carver MN", "Chisago MN", "Dakota MN", "Goodhue MN",
     "Hennepin MN", "Isanti MN", "Le Sueur MN", "McLeod MN", "Pierce WI",
     "Polk WI", "Ramsey MN", "Rice MN", "Scott MN", "Sherburne MN",
-    "Sibley MN", "St. Croix WI", "Washington MN", "Wright MN")
+    "Sibley MN", "St. Croix WI", "Washington MN", "Wright MN"
+  )
 
 
 ### List of Cities ----------
@@ -74,36 +76,42 @@ mpo_sf <- DBI::dbGetQuery(
 
 ##### Counties: ----
 # Minnesota:
-mn_cty_sf <- DBI::dbGetQuery(db,
-                             "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.MNCounties;") %>%
+mn_cty_sf <- DBI::dbGetQuery(
+  db,
+  "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.MNCounties;"
+) %>%
   st_as_sf(wkt = "geometry", crs = 26915) %>%
   st_transform(crs = 4326) %>%
   rename(county = CO_NAME) %>%
   mutate(county = paste(county, "MN")) %>%
-  select(county)%>%
+  select(county) %>%
   st_make_valid()
 
 # Wisconsin:
-wi_cty_sf <- DBI::dbGetQuery(db,
-                             "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.WICounties;") %>%
+wi_cty_sf <- DBI::dbGetQuery(
+  db,
+  "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.WICounties;"
+) %>%
   st_as_sf(wkt = "geometry", crs = 26915) %>%
   st_transform(crs = 4326) %>%
   rename(county = CO_NAME) %>%
   mutate(county = paste(stringr::str_to_title(county), "WI")) %>%
-  select(county)%>%
+  select(county) %>%
   st_make_valid()
 
 # Both states:
-cty_sf <- rbind(mn_cty_sf, wi_cty_sf)%>%
+cty_sf <- rbind(mn_cty_sf, wi_cty_sf) %>%
   st_make_valid()
 
 ##### Cities: ----
-ctu_sf <- DBI::dbGetQuery(db,
-                          "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.CTUs;") %>%
+ctu_sf <- DBI::dbGetQuery(
+  db,
+  "SELECT *, SHAPE.STAsText() as geometry FROM GISLibrary.DBO.CTUs;"
+) %>%
   st_as_sf(wkt = "geometry", crs = 26915) %>%
   select(CTU_NAME) %>%
   rename(community_name = CTU_NAME) %>%
-  st_transform(crs = 4326)%>%
+  st_transform(crs = 4326) %>%
   st_make_valid()
 
 ##### Thrive: ----
@@ -173,8 +181,10 @@ hh_mpo <-
 hh_cty <-
   st_join(hh_sf, cty_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  group_by(county) %>% add_tally() %>% ungroup() %>%
-  mutate(hh_county = case_when(!is.na(county) ~ paste0(county, " (n = ", n , ")"))) %>%
+  group_by(county) %>%
+  add_tally() %>%
+  ungroup() %>%
+  mutate(hh_county = case_when(!is.na(county) ~ paste0(county, " (n = ", n, ")"))) %>%
   select(-county, -n)
 
 ##### City: ----
@@ -184,16 +194,18 @@ hh_ctu <-
   group_by(community_name) %>%
   add_tally() %>%
   ungroup() %>%
-  mutate(hh_city = case_when(!is.na(community_name) ~ paste0(community_name, " (n = ", n , ")"))) %>%
+  mutate(hh_city = case_when(!is.na(community_name) ~ paste0(community_name, " (n = ", n, ")"))) %>%
   select(-community_name, -n)
 
 ##### Thrive: ----
 hh_thrive <-
   st_join(hh_sf, thrive_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  rename(hh_thrive_category = thrive_category,
-         hh_thrive_category_broad = thrive_category_broad,
-         hh_urban_rural_suburban = urban_rural_suburban)
+  rename(
+    hh_thrive_category = thrive_category,
+    hh_thrive_category_broad = thrive_category_broad,
+    hh_urban_rural_suburban = urban_rural_suburban
+  )
 
 # additional information from urban/rural/suburban
 hh_thrive2 <-
@@ -213,7 +225,7 @@ hh_thrive2 <-
   mutate(
     hh_urban_rural_suburban = factor(
       hh_urban_rural_suburban,
-      levels = c("Urban", "Suburban","Rural")
+      levels = c("Urban", "Suburban", "Rural")
     )
   )
 
@@ -248,27 +260,29 @@ trip_o_cty <-
   st_drop_geometry() %>%
   rename(trip_o_county = county) %>%
   mutate(trip_o_county = ifelse(
-    trip_o_county %in% county_list, trip_o_county, "Outside study area"))
+    trip_o_county %in% county_list, trip_o_county, "Outside study area"
+  ))
 
 trip_d_cty <-
   st_join(trip_d_sf, cty_sf, join = st_within) %>%
   st_drop_geometry() %>%
   rename(trip_d_county = county) %>%
   mutate(trip_d_county = ifelse(
-    trip_d_county %in% county_list, trip_d_county, "Outside study area"))
+    trip_d_county %in% county_list, trip_d_county, "Outside study area"
+  ))
 
 ##### City: ----
 message("... trip origin/destination city...")
 trip_o_ctu <-
   st_join(trip_o_sf, ctu_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(trip_o_city =ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
+  mutate(trip_o_city = ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
   select(-community_name)
 
 trip_d_ctu <-
   st_join(trip_d_sf, ctu_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(trip_d_city =ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
+  mutate(trip_d_city = ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
   select(-community_name)
 
 ##### Thrive: -----
@@ -277,16 +291,20 @@ message("... trip origin/destination thrive category...")
 trip_o_thrive <-
   st_join(trip_o_sf, thrive_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  rename(trip_o_thrive_category = thrive_category,
-         trip_o_thrive_category_broad = thrive_category_broad,
-         trip_o_urban_rural_suburban = urban_rural_suburban)
+  rename(
+    trip_o_thrive_category = thrive_category,
+    trip_o_thrive_category_broad = thrive_category_broad,
+    trip_o_urban_rural_suburban = urban_rural_suburban
+  )
 
 trip_d_thrive <-
   st_join(trip_d_sf, thrive_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  rename(trip_d_thrive_category = thrive_category,
-         trip_d_thrive_category_broad = thrive_category_broad,
-         trip_d_urban_rural_suburban = urban_rural_suburban)
+  rename(
+    trip_d_thrive_category = thrive_category,
+    trip_d_thrive_category_broad = thrive_category_broad,
+    trip_d_urban_rural_suburban = urban_rural_suburban
+  )
 
 ##### Compile: -----
 trip <- trip %>%
@@ -298,8 +316,10 @@ trip <- trip %>%
   left_join(trip_d_ctu) %>%
   left_join(trip_o_thrive) %>%
   left_join(trip_d_thrive) %>%
-  mutate(across(c(trip_o_in_mpo, trip_o_county, trip_o_city,
-                  trip_d_in_mpo, trip_d_county, trip_d_city), ~ as.factor(.)))
+  mutate(across(c(
+    trip_o_in_mpo, trip_o_county, trip_o_city,
+    trip_d_in_mpo, trip_d_county, trip_d_city
+  ), ~ as.factor(.)))
 
 ### Append Geographic Info to Work ----
 message("Appending geographic information to work locations (person table)")
@@ -324,16 +344,18 @@ work_cty <-
 work_ctu <-
   st_join(work_sf, ctu_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(work_city =ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
+  mutate(work_city = ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
   select(-community_name)
 
 ##### Thrive: ----
 work_thrive <-
   st_join(work_sf, thrive_sf, join = st_within) %>%
-  st_drop_geometry()%>%
-  rename(work_thrive_category = thrive_category,
-         work_thrive_category_broad = thrive_category_broad,
-         work_urban_rural_suburban = urban_rural_suburban)
+  st_drop_geometry() %>%
+  rename(
+    work_thrive_category = thrive_category,
+    work_thrive_category_broad = thrive_category_broad,
+    work_urban_rural_suburban = urban_rural_suburban
+  )
 
 #### Compile: -----
 per <- per %>%
@@ -367,17 +389,19 @@ school_cty <-
 school_ctu <-
   st_join(school_sf, ctu_sf, join = st_within) %>%
   st_drop_geometry() %>%
-  mutate(school_city =ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
+  mutate(school_city = ifelse(is.na(community_name), "Outside 7-county area", community_name)) %>%
   select(-community_name)
 
 
 ##### Thrive: ----
 school_thrive <-
   st_join(school_sf, thrive_sf, join = st_within) %>%
-  st_drop_geometry()%>%
-  rename(school_thrive_category = thrive_category,
-         school_thrive_category_broad = thrive_category_broad,
-         school_urban_rural_suburban = urban_rural_suburban)
+  st_drop_geometry() %>%
+  rename(
+    school_thrive_category = thrive_category,
+    school_thrive_category_broad = thrive_category_broad,
+    school_urban_rural_suburban = urban_rural_suburban
+  )
 
 
 ##### Compile: -----

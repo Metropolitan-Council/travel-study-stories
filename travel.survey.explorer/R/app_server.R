@@ -20,17 +20,19 @@ app_server <- function(input, output, session) {
   one_way_rts <- mod_input_utils_server(
     "input_utils_ui_1",
     user_var = user_var_1way,
-    user_hhs = user_hhs_1way)
+    user_hhs = user_hhs_1way
+  )
 
   # formatted table -----
   mod_table_one_way_server("table_one_way_ui_1",
-                           one_way_table_inputs = one_way_rts
+    one_way_table_inputs = one_way_rts
   )
 
   ## plot--------
   mod_plot_one_way_server("plot_one_way_ui_1",
-                          one_way_plot_inputs = one_way_rts,
-                          filter_info = user_hhs_1way)
+    one_way_plot_inputs = one_way_rts,
+    filter_info = user_hhs_1way
+  )
 
   # Two-way tab -------
 
@@ -47,7 +49,8 @@ app_server <- function(input, output, session) {
     "input_utils_two_way_ui_1",
     util_variable_row = user_row_var,
     util_variable_col = user_col_var,
-    util_hh_ids = user_hhs_2way)
+    util_hh_ids = user_hhs_2way
+  )
 
 
   mod_table_two_way_server("table_two_way_ui_1", two_way_table_inputs = two_way_tab)
@@ -57,5 +60,4 @@ app_server <- function(input, output, session) {
   # ## formatted table -----
   #
   # ## plot--------
-
 }

@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_input_category_row_ui <- function(id){
+mod_input_category_row_ui <- function(id) {
   ns <- NS(id)
   tagList(
     selectInput(
@@ -30,24 +30,24 @@ mod_input_category_row_ui <- function(id){
 #' input_category_row Server Functions
 #'
 #' @noRd
-mod_input_category_row_server <- function(id){
+mod_input_category_row_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     vals <- reactiveValues()
 
     observeEvent(input$category,
-                 {
-                   # update variable input by fetching variables specific
-                   # to the input$category
-                   updateSelectInput(
-                     session = session,
-                     inputId = "variable",
-                     label = "Variable",
-                     choices = input_list[input$category][[1]]
-                   )
-                 },
-                 ignoreInit = TRUE
+      {
+        # update variable input by fetching variables specific
+        # to the input$category
+        updateSelectInput(
+          session = session,
+          inputId = "variable",
+          label = "Variable",
+          choices = input_list[input$category][[1]]
+        )
+      },
+      ignoreInit = TRUE
     )
 
 
