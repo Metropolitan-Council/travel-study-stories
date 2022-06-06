@@ -1,6 +1,7 @@
 
 test_bike_freq <-
-  create_one_way_table("bike_freq")
+  create_one_way_table("bike_freq",
+                       hh_ids = travel.survey.explorer::tbi_tables$hh$hh_id)
 
 expect_bike_freq <-
   tibble::tribble(
@@ -16,16 +17,16 @@ expect_bike_freq <-
   )
 
 purrr::map(
-  names(test_bike_freq)[2:9],
+  names(test_bike_freq$table)[2:9],
   function(x) {
-    testthat::expect_equal(test_bike_freq[x], expect_bike_freq[x])
+    testthat::expect_equal(test_bike_freq$table[x], expect_bike_freq[x])
   }
 ) %>%
   suppressMessages()
 
 
-
-test_edu <- create_one_way_table("education")
+test_edu <- create_one_way_table("education",
+                                 hh_ids = travel.survey.explorer::tbi_tables$hh$hh_id)
 expect_edu <-
   # datapasta::tribble_paste(test_edu)
   tibble::tribble(
@@ -41,16 +42,17 @@ expect_edu <-
   )
 
 purrr::map(
-  names(test_edu)[2:9],
+  names(test_edu$table)[2:9],
   function(x) {
-    testthat::expect_equal(test_edu[x], expect_edu[x])
+    testthat::expect_equal(test_edu$table[x], expect_edu[x])
   }
 ) %>%
   suppressMessages()
 
 # Test a numeric variable - trip distance ------------
 test_trip_distance <-
-  create_one_way_table("distance")
+  create_one_way_table("distance",
+                       hh_ids = travel.survey.explorer::tbi_tables$hh$hh_id)
 
 expect_trip_distance <-
   tibble::tribble(
@@ -66,16 +68,17 @@ expect_trip_distance <-
   )
 
 purrr::map(
-  names(test_trip_distance)[2:9],
+  names(test_trip_distance$table)[2:9],
   function(x) {
-    testthat::expect_equal(test_bike_freq[x], expect_trip_distance[x])
+    testthat::expect_equal(test_trip_distance$table[x], expect_trip_distance[x])
   }
 ) %>%
   suppressMessages()
 
 # Test a time variable - departure time ------------
 test_trip_departure_time <-
-  create_one_way_table("departure_time_imputed")
+  create_one_way_table("departure_time_imputed",
+                       hh_ids = travel.survey.explorer::tbi_tables$hh$hh_id)
 
 expect_trip_departure_time <-
   tibble::tribble(
