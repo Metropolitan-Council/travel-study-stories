@@ -26,9 +26,11 @@ mod_input_utils_two_way_server <- function(id, util_variable_row, util_variable_
 
     # generate table
     two_way_rt_list <- reactive({
-      t <- create_two_way_table(variable_row = util_variable_row$variable,
-                           variable_col = util_variable_col$variable,
-                           hh_ids = util_hh_ids$hh_ids)
+      t <- create_two_way_table(
+        variable_row = util_variable_row$variable,
+        variable_col = util_variable_col$variable,
+        hh_ids = util_hh_ids$hh_ids
+      )
       return(t)
     })
 
@@ -46,7 +48,6 @@ mod_input_utils_two_way_server <- function(id, util_variable_row, util_variable_
       print(vals$table_return) # eventually comment out
 
       return(vals)
-
     }) %>%
       bindEvent(util_variable_row$variable, util_variable_col$variable, util_hh_ids$hh_ids)
 

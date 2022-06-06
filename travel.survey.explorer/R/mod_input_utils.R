@@ -26,8 +26,10 @@ mod_input_utils_server <- function(id, user_var, user_hhs) {
 
     # generate table
     one_way_rt_list <- reactive({
-      create_one_way_table(variable_row = user_var$variable,
-                           hh_ids = user_hhs$hh_ids)
+      create_one_way_table(
+        variable_row = user_var$variable,
+        hh_ids = user_hhs$hh_ids
+      )
     })
 
     observe({

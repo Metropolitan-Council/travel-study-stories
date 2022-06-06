@@ -23,7 +23,8 @@ mod_plot_two_way_server <- function(id, two_way_plot_inputs) {
 
 
     w_two_way <- waiter::Waiter$new(ns("plot"),
-                            color = waiter::transparent(0.5))
+      color = waiter::transparent(0.5)
+    )
 
     output$plot <- plotly::renderPlotly({
       # browser()

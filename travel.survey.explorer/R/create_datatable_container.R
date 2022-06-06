@@ -7,28 +7,36 @@
 #' @export
 #'
 create_datatable_container <- function(twoway_data,
-                                       type = c("proportion",
-                                                "proportion_w_se",
-                                                "total",
-                                                "total_w_se",
-                                                "sample")){
+                                       type = c(
+                                         "proportion",
+                                         "proportion_w_se",
+                                         "total",
+                                         "total_w_se",
+                                         "sample"
+                                       )) {
   these_columns <-
-    dplyr::case_when(type == "proportion" ~ c("proportion" = "estimated_prop"),
-              type == "proportion_w_se" ~ c("proportion" = "estimated_prop",
-                                            "se" = "estimated_prop_se"),
-              type == "total" ~ c("total" = "expanded_total"),
-              type == "total_w_se" ~ c("total" = "expanded_total",
-                                       "se" = "expanded_total_se"),
-              type == "sample" ~ c("sample" = "group_N"))
+    dplyr::case_when(
+      type == "proportion" ~ c("proportion" = "estimated_prop"),
+      type == "proportion_w_se" ~ c(
+        "proportion" = "estimated_prop",
+        "se" = "estimated_prop_se"
+      ),
+      type == "total" ~ c("total" = "expanded_total"),
+      type == "total_w_se" ~ c(
+        "total" = "expanded_total",
+        "se" = "expanded_total_se"
+      ),
+      type == "sample" ~ c("sample" = "group_N")
+    )
 
   this_table <- twoway_data$table %>%
     dplyr::mutate(estimated_prop_se = scales::percent(estimated_prop_se,
-                                               accuracy = 0.1
+      accuracy = 0.1
     )) %>%
-    dplyr::select(row_var = 1,
-                  col_var = 2,
-                  all_of(these_columns)
-
+    dplyr::select(
+      row_var = 1,
+      col_var = 2,
+      all_of(these_columns)
     ) %>%
     tidyr::pivot_wider(
       names_from = col_var,
@@ -48,11 +56,13 @@ create_datatable_container <- function(twoway_data,
 
 
   sub_col_headers <-
-    dplyr::case_when(type == "proportion" ~ c("Proportion"),
-              type == "proportion_w_se" ~ c("Proportion", "Standard Error"),
-              type == "total" ~ c("Total"),
-              type == "total_w_se" ~ c("Total", "Standard Error"),
-              type == "sample" ~ c("Sample size"))
+    dplyr::case_when(
+      type == "proportion" ~ c("Proportion"),
+      type == "proportion_w_se" ~ c("Proportion", "Standard Error"),
+      type == "total" ~ c("Total"),
+      type == "total_w_se" ~ c("Total", "Standard Error"),
+      type == "sample" ~ c("Sample size")
+    )
 
 
   sketch <- htmltools::withTags(
@@ -60,29 +70,41 @@ create_datatable_container <- function(twoway_data,
       class = "display",
       thead(
         tr(
-          th(class = "dt-center",
-             colspan = ncol(this_table), col_label)
+          th(
+            class = "dt-center",
+            colspan = ncol(this_table), col_label
+          )
         ),
         tr(
           th(class = "dt-center", rowspan = 2, row_label),
           lapply(super_col_headers,
-                 th, colspan = length(these_columns)),
+            th,
+            colspan = length(these_columns)
+          ),
         ),
         tr(
-          lapply(rep(sub_col_headers,
-                     length(super_col_headers)),
-                 function(x){th(class = "dt-center",
-                                style = "font-size:14px", x)})
+          lapply(
+            rep(
+              sub_col_headers,
+              length(super_col_headers)
+            ),
+            function(x) {
+              th(
+                class = "dt-center",
+                style = "font-size:14px", x
+              )
+            }
+          )
         )
       )
-    ))
+    )
+  )
 
 
   return(
     list(
       dt_data = this_table,
       container = sketch
-    ))
-
-
+    )
+  )
 }

@@ -20,13 +20,14 @@ twoway_test$table
 
 this_table <- twoway_test$table %>%
   dplyr::mutate(estimated_prop_se = scales::percent(estimated_prop_se,
-                                                    accuracy = 0.01
+    accuracy = 0.01
   )) %>%
-  dplyr::select(row_var = 1,
-                col_var = 2,
-                proportion = estimated_prop,
-                se = estimated_prop_se
-                # sample = group_N
+  dplyr::select(
+    row_var = 1,
+    col_var = 2,
+    proportion = estimated_prop,
+    se = estimated_prop_se
+    # sample = group_N
   ) %>%
   tidyr::pivot_wider(
     names_from = col_var,
@@ -52,27 +53,41 @@ sketch <- htmltools::withTags(
     class = "display",
     thead(
       tr(
-        th(class = "dt-center",
-           colspan = ncol(this_table)-1,
-           twoway_test$definition_col$variable_label)
+        th(
+          class = "dt-center",
+          colspan = ncol(this_table) - 1,
+          twoway_test$definition_col$variable_label
+        )
       ),
       tr(
         th(class = "dt-center", rowspan = 2, twoway_test$definition_row$variable_label),
         lapply(super_col_headers,
-               th, colspan = 2),
+          th,
+          colspan = 2
+        ),
       ),
       tr(
-        lapply(rep(sub_col_headers, length(super_col_headers)), function(x){th(class = "dt-center",style = "font-size:14px", x)})
+        lapply(rep(sub_col_headers, length(super_col_headers)), function(x) {
+          th(class = "dt-center", style = "font-size:14px", x)
+        })
       )
     )
-  ))
+  )
+)
 
 
 DT:::datatable(this_table, container = sketch, rownames = F) %>%
-  DT::formatPercentage(columns = which(sapply(this_table, is.numeric),
-                                       TRUE), digits = 1) %>%
-  DT::formatString(columns = which(sapply(this_table,
-                                          is.character),
-                                   TRUE),
-                   prefix = "+/-")
-
+  DT::formatPercentage(columns = which(
+    sapply(this_table, is.numeric),
+    TRUE
+  ), digits = 1) %>%
+  DT::formatString(
+    columns = which(
+      sapply(
+        this_table,
+        is.character
+      ),
+      TRUE
+    ),
+    prefix = "+/-"
+  )

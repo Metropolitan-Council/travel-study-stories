@@ -14,9 +14,6 @@ create_datatable_container(
 
 \item{type}{character, one of \code{c("proportion", "proportion_w_se","total", "total_w_se", "sample")}}
 }
-\value{
-
-}
 \description{
 Create HTML container for Two-way table
 }

@@ -21,7 +21,7 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     w <- waiter::Waiter$new(ns("table"),
-                            color = waiter::transparent(0.5)
+      color = waiter::transparent(0.5)
     )
     output$table <- DT::renderDataTable({
       w$show()
@@ -33,19 +33,32 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
 
 
       dt_items <- create_datatable_container(two_way_table_inputs$two_way_list,
-                                             type = "proportion_w_se")
+        type = "proportion_w_se"
+      )
 
       # browser()
 
-      DT::datatable(dt_items$dt_data,container = dt_items$container,
-                    rownames = F) %>%
-        DT::formatPercentage(columns = which(sapply(dt_items$dt_data,
-                                                    is.numeric),
-                                             TRUE), digits = 1) %>%
-        DT::formatString(columns = which(sapply(dt_items$dt_data,
-                                                is.character),
-                                         TRUE),
-                         prefix = "+/-")
+      DT::datatable(dt_items$dt_data,
+        container = dt_items$container,
+        rownames = F
+      ) %>%
+        DT::formatPercentage(columns = which(
+          sapply(
+            dt_items$dt_data,
+            is.numeric
+          ),
+          TRUE
+        ), digits = 1) %>%
+        DT::formatString(
+          columns = which(
+            sapply(
+              dt_items$dt_data,
+              is.character
+            ),
+            TRUE
+          ),
+          prefix = "+/-"
+        )
     })
   })
 }

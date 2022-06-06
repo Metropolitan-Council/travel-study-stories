@@ -163,22 +163,24 @@ trip <- trip %>%
     replacement = paste(hh_id, "_", sep = "")
   )) %>%
   mutate(veh_id = case_when(mode_type_detailed %in%
-                              c("Other vehicle in household",
-                                "Other motorcycle",
-                                "Car from work",
-                                "Friend/relative/colleague's car",
-                                "Rental car",
-                                "Carpool match (e.g., Waze Carpool)",
-                                "Carshare service (e.g., HOURCAR, Car2Go, Zipcar, Maven)",
-                                "Peer-to-peer car rental (e.g., Turo, Getaround)",
-                                "Other vehicle") ~
-                              "Other Private Vehicle"))
+    c(
+      "Other vehicle in household",
+      "Other motorcycle",
+      "Car from work",
+      "Friend/relative/colleague's car",
+      "Rental car",
+      "Carpool match (e.g., Waze Carpool)",
+      "Carshare service (e.g., HOURCAR, Car2Go, Zipcar, Maven)",
+      "Peer-to-peer car rental (e.g., Turo, Getaround)",
+      "Other vehicle"
+    ) ~
+    "Other Private Vehicle"))
 
 region_average_veh_stats <-
   veh %>%
   left_join(hh %>% select(hh_id, hh_weight)) %>%
   filter(mpg_city < Inf, mpg_highway < Inf) %>%
-  summarize(across(where(is.numeric), ~weighted.mean(., na.rm = T, w = hh_weight))) %>%
+  summarize(across(where(is.numeric), ~ weighted.mean(., na.rm = T, w = hh_weight))) %>%
   select(-hh_id, -vehicle_num, -hh_weight) %>%
   mutate(veh_id = "Other Private Vehicle")
 
