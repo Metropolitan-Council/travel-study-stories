@@ -18,9 +18,12 @@ app_server <- function(input, output, session) {
 
   ## raw table data------ this is where it seems to break!
   one_way_rts <- mod_input_utils_server(
-    "input_utils_ui_1",
+    id = "input_utils_ui_1",
+    n_ways = 1,
     user_var = user_var_1way,
-    user_hhs = user_hhs_1way
+    util_hh_ids = user_hhs_1way,
+    util_variable_row = NA,
+    util_variable_col = NA
   )
 
   # formatted table -----
@@ -45,8 +48,10 @@ app_server <- function(input, output, session) {
   user_hhs_2way <- mod_filters_twoway_server("filters_twoway_1")
 
   ## raw table data------
-  two_way_tab <- mod_input_utils_two_way_server(
+  two_way_tab <- mod_input_utils_server(
     "input_utils_two_way_ui_1",
+    user_var = NA,
+    n_ways = 2,
     util_variable_row = user_row_var,
     util_variable_col = user_col_var,
     util_hh_ids = user_hhs_2way
