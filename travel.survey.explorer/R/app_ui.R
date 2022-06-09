@@ -27,7 +27,7 @@ app_ui <- function(request) {
           sidebarPanel = sidebarPanel(
             width = 3,
             mod_input_category_variable_ui("oneway_input_1"),
-            mod_filters_oneway_ui("filters_oneway_1")
+            mod_filters_ui("filters_oneway_1")
           ),
           mainPanel = mainPanel(
             mod_plot_ui("plot_one_way_ui_1"),
@@ -41,11 +41,11 @@ app_ui <- function(request) {
           sidebarPanel = sidebarPanel(
             width = 3,
             h3("First variable (rows)"),
-            mod_input_category_row_ui("input_category_row_1"),
+            mod_input_category_variable_ui("input_category_row_1"),
             h3("Second variable (columns)"),
-            mod_input_category_col_ui("input_category_col_1"),
+            mod_input_category_variable_ui("input_category_col_1"),
             h3("Filter households by geography"),
-            mod_filters_twoway_ui("filters_twoway_1")
+            mod_filters_ui("filters_twoway_1")
           ),
           mainPanel = mainPanel( # plot goes here
             tabsetPanel(
