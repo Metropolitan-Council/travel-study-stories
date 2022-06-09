@@ -77,6 +77,7 @@ mod_input_utils_server <- function(id,
 
         vals$two_way_list <- two_way_rt
         vals$table_return <- two_way_rt$table
+        vals$definitions_return <- two_way_rt$definition_row
         vals$context_row_return <- two_way_rt$definition_row
         vals$context_col_return <- two_way_rt$definition_col
 
