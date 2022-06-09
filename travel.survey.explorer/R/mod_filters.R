@@ -11,44 +11,45 @@
 #' @importFrom purrr pluck
 #' @importFrom knitr combine_words
 #'
-mod_filters_oneway_ui <- function(id) {
+mod_filters_ui <- function(id) {
   ns <- NS(id)
   tagList(
 
     # Dropdown for Survey Year ----
     # selectInput(
-    #   inputId = ns("oneway_input_year"),
+    #   inputId = ns("input_year"),
     #   "Survey year",
     #   choices = c("2018-2019", "2020-2021"),
     #   selected = "2018-2019",
     #   multiple = FALSE
     # ),
 
-    # Checkbox for HHs in MPO ----
-    checkboxInput(
-      inputId = ns("oneway_input_mpo"),
-      label = "Filter to households in Twin Cities region (MPO)",
-      value = FALSE
-    ),
+    wellPanel(
+      # Checkbox for HHs in MPO ----
+      checkboxInput(
+        inputId = ns("input_mpo"),
+        label = "Filter to households in Twin Cities region (MPO)",
+        value = FALSE
+      ),
 
-    # Dropdown for HH County ----
-    selectInput(
-      inputId = ns("oneway_input_counties"),
-      "Household county",
-      choices = unique(na.omit(tbi_tables$hh$hh_county)),
-      selected = NULL,
-      multiple = TRUE
-    ),
+      # Dropdown for HH County ----
+      selectInput(
+        inputId = ns("input_counties"),
+        "Household county",
+        choices = unique(na.omit(tbi_tables$hh$hh_county)),
+        selected = NULL,
+        multiple = TRUE
+      ),
 
-    # Dropdown for HH City -----
-    selectInput(
-      inputId = ns("oneway_input_cities"),
-      "Household City/Township",
-      choices = unique(na.omit(tbi_tables$hh$hh_city)),
-      multiple = TRUE,
-      selected = NULL
+      # Dropdown for HH City -----
+      selectInput(
+        inputId = ns("input_cities"),
+        "Household City/Township",
+        choices = unique(na.omit(tbi_tables$hh$hh_city)),
+        multiple = TRUE,
+        selected = NULL
+      )
     ),
-
     # Button: Go One Way, Create Table ----
     actionButton(inputId = ns("go_one_way"), "Create Table")
   )
@@ -58,7 +59,7 @@ mod_filters_oneway_ui <- function(id) {
 #'
 #' @noRd
 #' @import bit64
-mod_filters_oneway_server <- function(id) {
+mod_filters_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -69,33 +70,33 @@ mod_filters_oneway_server <- function(id) {
 
     ## When county/counties selected, ----
     # update cities dropdown to include only cities within that county ----
-    observeEvent(input$oneway_input_counties,
-      {
-        if (!is.null(input$oneway_input_counties)) {
-          filtered_cities <- tbi_tables$hh %>%
-            dplyr::filter(hh_county %in% input$oneway_input_counties) %>%
-            dplyr::select(hh_city) %>%
-            unique() %>%
-            na.omit()
+    observeEvent(input$input_counties,
+                 {
+                   if (!is.null(input$input_counties)) {
+                     filtered_cities <- tbi_tables$hh %>%
+                       dplyr::filter(hh_county %in% input$input_counties) %>%
+                       dplyr::select(hh_city) %>%
+                       unique() %>%
+                       na.omit()
 
-          updateSelectInput(
-            session = session,
-            inputId = "oneway_input_cities",
-            label = "Household City/Township",
-            choices = filtered_cities$hh_city,
-            selected = NULL
-          )
-        } else {
-          selectInput(
-            session = session,
-            inputId = ns("oneway_input_cities"),
-            "Household City/Township",
-            choices = unique(na.omit(tbi_tables$hh$hh_city)),
-            selected = NULL
-          )
-        }
-      },
-      ignoreInit = TRUE
+                     updateSelectInput(
+                       session = session,
+                       inputId = "input_cities",
+                       label = "Household City/Township",
+                       choices = filtered_cities$hh_city,
+                       selected = NULL
+                     )
+                   } else {
+                     selectInput(
+                       session = session,
+                       inputId = ns("input_cities"),
+                       "Household City/Township",
+                       choices = unique(na.omit(tbi_tables$hh$hh_city)),
+                       selected = NULL
+                     )
+                   }
+                 },
+                 ignoreInit = TRUE
     )
 
 
@@ -114,7 +115,7 @@ mod_filters_oneway_server <- function(id) {
 
       ## Filter to MPO----
       # only if the checkbox has been set to "TRUE"
-      if (input$oneway_input_mpo == TRUE) {
+      if (input$input_mpo == TRUE) {
         mpo_ids <-
           tbi_tables$hh %>%
           dplyr::filter(hh_in_mpo == "Household in Twin Cities region") %>%
@@ -125,20 +126,20 @@ mod_filters_oneway_server <- function(id) {
 
       ## Filter to County----
       # only if counties are not null
-      if (!is.null(input$oneway_input_counties)) {
+      if (!is.null(input$input_counties)) {
         cty_ids <-
           tbi_tables$hh %>%
-          dplyr::filter(hh_county %in% input$oneway_input_counties) %>%
+          dplyr::filter(hh_county %in% input$input_counties) %>%
           dplyr::select(hh_id)
       } else {
         cty_ids <- all_hh_ids
       }
 
       ## Filter to City----
-      if (!is.null(input$oneway_input_cities)) {
+      if (!is.null(input$input_cities)) {
         ctu_ids <-
           tbi_tables$hh %>%
-          dplyr::filter(hh_city %in% input$oneway_input_cities) %>%
+          dplyr::filter(hh_city %in% input$input_cities) %>%
           dplyr::select(hh_id)
       } else {
         ctu_ids <- all_hh_ids
@@ -147,7 +148,7 @@ mod_filters_oneway_server <- function(id) {
       ## Filter to Year----
       # year_ids <-
       #   tbi_tables$hh %>%
-      #   dplyr::filter(survey == input$oneway_input_year) %>%
+      #   dplyr::filter(survey == input$input_year) %>%
       #   dplyr::select(hh_id)
 
       ## Final HH ID list----
@@ -168,7 +169,7 @@ mod_filters_oneway_server <- function(id) {
           gsub(
             "\\s*\\([^\\)]+\\)",
             "",
-            as.character(input$oneway_input_cities)
+            as.character(input$input_cities)
           )
         ))
 
@@ -178,32 +179,32 @@ mod_filters_oneway_server <- function(id) {
             gsub(
               "\\s*\\([^\\)]+\\)|[[:space:]]MN|[[:space:]]WI",
               "",
-              as.character(input$oneway_input_counties)
+              as.character(input$input_counties)
             )
           ),
-          ifelse(length(input$oneway_input_counties) > 1, " Counties", " County")
+          ifelse(length(input$input_counties) > 1, " Counties", " County")
         )
 
       countystring_withMPO <-
         ifelse(
-          any(grepl("St. Croix|Sherburne|Wright", x = input$oneway_input_counties)) & input$oneway_input_mpo == T,
+          any(grepl("St. Croix|Sherburne|Wright", x = input$input_counties)) & input$input_mpo == T,
           paste0(countystring_1, ", restricted to areas within MPO boundary"),
           ifelse(
-            any(grepl("St. Croix|Sherburne|Wright", x = input$oneway_input_counties)) & input$oneway_input_mpo == F,
+            any(grepl("St. Croix|Sherburne|Wright", x = input$input_counties)) & input$input_mpo == F,
             paste0(countystring_1, ", includes some areas outside MPO boundary"),
             countystring_1
           )
         )
 
       vals$filter_text <- ifelse( # if there is a city/cities, print that:
-        length(input$oneway_input_cities) > 0,
+        length(input$input_cities) > 0,
         citystring,
         # OTHERWISE if there is a county/counties, print that:
         ifelse(
-          length(input$oneway_input_counties) > 0,
+          length(input$input_counties) > 0,
           countystring_withMPO,
           # OTHERWISE, print the MPO boundary:
-          ifelse(input$oneway_input_mpo == T, " the Twin Cities region (MPO Boundary)", "")
+          ifelse(input$input_mpo == T, " the Twin Cities region (MPO Boundary)", "")
         )
       )
 
@@ -217,7 +218,7 @@ mod_filters_oneway_server <- function(id) {
 }
 
 ## To be copied in the UI
-# mod_filters_oneway_ui("filters_oneway_1")
+# mod_filters_ui("filters_1")
 
 ## To be copied in the server
-# mod_filters_oneway_server("filters_oneway_1")
+# mod_filters_server("filters_1")
