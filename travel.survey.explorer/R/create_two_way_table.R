@@ -221,7 +221,14 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       "estimated_prop_se"
     ) %>%
     dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric),
-                                round, digits = 5))
+                                round, digits = 5)) %>%
+    dplyr::mutate(units = !!this_table_row) %>%
+    dplyr::mutate(units = dplyr::case_when(units == "per" ~ "people",
+                                           units == "day" ~ "days",
+                                           units == "hh" ~ "households",
+                                           units == "veh" ~ "vehicles",
+                                           units == "trip" ~ "trips"))
+
 
 
   # Dictionary -------------
