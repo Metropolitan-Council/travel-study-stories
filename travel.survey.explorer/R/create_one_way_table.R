@@ -137,9 +137,9 @@ create_one_way_table <- function(variable_row, hh_ids) {
       )
   }
 
-    table <- tab %>%
+  table <- tab %>%
     # get our households:
-      dplyr::filter(hh_id %in% hh_ids)%>%
+    dplyr::filter(hh_id %in% hh_ids)%>%
     # clean up:
     droplevels() %>%
     # big N sample size - for the whole data frame:
@@ -173,21 +173,21 @@ create_one_way_table <- function(variable_row, hh_ids) {
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5)) %>%
-    mutate(units = !!this_table) %>%
-    mutate(units = dplyr::case_when(units == "per" ~ "people",
-                             units == "day" ~ "days",
-                             units == "hh" ~ "households",
-                             units == "veh" ~ "vehicles",
-                             units == "trip" ~ "trips"))
+    dplyr::mutate(units = !!this_table) %>%
+    dplyr::mutate(units = dplyr::case_when(units == "per" ~ "people",
+                                           units == "day" ~ "days",
+                                           units == "hh" ~ "households",
+                                           units == "veh" ~ "vehicles",
+                                           units == "trip" ~ "trips"))
 
-    # Dictionary -------------
-    definitions <-
+  # Dictionary -------------
+  definitions <-
     tbi_dict %>%
-      dplyr::filter(variable == variable_row) %>%
-      dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
-      unique()
+    dplyr::filter(variable == variable_row) %>%
+    dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
+    unique()
 
-    one_way_rt_list <- list(table = table, definitions = definitions, summary = summary)
+  one_way_rt_list <- list(table = table, definitions = definitions, summary = summary)
 
   return(one_way_rt_list)
 }
