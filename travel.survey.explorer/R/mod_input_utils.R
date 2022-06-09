@@ -42,6 +42,8 @@ mod_input_utils_server <- function(id,
 
       } else {
 
+        req(util_variable_col$variable != util_variable_row$variable)
+
         t <- create_two_way_table(
           variable_row = util_variable_row$variable,
           variable_col = util_variable_col$variable,
