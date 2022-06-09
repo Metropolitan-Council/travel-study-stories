@@ -68,8 +68,14 @@ mod_plot_server <- function(id,  n_ways = 1, plot_inputs, filter_info) {
             x = table_data[[1]],
             y = table_data$estimated_prop,
             hovertemplate = paste0(
-              "<b>", plot_inputs$context_data$variable_label, "</b><br>",
-              "%{x}: %{y:.0%}"
+              "Estimated ",
+              "%{y:.0%}",
+              " of ",
+              table_data$units[[1]],
+              " ",
+              plot_inputs$definitions_return$variable_label,
+              " ",
+              "%{x}"
             )
           ) %>%
           plotly::layout(
@@ -103,12 +109,20 @@ mod_plot_server <- function(id,  n_ways = 1, plot_inputs, filter_info) {
             x = table_data[[2]],
             y = table_data$estimated_prop,
             color = table_data[[1]],
-            hovertemplate = paste0(
+            hovertemplate = stringr::str_wrap(paste0(
+              "%{x}, %{fullData.name}",
+              "<br>",
+              " Estimated ",
+              "%{y:.0%}",
+              " of ",
+              table_data$units[[1]],
+              " in each ",
               "<b>",
-              plot_inputs$context_row_return$variable_label,
-              "</b>: %{fullData.name} <br>",
-              "%{x}: %{y:.0%}"
-            )
+              plot_inputs$context_col_return$variable_label,
+              "</b>",
+              " category, by ",
+              plot_inputs$context_row_return$variable_label
+            ))
           ) %>%
           plotly::layout(
             barmode = "group",
