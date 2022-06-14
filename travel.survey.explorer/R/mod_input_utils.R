@@ -26,7 +26,6 @@ mod_input_utils_server <- function(id,
                                    util_variable_col) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
     vals <- reactiveValues()
 
     # generate table
@@ -42,9 +41,10 @@ mod_input_utils_server <- function(id,
 
       } else {
 
-        req(util_variable_col$variable != util_variable_row$variable)
+        validate(need(util_variable_col$variable != util_variable_row$variable,
+                      message = "Column and row inputs must be different"))
 
-        t <- create_two_way_table(
+        create_two_way_table(
           variable_row = util_variable_row$variable,
           variable_col = util_variable_col$variable,
           hh_ids = util_hh_ids$hh_ids
