@@ -37,27 +37,28 @@ app_ui <- function(request) {
       ),
       tabPanel(
         title = "Two-Way Table",
-        sidebarLayout(
-          sidebarPanel = sidebarPanel(
-            width = 3,
-            h3("First variable (rows)"),
-            mod_input_category_variable_ui("input_category_row_1"),
-            h3("Second variable (columns)"),
-            mod_input_category_variable_ui("input_category_col_1"),
-            h3("Filter households by geography"),
-            mod_filters_ui("filters_twoway_1")
+        fluidRow(
+          column(width = 3,
+                 h3("How this works"),
+                 p(shinipsum::random_text(nwords = 50))),
+          shiny::column(width = 3,
+            h4("First variable (rows)"),
+            mod_input_category_variable_ui("input_category_row_1")),
+          column(width = 3,
+            h4("Second variable (columns)"),
+            mod_input_category_variable_ui("input_category_col_1")),
+          column(width = 3,
+            h4("Filter households by geography"),
+            mod_filters_ui("filters_twoway_1"))
+        ),
+        tabsetPanel(
+          tabPanel(
+            title = "Table",
+            mod_table_two_way_ui("table_two_way_ui_1")
           ),
-          mainPanel = mainPanel( # plot goes here
-            tabsetPanel(
-              tabPanel(
-                title = "Table",
-                mod_table_two_way_ui("table_two_way_ui_1")
-              ),
-              tabPanel(
-                title = "Plot",
-                mod_plot_ui("plot_two_way_ui_1")
-              )
-            )
+          tabPanel(
+            title = "Plot",
+            mod_plot_ui("plot_two_way_ui_1")
           )
         )
       ),
