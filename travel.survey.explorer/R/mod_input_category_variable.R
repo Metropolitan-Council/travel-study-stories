@@ -1,26 +1,50 @@
 #' input_category_variable UI Function
 #'
-#' @description A shiny Module.
-#'
 #' @param id,input,output,session Internal parameters for {shiny}.
+#' @param starting_category_selected character, starting category
+#' @param starting_variable_choices list, starting variable choices. Default is
+#'     `input_list$Demographics`
+#' @param starting_variable_selected character, starting variable selection.
+#'     Default is `"Age"`
 #'
-#' @noRd
+#' @description A shiny Module.
+#' @note Category and variable must be corresponding.
+#'
+#' ```
+#'
+#' # good
+#' mod_input_category_variable_ui(id = "an_id",
+#'     starting_category_selected = "Demographics",
+#'     starting_variable_choices = input_list$Demographics,
+#'     starting_variable_selected = "Age")
+#'
+#' # bad
+#' mod_input_category_variable_ui(id = "an_id",
+#'     starting_category_selected = "Demographics",
+#'     starting_variable_choices = input_list$Trips,
+#'     starting_variable_selected = "City of Trip Origin")
+#'
+#' ```
+#'
 #'
 #' @importFrom shiny NS tagList
-mod_input_category_variable_ui <- function(id) {
+mod_input_category_variable_ui <- function(id,
+                                           starting_category_selected = "Demographics",
+                                           starting_variable_choices = input_list$Demographics,
+                                           starting_variable_selected = "Age") {
   ns <- NS(id)
   tagList(
     selectInput(
       inputId = ns("category"),
       label = "Category",
       choices = unique(tbi_dict$category),
-      selected = "Demographics"
+      selected = starting_category_selected
     ),
     selectInput(
       inputId = ns("variable"),
       label = "Variable",
-      choices = input_list$Demographics,
-      selected = "Age"
+      choices = starting_variable_choices,
+      selected = starting_variable_selected
     )
 
     # textOutput(outputId = "question")
@@ -37,17 +61,17 @@ mod_input_category_variable_server <- function(id) {
     vals <- reactiveValues()
 
     observeEvent(input$category,
-      {
-        # update variable input by fetching variables specific
-        # to the input$category
-        updateSelectInput(
-          session = session,
-          inputId = "variable",
-          label = "Variable",
-          choices = input_list[input$category][[1]]
-        )
-      },
-      ignoreInit = TRUE
+                 {
+                   # update variable input by fetching variables specific
+                   # to the input$category
+                   updateSelectInput(
+                     session = session,
+                     inputId = "variable",
+                     label = "Variable",
+                     choices = input_list[input$category][[1]]
+                   )
+                 },
+                 ignoreInit = TRUE
     )
 
 
