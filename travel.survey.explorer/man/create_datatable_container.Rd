@@ -14,6 +14,11 @@ create_datatable_container(
 
 \item{type}{character, one of \code{c("proportion", "proportion_w_se","total", "total_w_se", "sample")}}
 }
+\value{
+named list, of two items.
+- \code{dt_data} table data
+- \code{container} HTML DT container
+}
 \description{
 Create HTML container for Two-way table
 }

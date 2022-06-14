@@ -3,7 +3,9 @@
 #' @param twoway_data list, return from `create_twoway_table()`
 #' @param type character, one of `c("proportion", "proportion_w_se","total", "total_w_se", "sample")`
 #'
-#' @return
+#' @return named list, of two items.
+#'     - `dt_data` table data
+#'     - `container` HTML DT container
 #' @export
 #'
 create_datatable_container <- function(twoway_data,
