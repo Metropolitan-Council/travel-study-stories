@@ -61,11 +61,17 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     purrr::pluck(1)
 
   table_row <- tbi_tables[[this_table_row]] %>%
-    dplyr::select(dplyr::contains("_id"), dplyr::contains("_num"), dplyr::contains("weight"), rlang::sym(variable_row)) %>%
+    dplyr::select(dplyr::contains("_id"),
+                  dplyr::contains("_num"),
+                  dplyr::contains("weight"),
+                  rlang::sym(variable_row)) %>%
     dplyr::filter(!(get(variable_row) %in% missing_codes))
 
   table_col <- tbi_tables[[this_table_col]] %>%
-    dplyr::select(dplyr::contains("_id"), dplyr::contains("_num"), dplyr::contains("weight"), rlang::sym(variable_col)) %>%
+    dplyr::select(dplyr::contains("_id"),
+                  dplyr::contains("_num"),
+                  dplyr::contains("weight"),
+                  rlang::sym(variable_col)) %>%
     dplyr::filter(!(get(variable_col) %in% missing_codes))
 
   tab_0 <- table_row %>%
@@ -139,7 +145,8 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       dplyr::group_by(get(variable_row)) %>%
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
                        median = srvyr::survey_median(get(variable_col))) %>%
-      dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5)) %>%
+      dplyr::mutate(dplyr::across(
+        tidyselect:::where(is.numeric), round, digits = 5)) %>%
       dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
 
   } else if (vartype_col == "ITime") {
@@ -166,9 +173,11 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
                        median = srvyr::survey_median(get(variable_col))) %>%
       # round to nearest minute:
-      dplyr::mutate(across(where(is.numeric), function(x) (x %/% 60L) * 60L)) %>%
+      dplyr::mutate(across(where(is.numeric),
+                           function(x) (x %/% 60L) * 60L)) %>%
       # make into a time obj:
-      dplyr::mutate(across(where(is.numeric), function(x) data.table::as.ITime(x))) %>%
+      dplyr::mutate(across(where(is.numeric),
+                           function(x) data.table::as.ITime(x))) %>%
       dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
 
   } else {
@@ -235,13 +244,15 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
   definition_row <-
     tbi_dict %>%
     dplyr::filter(variable == variable_row) %>%
-    dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
+    dplyr::select(variable_label, survey_question,
+                  variable_logic, which_table, category) %>%
     unique()
 
   definition_col <-
     tbi_dict %>%
     dplyr::filter(variable == variable_col) %>%
-    dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
+    dplyr::select(variable_label, survey_question,
+                  variable_logic, which_table, category) %>%
     unique()
 
   # return -----
