@@ -26,6 +26,8 @@ app_ui <- function(request) {
         sidebarLayout(
           sidebarPanel = sidebarPanel(
             width = 3,
+            h3("How this works"),
+            p(shinipsum::random_text(nwords = 50)),
             mod_input_category_variable_ui("oneway_input_1"),
             mod_filters_ui("filters_oneway_1")
           ),
