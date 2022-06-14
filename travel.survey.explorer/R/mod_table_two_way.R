@@ -21,7 +21,7 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     w <- waiter::Waiter$new(ns("table"),
-      color = waiter::transparent(0.5)
+                            color = waiter::transparent(0.5)
     )
     output$table <- DT::renderDataTable({
       w$show()
@@ -37,13 +37,14 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
         type = "proportion_w_se"
       )
 
-      # browser()
-
-      DT::datatable(dt_items$dt_data,
+      DT::datatable(
+        data = dt_items$dt_data,
         container = dt_items$container,
-        rownames = F
+        rownames = F,
+        options = list(language = list(emptyTable = "No data here"))
       ) %>%
-        DT::formatPercentage(columns = which(sapply(names(dt_items$dt_data), stringr::str_detect, "estimate")),
+        DT::formatPercentage(columns = which(sapply(names(dt_items$dt_data),
+                                                    stringr::str_detect, "estimate")),
                              digits = 1) %>%
         DT::formatString(
           columns = which(
@@ -56,9 +57,12 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
           prefix = "+/-"
         ) %>%
         DT::formatStyle(
-          valueColumns = which(sapply(names(dt_items$dt_data), stringr::str_detect, "group_N")),
-          color = DT::styleInterval(30, c("#bdbdc3", councilR::colors$suppBlack)),
-          columns = 1:ncol(dt_items$dt_data),
+          valueColumns = which(sapply(names(dt_items$dt_data),
+                                      stringr::str_detect, "group_N")),
+          color = DT::styleInterval(30, c("#bdbdc3",
+                                          councilR::colors$suppBlack)),
+          columns = which(sapply(names(dt_items$dt_data),
+                                 stringr::str_detect, "group_N")),
           target = "cell"
         )
 
