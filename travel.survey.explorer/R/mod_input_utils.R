@@ -49,7 +49,6 @@ mod_input_utils_server <- function(id,
           variable_col = util_variable_col$variable,
           hh_ids = util_hh_ids$hh_ids
         )
-        return(t)
 
       }
     })
