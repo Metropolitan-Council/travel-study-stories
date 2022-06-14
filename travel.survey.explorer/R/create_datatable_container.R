@@ -16,24 +16,24 @@ create_datatable_container <- function(twoway_data,
                                          "total_w_se",
                                          "sample"
                                        )) {
+  # browser()
   these_columns <-
     dplyr::case_when(
       type == "proportion" ~ c("proportion" = "estimated_prop"),
       type == "proportion_w_se" ~ c(
         "proportion" = "estimated_prop",
-        "se" = "estimated_prop_se"
-      ),
+        "se" = "estimated_prop_se",
+        "sample" = "group_N"),
       type == "total" ~ c("total" = "expanded_total"),
-      type == "total_w_se" ~ c(
-        "total" = "expanded_total",
-        "se" = "expanded_total_se"
-      ),
+      # type == "total_w_se" ~ c(
+      #   "total" = "expanded_total",
+      #   "se" = "expanded_total_se"),
       type == "sample" ~ c("sample" = "group_N")
     )
 
   this_table <- twoway_data$table %>%
     dplyr::mutate(estimated_prop_se = scales::percent(estimated_prop_se,
-      accuracy = 0.1
+                                                      accuracy = 0.1
     )) %>%
     dplyr::select(
       row_var = 1,
@@ -60,9 +60,9 @@ create_datatable_container <- function(twoway_data,
   sub_col_headers <-
     dplyr::case_when(
       type == "proportion" ~ c("Proportion"),
-      type == "proportion_w_se" ~ c("Proportion", "Standard Error"),
+      type == "proportion_w_se" ~ c("Proportion", "Standard Error", "Sample size"),
       type == "total" ~ c("Total"),
-      type == "total_w_se" ~ c("Total", "Standard Error"),
+      # type == "total_w_se" ~ c("Total", "Standard Error"),
       type == "sample" ~ c("Sample size")
     )
 
@@ -80,8 +80,8 @@ create_datatable_container <- function(twoway_data,
         tr(
           th(class = "dt-center", rowspan = 2, row_label),
           lapply(super_col_headers,
-            th,
-            colspan = length(these_columns)
+                 th,
+                 colspan = length(these_columns)
           ),
         ),
         tr(
