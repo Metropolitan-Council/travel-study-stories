@@ -32,7 +32,8 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
       # summary_data <- two_way_table_inputs$summary_return
 
 
-      dt_items <- create_datatable_container(two_way_table_inputs$two_way_list,
+      dt_items <- create_datatable_container(
+        two_way_table_inputs$two_way_list,
         type = "proportion_w_se"
       )
 
@@ -42,13 +43,8 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
         container = dt_items$container,
         rownames = F
       ) %>%
-        DT::formatPercentage(columns = which(
-          sapply(
-            dt_items$dt_data,
-            is.numeric
-          ),
-          TRUE
-        ), digits = 1) %>%
+        DT::formatPercentage(columns = which(sapply(names(dt_items$dt_data), stringr::str_detect, "estimate")),
+                             digits = 1) %>%
         DT::formatString(
           columns = which(
             sapply(
