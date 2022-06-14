@@ -26,6 +26,15 @@
 #'
 create_two_way_table <- function(variable_row, variable_col, hh_ids){
 
+  if(variable_row == variable_col){
+    warning("Row and columns variables must be distinct values")
+    # return(list(
+    #   table = tibble::tibble(),
+    #   definition_row = tibble::tibble(),
+    #   definition_col = tibble::tibble(),
+    #   summary = tibble::tibble()))
+  }
+
   this_table_row <-
     tbi_dict %>%
     dplyr::filter(variable == variable_row) %>%
