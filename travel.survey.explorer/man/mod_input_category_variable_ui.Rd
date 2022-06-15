@@ -6,6 +6,7 @@
 \usage{
 mod_input_category_variable_ui(
   id,
+  starting_category_choices = unique(tbi_dict$category),
   starting_category_selected = "Demographics",
   starting_variable_choices = input_list$Demographics,
   starting_variable_selected = "Age"
@@ -13,6 +14,9 @@ mod_input_category_variable_ui(
 }
 \arguments{
 \item{id, input, output, session}{Internal parameters for {shiny}.}
+
+\item{starting_category_choices}{list, category choices. Default is
+\code{unique(tbi_dict$category)}.}
 
 \item{starting_category_selected}{character, starting category}
 
