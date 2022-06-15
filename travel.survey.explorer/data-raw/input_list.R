@@ -4,7 +4,7 @@ library(dplyr)
 # library(travel.survey.explorer)
 
 tbi_dict_app <- tbi_dict %>%
-  filter(stringr::str_detect(variable, "ethnicity", negate = T))
+  filter(stringr::str_detect(variable, "ethnicity_", negate = T))
 
 input_list <- purrr::map(unique(tbi_dict_app$category), function(x) {
   tb <- tbi_dict_app %>%
