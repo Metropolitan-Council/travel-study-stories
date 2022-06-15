@@ -1,6 +1,8 @@
 #' input_category_variable UI Function
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
+#' @param starting_category_choices list, category choices. Default is
+#'     `unique(tbi_dict$category)`.
 #' @param starting_category_selected character, starting category
 #' @param starting_variable_choices list, starting variable choices. Default is
 #'     `input_list$Demographics`
@@ -29,6 +31,7 @@
 #'
 #' @importFrom shiny NS tagList
 mod_input_category_variable_ui <- function(id,
+                                           starting_category_choices = unique(tbi_dict$category),
                                            starting_category_selected = "Demographics",
                                            starting_variable_choices = input_list$Demographics,
                                            starting_variable_selected = "Age") {
@@ -37,7 +40,7 @@ mod_input_category_variable_ui <- function(id,
     selectInput(
       inputId = ns("category"),
       label = "Category",
-      choices = unique(tbi_dict$category),
+      choices = starting_category_choices,
       selected = starting_category_selected
     ),
     selectInput(
