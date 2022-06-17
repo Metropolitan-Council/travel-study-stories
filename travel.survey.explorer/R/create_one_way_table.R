@@ -1,6 +1,8 @@
 #' @title Create a one-way cross table
 #'
 #' @param variable character, variable name. Must be one of `tbi_dict$variable`.
+#' @param hh_ids vector, integer64 vector of unique household IDs. Must be
+#'     one or more of `tbi_tables$hh$hhid`
 #'
 #' @return A tibble with columns
 #'    - variable name with relevant values
@@ -12,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' /dontrun{
+#' \dontrun{
 #'
 #' library(travel.survey.explorer)
 #' create_one_way_table("bike_freq")
