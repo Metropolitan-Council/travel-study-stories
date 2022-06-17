@@ -58,9 +58,9 @@ app_ui <- function(request) {
             mod_input_category_variable_ui(
               "input_category_col_1",
               starting_category_choices = unique(tbi_dict$category)[-1],
-              starting_category_selected = "Shared mobility",
-              starting_variable_choices = input_list$`Shared mobility`,
-              starting_variable_selected = "How often uses a bicycle"
+              starting_category_selected = "Trips",
+              starting_variable_choices = input_list$Trips,
+              starting_variable_selected = "Trip mode type - broad categories"
             )
           ),
           column(
