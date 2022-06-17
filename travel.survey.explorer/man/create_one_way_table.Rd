@@ -7,6 +7,9 @@
 create_one_way_table(variable_row, hh_ids)
 }
 \arguments{
+\item{hh_ids}{vector, integer64 vector of unique household IDs. Must be
+one or more of \code{tbi_tables$hh$hhid}}
+
 \item{variable}{character, variable name. Must be one of \code{tbi_dict$variable}.}
 }
 \value{
@@ -24,10 +27,9 @@ multiply by 100 for percentages.
 Create a one-way cross table
 }
 \examples{
-/dontrun{
+\dontrun{
 
 library(travel.survey.explorer)
 create_one_way_table("bike_freq")
-
 }
 }

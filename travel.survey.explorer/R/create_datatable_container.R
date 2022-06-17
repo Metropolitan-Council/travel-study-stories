@@ -23,7 +23,8 @@ create_datatable_container <- function(twoway_data,
       type == "proportion_w_se" ~ c(
         "proportion" = "estimated_prop",
         "se" = "estimated_prop_se",
-        "sample" = "group_N"),
+        "sample" = "group_N"
+      ),
       type == "total" ~ c("total" = "expanded_total"),
       # type == "total_w_se" ~ c(
       #   "total" = "expanded_total",
@@ -33,7 +34,7 @@ create_datatable_container <- function(twoway_data,
 
   this_table <- twoway_data$table %>%
     dplyr::mutate(estimated_prop_se = scales::percent(estimated_prop_se,
-                                                      accuracy = 0.1
+      accuracy = 0.1
     )) %>%
     dplyr::select(
       row_var = 1,
@@ -80,8 +81,8 @@ create_datatable_container <- function(twoway_data,
         tr(
           th(class = "dt-center", rowspan = 2, row_label),
           lapply(super_col_headers,
-                 th,
-                 colspan = length(these_columns)
+            th,
+            colspan = length(these_columns)
           ),
         ),
         tr(

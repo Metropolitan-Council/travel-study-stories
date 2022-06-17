@@ -64,17 +64,17 @@ mod_input_category_variable_server <- function(id) {
     vals <- reactiveValues()
 
     observeEvent(input$category,
-                 {
-                   # update variable input by fetching variables specific
-                   # to the input$category
-                   updateSelectInput(
-                     session = session,
-                     inputId = "variable",
-                     label = "Variable",
-                     choices = input_list[input$category][[1]]
-                   )
-                 },
-                 ignoreInit = TRUE
+      {
+        # update variable input by fetching variables specific
+        # to the input$category
+        updateSelectInput(
+          session = session,
+          inputId = "variable",
+          label = "Variable",
+          choices = input_list[input$category][[1]]
+        )
+      },
+      ignoreInit = TRUE
     )
 
 

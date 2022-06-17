@@ -71,32 +71,32 @@ mod_filters_server <- function(id) {
     ## When county/counties selected, ----
     # update cities dropdown to include only cities within that county ----
     observeEvent(input$input_counties,
-                 {
-                   if (!is.null(input$input_counties)) {
-                     filtered_cities <- tbi_tables$hh %>%
-                       dplyr::filter(hh_county %in% input$input_counties) %>%
-                       dplyr::select(hh_city) %>%
-                       unique() %>%
-                       na.omit()
+      {
+        if (!is.null(input$input_counties)) {
+          filtered_cities <- tbi_tables$hh %>%
+            dplyr::filter(hh_county %in% input$input_counties) %>%
+            dplyr::select(hh_city) %>%
+            unique() %>%
+            na.omit()
 
-                     updateSelectInput(
-                       session = session,
-                       inputId = "input_cities",
-                       label = "Household City/Township",
-                       choices = filtered_cities$hh_city,
-                       selected = NULL
-                     )
-                   } else {
-                     selectInput(
-                       session = session,
-                       inputId = ns("input_cities"),
-                       "Household City/Township",
-                       choices = unique(na.omit(tbi_tables$hh$hh_city)),
-                       selected = NULL
-                     )
-                   }
-                 },
-                 ignoreInit = TRUE
+          updateSelectInput(
+            session = session,
+            inputId = "input_cities",
+            label = "Household City/Township",
+            choices = filtered_cities$hh_city,
+            selected = NULL
+          )
+        } else {
+          selectInput(
+            session = session,
+            inputId = ns("input_cities"),
+            "Household City/Township",
+            choices = unique(na.omit(tbi_tables$hh$hh_city)),
+            selected = NULL
+          )
+        }
+      },
+      ignoreInit = TRUE
     )
 
 

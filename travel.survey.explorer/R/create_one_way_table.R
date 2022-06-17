@@ -18,7 +18,6 @@
 #'
 #' library(travel.survey.explorer)
 #' create_one_way_table("bike_freq")
-#'
 #' }
 #' @importFrom rlang sym quo_name enquo
 #' @importFrom dplyr filter select mutate rename group_by summarize ungroup summarize_all
@@ -29,7 +28,6 @@
 #' @import bit64
 #'
 create_one_way_table <- function(variable_row, hh_ids) {
-
   this_table <-
     tbi_dict %>%
     dplyr::filter(variable == variable_row) %>%
@@ -67,8 +65,10 @@ create_one_way_table <- function(variable_row, hh_ids) {
       # get our households:
       dplyr::filter(hh_id %in% hh_ids) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
-      dplyr::summarize(mean = srvyr::survey_mean(get(variable_row)),
-                       median = srvyr::survey_median(get(variable_row))) %>%
+      dplyr::summarize(
+        mean = srvyr::survey_mean(get(variable_row)),
+        median = srvyr::survey_median(get(variable_row))
+      ) %>%
       dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
 
 
@@ -91,8 +91,6 @@ create_one_way_table <- function(variable_row, hh_ids) {
 
     # time data -----
   } else if (vartype == "ITime") {
-
-
     summary <-
       tab %>%
       # get our households:
@@ -100,8 +98,10 @@ create_one_way_table <- function(variable_row, hh_ids) {
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
       dplyr::filter(!get(variable_row) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
-      dplyr::summarize(mean = srvyr::survey_mean(get(variable_row)),
-                       median = srvyr::survey_median(get(variable_row))) %>%
+      dplyr::summarize(
+        mean = srvyr::survey_mean(get(variable_row)),
+        median = srvyr::survey_median(get(variable_row))
+      ) %>%
       # round to nearest minute:
       dplyr::mutate(across(everything(), function(x) (x %/% 60L) * 60L)) %>%
       # make into a time obj:
@@ -141,16 +141,19 @@ create_one_way_table <- function(variable_row, hh_ids) {
 
   table <- tab %>%
     # get our households:
-    dplyr::filter(hh_id %in% hh_ids)%>%
+    dplyr::filter(hh_id %in% hh_ids) %>%
     # clean up:
     droplevels() %>%
     # big N sample size - for the whole data frame:
-    dplyr::mutate(total_N = length(hh_id), # raw sample size - number of people, trips, households, days
-                  total_N_hh = length(unique(hh_id))) %>% # total number of households in sample
+    dplyr::mutate(
+      total_N = length(hh_id), # raw sample size - number of people, trips, households, days
+      total_N_hh = length(unique(hh_id))
+    ) %>% # total number of households in sample
     srvyr::as_survey_design(weights = !!this_weight) %>%
-    dplyr::group_by(# grouping by number of samples, number of households to keep this info
+    dplyr::group_by( # grouping by number of samples, number of households to keep this info
       total_N, total_N_hh,
-      get(variable_row)) %>%
+      get(variable_row)
+    ) %>%
     dplyr::summarize(
       group_N = length(hh_id),
       # raw sample size - number of people, trips, households, days (by group)
@@ -176,11 +179,13 @@ create_one_way_table <- function(variable_row, hh_ids) {
     dplyr::ungroup() %>%
     dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5)) %>%
     dplyr::mutate(units = !!this_table) %>%
-    dplyr::mutate(units = dplyr::case_when(units == "per" ~ "people",
-                                           units == "day" ~ "days",
-                                           units == "hh" ~ "households",
-                                           units == "veh" ~ "vehicles",
-                                           units == "trip" ~ "trips"))
+    dplyr::mutate(units = dplyr::case_when(
+      units == "per" ~ "people",
+      units == "day" ~ "days",
+      units == "hh" ~ "households",
+      units == "veh" ~ "vehicles",
+      units == "trip" ~ "trips"
+    ))
 
   # Dictionary -------------
   definitions <-

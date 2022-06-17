@@ -60,9 +60,10 @@ app_server <- function(input, output, session) {
 
   mod_table_two_way_server("table_two_way_ui_1", two_way_table_inputs = two_way_tab)
   mod_plot_server("plot_two_way_ui_1",
-                  n_ways = 2,
-                  plot_inputs = two_way_tab,
-                  filter_info = user_hhs_2way)
+    n_ways = 2,
+    plot_inputs = two_way_tab,
+    filter_info = user_hhs_2way
+  )
 
 
   # ## formatted table -----

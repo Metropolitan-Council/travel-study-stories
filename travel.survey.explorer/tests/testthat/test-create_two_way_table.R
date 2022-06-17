@@ -1,26 +1,27 @@
 
 test_disab_mode_group <-
   create_two_way_table("disability", "mode_group",
-                       hh_ids = travel.survey.explorer::tbi_tables$hh$hh_id) %>%
+    hh_ids = travel.survey.explorer::tbi_tables$hh$hh_id
+  ) %>%
   suppressMessages()
 
 expect_disab_mode_group <-
   tibble::tribble(
-    ~disability, ~mode_group, ~total_N, ~total_N_hh, ~group_N, ~group_N_hh, ~expanded_total, ~expanded_total_se, ~estimated_prop, ~estimated_prop_se,   ~units,
-    "No",     "Drive",   289489,        7479,   232117,        6931,  11177905.23241,        65296.44509,         0.85956,             0.0019, "people",
-    "No",     "Other",   289489,        7479,     9241,        1604,    279866.31962,         8685.14405,         0.02152,            0.00067, "people",
-    "No",   "Transit",   289489,        7479,     7868,        1147,    315156.00788,        11620.17391,         0.02424,            0.00088, "people",
-    "No",      "Walk",   289489,        7479,    32650,        3532,    1227360.4821,        22012.33471,         0.09438,            0.00162, "people",
-    "No",   "Bicycle",   289489,        7479,      136,          47,      3867.83033,          750.80431,          0.0003,            0.00006, "people",
-    "Yes",     "Drive",   289489,        7479,     3774,         320,     275845.2889,        10945.71777,         0.68709,            0.01695, "people",
-    "Yes",     "Other",   289489,        7479,      190,          53,     23222.42576,         3947.06161,         0.05784,            0.00946, "people",
-    "Yes",   "Transit",   289489,        7479,      484,         100,     55438.75346,         6209.66355,         0.13809,              0.014, "people",
-    "Yes",      "Walk",   289489,        7479,      720,         118,     46960.99533,         4367.47837,         0.11697,            0.01035, "people",
-    "Yes",   "Bicycle",   289489,        7479,        3,           2,               0,                  0,               0,                  0, "people",
-    "Prefer not to answer",     "Drive",   289489,        7479,     1767,         126,    215052.48057,        13358.08368,         0.84863,            0.01526, "people",
-    "Prefer not to answer",     "Other",   289489,        7479,       46,          15,      2167.53209,          1019.2799,         0.00855,            0.00402, "people",
-    "Prefer not to answer",   "Transit",   289489,        7479,      142,          24,     15639.85796,         2607.69307,         0.06172,            0.01021, "people",
-    "Prefer not to answer",      "Walk",   289489,        7479,      351,          48,     20552.76436,         2690.98586,          0.0811,            0.01069, "people"
+    ~disability, ~mode_group, ~total_N, ~total_N_hh, ~group_N, ~group_N_hh, ~expanded_total, ~expanded_total_se, ~estimated_prop, ~estimated_prop_se, ~units,
+    "No", "Drive", 289489, 7479, 232117, 6931, 11177905.23241, 65296.44509, 0.85956, 0.0019, "people",
+    "No", "Other", 289489, 7479, 9241, 1604, 279866.31962, 8685.14405, 0.02152, 0.00067, "people",
+    "No", "Transit", 289489, 7479, 7868, 1147, 315156.00788, 11620.17391, 0.02424, 0.00088, "people",
+    "No", "Walk", 289489, 7479, 32650, 3532, 1227360.4821, 22012.33471, 0.09438, 0.00162, "people",
+    "No", "Bicycle", 289489, 7479, 136, 47, 3867.83033, 750.80431, 0.0003, 0.00006, "people",
+    "Yes", "Drive", 289489, 7479, 3774, 320, 275845.2889, 10945.71777, 0.68709, 0.01695, "people",
+    "Yes", "Other", 289489, 7479, 190, 53, 23222.42576, 3947.06161, 0.05784, 0.00946, "people",
+    "Yes", "Transit", 289489, 7479, 484, 100, 55438.75346, 6209.66355, 0.13809, 0.014, "people",
+    "Yes", "Walk", 289489, 7479, 720, 118, 46960.99533, 4367.47837, 0.11697, 0.01035, "people",
+    "Yes", "Bicycle", 289489, 7479, 3, 2, 0, 0, 0, 0, "people",
+    "Prefer not to answer", "Drive", 289489, 7479, 1767, 126, 215052.48057, 13358.08368, 0.84863, 0.01526, "people",
+    "Prefer not to answer", "Other", 289489, 7479, 46, 15, 2167.53209, 1019.2799, 0.00855, 0.00402, "people",
+    "Prefer not to answer", "Transit", 289489, 7479, 142, 24, 15639.85796, 2607.69307, 0.06172, 0.01021, "people",
+    "Prefer not to answer", "Walk", 289489, 7479, 351, 48, 20552.76436, 2690.98586, 0.0811, 0.01069, "people"
   )
 
 
@@ -38,7 +39,8 @@ purrr::map(
 testthat::expect_error(
   create_two_way_table(
     "d_purpose_category_imputed", "distance",
-    hh_ids = c(1))
+    hh_ids = c(1)
+  )
 ) %>%
   suppressMessages()
 #
@@ -86,4 +88,3 @@ testthat::expect_error(
 # ) %>%
 #   suppressMessages()
 #
-

@@ -1,7 +1,8 @@
 
 test_bike_freq <-
   create_one_way_table("bike_freq",
-                       hh_ids = travel.survey.explorer::tbi_tables$hh$hh_id)
+    hh_ids = travel.survey.explorer::tbi_tables$hh$hh_id
+  )
 
 expect_bike_freq <-
   tibble::tribble(
