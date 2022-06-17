@@ -10,7 +10,7 @@
 #' @importFrom dplyr filter select inner_join
 #' @importFrom purrr pluck
 #' @importFrom knitr combine_words
-#'
+#' @importFrom stats na.omit
 mod_filters_ui <- function(id) {
   ns <- NS(id)
   tagList(
