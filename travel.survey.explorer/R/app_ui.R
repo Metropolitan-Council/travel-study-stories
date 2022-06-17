@@ -40,25 +40,34 @@ app_ui <- function(request) {
       tabPanel(
         title = "Two-Way Table",
         fluidRow(
-          column(width = 3,
-                 h3("How this works"),
-                 p(shinipsum::random_text(nwords = 50))),
-          shiny::column(width = 3,
-                        h4("First variable (rows)"),
-                        mod_input_category_variable_ui("input_category_row_1",
-                                                       starting_category_choices = "Demographics")),
-          column(width = 3,
-                 h4("Second variable (columns)"),
-                 mod_input_category_variable_ui(
-                   "input_category_col_1",
-                   starting_category_choices = unique(tbi_dict$category)[-1],
-                   starting_category_selected = "Shared mobility",
-                   starting_variable_choices = input_list$`Shared mobility`,
-                   starting_variable_selected = "How often uses a bicycle"
-                 )),
-          column(width = 3,
-                 h4("Filter households by geography"),
-                 mod_filters_ui("filters_twoway_1"))
+          column(
+            width = 3,
+            h3("How this works"),
+            p(shinipsum::random_text(nwords = 50))
+          ),
+          shiny::column(
+            width = 3,
+            h4("First variable (rows)"),
+            mod_input_category_variable_ui("input_category_row_1",
+              starting_category_choices = "Demographics"
+            )
+          ),
+          column(
+            width = 3,
+            h4("Second variable (columns)"),
+            mod_input_category_variable_ui(
+              "input_category_col_1",
+              starting_category_choices = unique(tbi_dict$category)[-1],
+              starting_category_selected = "Shared mobility",
+              starting_variable_choices = input_list$`Shared mobility`,
+              starting_variable_selected = "How often uses a bicycle"
+            )
+          ),
+          column(
+            width = 3,
+            h4("Filter households by geography"),
+            mod_filters_ui("filters_twoway_1")
+          )
         ),
         tabsetPanel(
           tabPanel(

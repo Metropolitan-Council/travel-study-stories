@@ -31,31 +31,28 @@ mod_input_utils_server <- function(id,
     # generate table
 
     rt_list <- reactive({
-      if(n_ways == 1){
-
+      if (n_ways == 1) {
         t <- create_one_way_table(
           variable_row = user_var$variable,
           hh_ids = util_hh_ids$hh_ids
         )
         return(t)
-
       } else {
-
         validate(need(util_variable_col$variable != util_variable_row$variable,
-                      message = "Column and row inputs must be different"))
+          message = "Column and row inputs must be different"
+        ))
 
         create_two_way_table(
           variable_row = util_variable_row$variable,
           variable_col = util_variable_col$variable,
           hh_ids = util_hh_ids$hh_ids
         )
-
       }
     })
 
 
     # browser()
-    if(n_ways == 1){
+    if (n_ways == 1) {
       observe({
         one_way_rt <- rt_list()
 
@@ -68,9 +65,7 @@ mod_input_utils_server <- function(id,
         return(vals)
       }) %>%
         bindEvent(user_var$variable, util_hh_ids$hh_ids)
-
     } else {
-
       observe({
         two_way_rt <- rt_list()
 
@@ -87,11 +82,9 @@ mod_input_utils_server <- function(id,
         return(vals)
       }) %>%
         bindEvent(util_variable_row$variable, util_variable_col$variable, util_hh_ids$hh_ids)
-
     }
 
     return(vals)
-
   })
 }
 

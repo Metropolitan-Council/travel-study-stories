@@ -24,7 +24,7 @@ multiply by 100 for percentages.
 Create a two-way cross table
 }
 \examples{
-/dontrun{
+\dontrun{
 
 library(travel.survey.explorer)
 create_one_way_table("bike_freq")

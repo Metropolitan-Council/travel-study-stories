@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-#' /dontrun{
+#' \dontrun{
 #'
 #' library(travel.survey.explorer)
 #' create_one_way_table("bike_freq")
