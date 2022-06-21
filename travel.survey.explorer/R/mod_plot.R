@@ -50,17 +50,22 @@ mod_plot_server <- function(id, n_ways = 1, plot_inputs, filter_info) {
           "Showing data for ", format(n_hh, big.mark = ","),
           " households",
           ifelse(area_filter == "", ".",
-            paste0(" from ", area_filter, ".")
+                 paste0(" from ", area_filter, ".")
           )
         )
       } else {
-        paste0("Showing data for ", format(n, big.mark = ","), " ", units, " from ", format(n_hh, big.mark = ","), " households", ifelse(area_filter == "", ".", paste0(" from ", area_filter, ".")))
+        paste0("Showing data for ", format(n, big.mark = ","),
+               " ", units, " from ", format(n_hh, big.mark = ","),
+               " households",
+               ifelse(area_filter == "", ".",
+                      paste0(" from ", area_filter, ".")))
       }
     })
 
 
     output$plot <- plotly::renderPlotly({
-      w$show()
+      # browser()
+      w_plot$show()
       table_data <- plot_inputs$table_return
       if (n_ways == 1) {
         # browser()
