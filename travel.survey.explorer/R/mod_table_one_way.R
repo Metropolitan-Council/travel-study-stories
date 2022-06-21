@@ -42,6 +42,7 @@ mod_table_one_way_server <- function(id, one_way_table_inputs) {
         mutate(estimated_prop_se = scales::percent(estimated_prop_se,
           accuracy = 0.01
         )),
+      options = list(scrollX = TRUE),
       rownames = F,
       colnames = c(
         definitions_data$variable_label,
