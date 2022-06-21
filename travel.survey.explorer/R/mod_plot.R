@@ -25,7 +25,8 @@ mod_plot_server <- function(id, n_ways = 1, plot_inputs, filter_info) {
     ns <- session$ns
 
 
-    w <- waiter::Waiter$new(ns("plot"), color = waiter::transparent(0.5))
+    w_plot <- waiter::Waiter$new(ns("plot"),
+                                 html = waiter::spin_flower())
 
     output$variable_label <- shiny::renderText({
       definitions_data <- plot_inputs$definitions_return
