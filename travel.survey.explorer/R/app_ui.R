@@ -49,7 +49,8 @@ app_ui <- function(request) {
             width = 3,
             h4("First variable (rows)"),
             mod_input_category_variable_ui("input_category_row_1",
-              starting_category_choices = "Demographics"
+              starting_category_choices = "Demographics",
+              starting_variable_selected = "gender"
             )
           ),
           column(
@@ -60,7 +61,7 @@ app_ui <- function(request) {
               starting_category_choices = unique(tbi_dict$category)[-1],
               starting_category_selected = "Trips",
               starting_variable_choices = input_list$Trips,
-              starting_variable_selected = "Trip mode type - broad categories"
+              starting_variable_selected = "mode_type"
             )
           ),
           column(
