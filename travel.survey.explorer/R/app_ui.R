@@ -83,7 +83,7 @@ app_ui <- function(request) {
       ),
       tabPanel(
         title = "About",
-        mod_about_ui("about_ui_1")
+        mod_markdown_ui("START")
       )
     )
   )
