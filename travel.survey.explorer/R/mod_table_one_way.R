@@ -20,8 +20,9 @@ mod_table_one_way_ui <- function(id) {
 mod_table_one_way_server <- function(id, one_way_table_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    w <- waiter::Waiter$new(ns("table"),
-      color = waiter::transparent(0.5)
+    w_1way <- waiter::Waiter$new(ns("table_1way"),
+      html = waiter::spin_flower()
+
     )
 
 
