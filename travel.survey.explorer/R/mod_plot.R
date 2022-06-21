@@ -78,7 +78,8 @@ mod_plot_server <- function(id, n_ways = 1, plot_inputs, filter_info) {
               " ",
               plot_inputs$definitions_return$variable_label,
               " ",
-              "%{x}"
+              "%{x}",
+              "<extra></extra>"
             )
           ) %>%
           plotly::layout(
@@ -124,7 +125,8 @@ mod_plot_server <- function(id, n_ways = 1, plot_inputs, filter_info) {
               plot_inputs$context_col_return$variable_label,
               "</b>",
               " category, by ",
-              plot_inputs$context_row_return$variable_label
+              plot_inputs$context_row_return$variable_label,
+              "<extra></extra>"
             ))
           ) %>%
           plotly::layout(
