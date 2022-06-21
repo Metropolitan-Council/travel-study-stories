@@ -10,7 +10,7 @@
 mod_table_one_way_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    DT::DTOutput(ns("table"), width = "90%")
+    DT::DTOutput(ns("table_1way"), width = "90%")
   )
 }
 
@@ -26,8 +26,8 @@ mod_table_one_way_server <- function(id, one_way_table_inputs) {
 
 
 
-    output$table <- DT::renderDataTable({
-      w$show()
+    output$table_1way <- DT::renderDataTable({
+      w_1way$show()
       definitions_data <- one_way_table_inputs$definitions_return
       summary_data <- one_way_table_inputs$summary_return
       table_data <- one_way_table_inputs$table_return
