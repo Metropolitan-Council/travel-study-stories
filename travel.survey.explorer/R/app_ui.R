@@ -101,6 +101,7 @@ golem_add_external_resources <- function() {
   add_resource_path("www", app_sys("app/www"))
 
   tags$head(
+    shiny::includeHTML("inst/app/www/google-analytics.html"),
     waiter::useWaiter(),
     favicon(),
     bundle_resources( # shiny::includeHTML(paste0(app_sys("app/www"), "/google-analytics.html")),
