@@ -16,6 +16,7 @@ Depends:
 Imports: 
     bit64 (>= 4.0.5),
     config (>= 0.3.1),
+    councilR (>= 0.1.2.9000),
     data.table (>= 1.14.2),
     dplyr (>= 1.0.9),
     DT (>= 0.20),
@@ -37,6 +38,8 @@ Imports:
 Suggests: 
     spelling (>= 2.2),
     testthat (>= 3.0.0)
+Remotes: 
+    Metropolitan-Council/councilR
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
