@@ -17,6 +17,7 @@ mod_table_one_way_ui <- function(id) {
 #'  @title table_one_way Server Functions
 #'
 #' @noRd
+#' @import councilR
 mod_table_one_way_server <- function(id, one_way_table_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns

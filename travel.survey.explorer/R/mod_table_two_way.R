@@ -17,6 +17,7 @@ mod_table_two_way_ui <- function(id) {
 #' @title table_two_way Server Functions
 #'
 #' @noRd
+#' @import councilR
 mod_table_two_way_server <- function(id, two_way_table_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
