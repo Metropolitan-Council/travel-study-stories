@@ -4,13 +4,16 @@
 #' @param hh_ids vector, integer64 vector of unique household IDs. Must be
 #'     one or more of `tbi_tables$hh$hhid`
 #'
-#' @return A tibble with columns
-#'    - variable name with relevant values
-#'    - `group_N` raw sample size - number of people, trips, households, days (by group)
-#'    - `group_N_hh` number of households in sample (by group)
-#'    - `expanded_total` and `expanded_total_se`
-#'    - `estimated_prop` and `estimated_prop_se` estimated proportion (0.0 - 1.0) and SE;
-#'         multiply by 100 for percentages.
+#' @return A named list of tables
+#'     - `table`, table with columns
+#'        - variable  name, matching `variable`
+#'        - `group_N` raw sample size - number of people, trips, households, days (by group)
+#'        - `group_N_hh` number of households in sample (by group)
+#'        - `expanded_total` and `expanded_total_se`
+#'        - `estimated_prop` and `estimated_prop_se` estimated proportion (0.0 - 1.0) and SE;
+#'            multiply by 100 for percentages.
+#'     - `definitions` table with contextual information from `tbi_dict`
+#'     - `summary`, table
 #' @export
 #'
 #' @examples
