@@ -1,14 +1,23 @@
 #' @title Create a two-way cross table
 #'
-#' @param variable character, variable name. Must be one of `tbi_dict$variable`.
+#' @param variable_row character, variable name for the ROW cross.
+#'      Must be one of `tbi_dict$variable`.
+#' @param variable_col character, variable name for the COLUMN cross.
+#'      Must be one of `tbi_dict$variable`.
+#' @inheritParams create_one_way_table
 #'
-#' @return A tibble with columns
-#'    - variable name with relevant values
-#'    - `group_N` raw sample size - number of people, trips, households, days (by group)
-#'    - `group_N_hh` number of households in sample (by group)
-#'    - `expanded_total` and `expanded_total_se`
-#'    - `estimated_prop` and `estimated_prop_se` estimated proportion (0.0 - 1.0) and SE;
-#'         multiply by 100 for percentages.
+#' @return A named list of tables
+#'     - `table`, table with columns
+#'        - variable row name, `variable_row`
+#'        - variable column name, matching `variable_col`
+#'        - `group_N` raw sample size - number of people, trips, households, days (by group)
+#'        - `group_N_hh` number of households in sample (by group)
+#'        - `expanded_total` and `expanded_total_se`
+#'        - `estimated_prop` and `estimated_prop_se` estimated proportion (0.0 - 1.0) and SE;
+#'            multiply by 100 for percentages.
+#'     - `definition_row` table with row variable contextual information from `tbi_dict`
+#'     - `definition_col` table with column variable contextual information from `tbi_dict`
+#'     - `summary`, table with numeric summary information
 #' @export
 #'
 #' @examples
