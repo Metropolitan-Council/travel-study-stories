@@ -158,8 +158,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       dplyr::group_by(get(variable_row)) %>%
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
                        median = srvyr::survey_median(get(variable_col))) %>%
-      dplyr::mutate(dplyr::across(
-        tidyselect:::where(is.numeric), round, digits = 5)) %>%
+      dplyr::mutate(dplyr::across(where(is.numeric), round, digits = 5)) %>%
       dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
 
   } else if (vartype_col == "ITime") {
@@ -232,8 +231,8 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`) %>%
     dplyr::rename(!!rlang::quo_name(variable_col) := `get(variable_col)`) %>%
     dplyr::select(
-      all_of(variable_row),
-      all_of(variable_col),
+      tidyselect::all_of(variable_row),
+      tidyselect::all_of(variable_col),
       "total_N",
       "total_N_hh",
       "group_N",
@@ -243,7 +242,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       "estimated_prop",
       "estimated_prop_se"
     ) %>%
-    dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric),
+    dplyr::mutate(dplyr::across(where(is.numeric),
                                 round, digits = 5)) %>%
     dplyr::mutate(units = !!this_table_row) %>%
     dplyr::mutate(units = dplyr::case_when(.data$units == "per" ~ "people",
