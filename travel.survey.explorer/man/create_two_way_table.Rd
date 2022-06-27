@@ -7,18 +7,28 @@
 create_two_way_table(variable_row, variable_col, hh_ids)
 }
 \arguments{
-\item{variable}{character, variable name. Must be one of \code{tbi_dict$variable}.}
+\item{variable_row}{character, variable name for the ROW cross.
+Must be one of \code{tbi_dict$variable}.}
+
+\item{variable_col}{character, variable name for the COLUMN cross.
+Must be one of \code{tbi_dict$variable}.}
+
+\item{hh_ids}{vector, integer64 vector of unique household IDs. Must be
+one or more of \code{tbi_tables$hh$hhid}}
 }
 \value{
-A tibble with columns
-\itemize{
-\item variable name with relevant values
-\item \code{group_N} raw sample size - number of people, trips, households, days (by group)
-\item \code{group_N_hh} number of households in sample (by group)
-\item \code{expanded_total} and \code{expanded_total_se}
-\item \code{estimated_prop} and \code{estimated_prop_se} estimated proportion (0.0 - 1.0) and SE;
+A named list of tables
+- \code{table}, table with columns
+- variable row name, \code{variable_row}
+- variable column name, matching \code{variable_col}
+- \code{group_N} raw sample size - number of people, trips, households, days (by group)
+- \code{group_N_hh} number of households in sample (by group)
+- \code{expanded_total} and \code{expanded_total_se}
+- \code{estimated_prop} and \code{estimated_prop_se} estimated proportion (0.0 - 1.0) and SE;
 multiply by 100 for percentages.
-}
+- \code{definition_row} table with row variable contextual information from \code{tbi_dict}
+- \code{definition_col} table with column variable contextual information from \code{tbi_dict}
+- \code{summary} table with numeric summary information
 }
 \description{
 Create a two-way cross table
