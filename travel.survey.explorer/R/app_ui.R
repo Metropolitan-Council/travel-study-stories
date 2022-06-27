@@ -50,7 +50,7 @@ app_ui <- function(request) {
             h4("First variable (rows)"),
             mod_input_category_variable_ui("input_category_row_1",
               starting_category_choices = "Demographics",
-              starting_variable_selected = "gender"
+              starting_variable_selected = "disability"
             )
           ),
           column(
@@ -59,9 +59,9 @@ app_ui <- function(request) {
             mod_input_category_variable_ui(
               "input_category_col_1",
               starting_category_choices = unique(tbi_dict$category)[-1],
-              starting_category_selected = "Trips",
-              starting_variable_choices = input_list$Trips,
-              starting_variable_selected = "mode_type"
+              starting_category_selected = "Commute",
+              starting_variable_choices = input_list$Commute,
+              starting_variable_selected = "work_mode"
             )
           ),
           column(
