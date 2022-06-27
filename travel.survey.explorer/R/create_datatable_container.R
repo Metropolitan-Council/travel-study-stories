@@ -33,13 +33,13 @@ create_datatable_container <- function(twoway_data,
     )
 
   this_table <- twoway_data$table %>%
-    dplyr::mutate(estimated_prop_se = scales::percent(estimated_prop_se,
-      accuracy = 0.1
+    dplyr::mutate(estimated_prop_se = scales::percent(.data$estimated_prop_se,
+                                                      accuracy = 0.1
     )) %>%
     dplyr::select(
       row_var = 1,
       col_var = 2,
-      all_of(these_columns)
+      tidyselect::all_of(these_columns)
     ) %>%
     tidyr::pivot_wider(
       names_from = col_var,
