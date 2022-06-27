@@ -151,7 +151,7 @@ mod_filters_server <- function(id) {
       #   dplyr::select(hh_id)
 
       ## Final HH ID list----
-      # inner join is the key here: gets the intersecting set.
+      # inner join is important: gets the intersecting set.
       vals$hh_ids <- all_hh_ids %>%
         #  dplyr::inner_join(year_ids, by = "hh_id") %>%
         dplyr::inner_join(ctu_ids, by = "hh_id") %>%
