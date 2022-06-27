@@ -49,9 +49,9 @@ mod_filters_ui <- function(id) {
         multiple = TRUE,
         selected = NULL
       )
-    ),
+    )
     # Button: Go One Way, Create Table ----
-    actionButton(inputId = ns("go_one_way"), "Create Table")
+    # actionButton(inputId = ns("go_one_way"), "Create Table")
   )
 }
 
