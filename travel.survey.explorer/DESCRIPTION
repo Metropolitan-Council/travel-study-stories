@@ -9,7 +9,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0001-5505-1372"))
   )
 Description: Interactive data visualization for the Metropolitan Council
-    Travel Behavior Inventory
+    Travel Behavior Inventory.
 License: MIT + file LICENSE
 Depends: 
     R (>= 2.10)
