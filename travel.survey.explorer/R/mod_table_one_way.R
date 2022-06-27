@@ -38,11 +38,11 @@ mod_table_one_way_server <- function(id, one_way_table_inputs) {
       DT::datatable(table_data %>%
         dplyr::select(
           1,
-          estimated_prop,
-          estimated_prop_se,
-          group_N
+          .data$estimated_prop,
+          .data$estimated_prop_se,
+          .data$group_N
         ) %>%
-        mutate(estimated_prop_se = scales::percent(estimated_prop_se,
+      dplyr::mutate(estimated_prop_se = scales::percent(.data$estimated_prop_se,
           accuracy = 0.01
         )),
       options = list(scrollX = TRUE),

@@ -11,6 +11,7 @@
 #' @importFrom dplyr case_when select mutate
 #' @importFrom tidyr pivot_wider
 #' @importFrom tidyselect all_of
+#' @importFrom rlang .data
 create_datatable_container <- function(twoway_data,
                                        type = c(
                                          "proportion",

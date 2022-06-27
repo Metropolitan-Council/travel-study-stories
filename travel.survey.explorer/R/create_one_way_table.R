@@ -22,14 +22,13 @@
 #' library(travel.survey.explorer)
 #' create_one_way_table("bike_freq")
 #' }
-#' @importFrom rlang sym quo_name enquo
+#' @importFrom rlang sym quo_name enquo .data
 #' @importFrom dplyr filter select mutate rename group_by summarize ungroup summarize_all
 #' @importFrom magrittr extract2
 #' @importFrom srvyr survey_total survey_prop
 #' @importFrom purrr pluck
 #' @importFrom data.table as.ITime
 #' @import bit64
-#'
 create_one_way_table <- function(variable_row, hh_ids) {
   this_table <-
     tbi_dict %>%
@@ -106,9 +105,9 @@ create_one_way_table <- function(variable_row, hh_ids) {
         median = srvyr::survey_median(get(variable_row))
       ) %>%
       # round to nearest minute:
-      dplyr::mutate(across(everything(), function(x) (x %/% 60L) * 60L)) %>%
+      dplyr::mutate(dplyr::across(dplyr::everything(), function(x) (x %/% 60L) * 60L)) %>%
       # make into a time obj:
-      dplyr::mutate(across(everything(), data.table::as.ITime))
+      dplyr::mutate(dplyr::across(dplyr::everything(), data.table::as.ITime))
 
 
     brks <- histogram_breaks[[variable_row]]$breaks

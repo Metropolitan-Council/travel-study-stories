@@ -4,6 +4,7 @@
 #' @export
 #' @importFrom dplyr select group_by summarize
 #' @importFrom DT datatable
+#' @importFrom rlang .data
 reference_table <- function(){
 
   tbi_dict %>%
