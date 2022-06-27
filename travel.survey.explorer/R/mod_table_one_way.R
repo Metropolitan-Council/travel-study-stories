@@ -18,6 +18,7 @@ mod_table_one_way_ui <- function(id) {
 #'
 #' @noRd
 #' @import councilR
+#' @importFrom scales percent
 mod_table_one_way_server <- function(id, one_way_table_inputs) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
