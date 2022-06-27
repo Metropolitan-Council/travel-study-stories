@@ -118,8 +118,8 @@ mod_filters_server <- function(id) {
       if (input$input_mpo == TRUE) {
         mpo_ids <-
           tbi_tables$hh %>%
-          dplyr::filter(hh_in_mpo == "Household in Twin Cities region") %>%
-          dplyr::select(hh_id)
+          dplyr::filter(.data$hh_in_mpo == "Household in Twin Cities region") %>%
+          dplyr::select(.data$hh_id)
       } else {
         mpo_ids <- all_hh_ids
       }
@@ -129,8 +129,8 @@ mod_filters_server <- function(id) {
       if (!is.null(input$input_counties)) {
         cty_ids <-
           tbi_tables$hh %>%
-          dplyr::filter(hh_county %in% input$input_counties) %>%
-          dplyr::select(hh_id)
+          dplyr::filter(.data$hh_county %in% input$input_counties) %>%
+          dplyr::select(.data$hh_id)
       } else {
         cty_ids <- all_hh_ids
       }
@@ -139,8 +139,8 @@ mod_filters_server <- function(id) {
       if (!is.null(input$input_cities)) {
         ctu_ids <-
           tbi_tables$hh %>%
-          dplyr::filter(hh_city %in% input$input_cities) %>%
-          dplyr::select(hh_id)
+          dplyr::filter(.data$hh_city %in% input$input_cities) %>%
+          dplyr::select(.data$hh_id)
       } else {
         ctu_ids <- all_hh_ids
       }

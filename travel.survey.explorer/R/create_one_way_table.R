@@ -33,15 +33,15 @@
 create_one_way_table <- function(variable_row, hh_ids) {
   this_table <-
     tbi_dict %>%
-    dplyr::filter(variable == variable_row) %>%
-    dplyr::select(which_table) %>%
+    dplyr::filter(.data$variable == variable_row) %>%
+    dplyr::select(.data$which_table) %>%
     unique() %>%
     magrittr::extract2(1)
 
   this_weight <-
     tbi_dict %>%
-    dplyr::filter(variable == variable_row) %>%
-    dplyr::select(wt_field) %>%
+    dplyr::filter(.data$variable == variable_row) %>%
+    dplyr::select(.data$wt_field) %>%
     unique() %>%
     magrittr::extract2(1)
 
@@ -66,13 +66,13 @@ create_one_way_table <- function(variable_row, hh_ids) {
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
       dplyr::filter(!get(variable_row) == Inf) %>%
       # get our households:
-      dplyr::filter(hh_id %in% hh_ids) %>%
+      dplyr::filter(.data$hh_id %in% hh_ids) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
       dplyr::summarize(
         mean = srvyr::survey_mean(get(variable_row)),
         median = srvyr::survey_median(get(variable_row))
       ) %>%
-      dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5))
+      dplyr::mutate(dplyr::across(is.numeric, round, digits = 5))
 
 
     # cut into bins:
@@ -82,7 +82,7 @@ create_one_way_table <- function(variable_row, hh_ids) {
 
     tab <- tab %>%
       # get our households:
-      dplyr::filter(hh_id %in% hh_ids) %>%
+      dplyr::filter(.data$hh_id %in% hh_ids) %>%
       dplyr::mutate(cuts = cut(
         get(variable_row),
         breaks = brks,
@@ -90,14 +90,14 @@ create_one_way_table <- function(variable_row, hh_ids) {
         order_result = TRUE
       )) %>%
       dplyr::select(-rlang::sym(variable_row)) %>%
-      dplyr::rename(!!rlang::enquo(variable_row) := cuts)
+      dplyr::rename(!!rlang::enquo(variable_row) := .data$cuts)
 
     # time data -----
   } else if (vartype == "ITime") {
     summary <-
       tab %>%
       # get our households:
-      dplyr::filter(hh_id %in% hh_ids) %>%
+      dplyr::filter(.data$hh_id %in% hh_ids) %>%
       # get rid of "Inf" values (for mpg_city, mpg_highway) :
       dplyr::filter(!get(variable_row) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
@@ -126,7 +126,7 @@ create_one_way_table <- function(variable_row, hh_ids) {
         include.lowest = TRUE
       )) %>%
       dplyr::select(-rlang::sym(variable_row)) %>%
-      dplyr::rename(!!rlang::enquo(variable_row) := cuts)
+      dplyr::rename(!!rlang::enquo(variable_row) := .data$cuts)
 
     # factor data -----
   } else {
@@ -144,23 +144,24 @@ create_one_way_table <- function(variable_row, hh_ids) {
 
   table <- tab %>%
     # get our households:
-    dplyr::filter(hh_id %in% hh_ids) %>%
+    dplyr::filter(.data$hh_id %in% hh_ids) %>%
     # clean up:
     droplevels() %>%
     # big N sample size - for the whole data frame:
     dplyr::mutate(
-      total_N = length(hh_id), # raw sample size - number of people, trips, households, days
-      total_N_hh = length(unique(hh_id))
+      total_N = length(.data$hh_id), # raw sample size - number of people, trips, households, days
+      total_N_hh = length(unique(.data$hh_id))
     ) %>% # total number of households in sample
     srvyr::as_survey_design(weights = !!this_weight) %>%
     dplyr::group_by( # grouping by number of samples, number of households to keep this info
-      total_N, total_N_hh,
+      .data$total_N,
+      .data$total_N_hh,
       get(variable_row)
     ) %>%
     dplyr::summarize(
-      group_N = length(hh_id),
+      group_N = length(.data$hh_id),
       # raw sample size - number of people, trips, households, days (by group)
-      group_N_hh = length(unique(hh_id)),
+      group_N_hh = length(unique(.data$hh_id)),
       # number of households in sample (by group)
       expanded_total = srvyr::survey_total(),
       # expanded total and SE
@@ -169,7 +170,7 @@ create_one_way_table <- function(variable_row, hh_ids) {
     # rename the column back to the original name - it gets weird for some reason
     dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`) %>%
     dplyr::select(
-      all_of(variable_row),
+      tidyselect::all_of(variable_row),
       "total_N",
       "total_N_hh",
       "group_N",
@@ -183,21 +184,24 @@ create_one_way_table <- function(variable_row, hh_ids) {
     dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric), round, digits = 5)) %>%
     dplyr::mutate(units = !!this_table) %>%
     dplyr::mutate(units = dplyr::case_when(
-      units == "per" ~ "people",
-      units == "day" ~ "days",
-      units == "hh" ~ "households",
-      units == "veh" ~ "vehicles",
-      units == "trip" ~ "trips"
+      .data$units == "per" ~ "people",
+      .data$units == "day" ~ "days",
+      .data$units == "hh" ~ "households",
+      .data$units == "veh" ~ "vehicles",
+      .data$units == "trip" ~ "trips"
     ))
 
   # Dictionary -------------
   definitions <-
     tbi_dict %>%
     dplyr::filter(variable == variable_row) %>%
-    dplyr::select(variable_label, survey_question, variable_logic, which_table, category) %>%
+    dplyr::select(.data$variable_label, .data$survey_question,
+                  .data$variable_logic, .data$which_table, .data$category) %>%
     unique()
 
-  one_way_rt_list <- list(table = table, definitions = definitions, summary = summary)
+  one_way_rt_list <- list(table = table,
+                          definitions = definitions,
+                          summary = summary)
 
   return(one_way_rt_list)
 }

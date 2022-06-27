@@ -37,32 +37,27 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
 
   if(variable_row == variable_col){
     warning("Row and columns variables must be distinct values")
-    # return(list(
-    #   table = tibble::tibble(),
-    #   definition_row = tibble::tibble(),
-    #   definition_col = tibble::tibble(),
-    #   summary = tibble::tibble()))
   }
 
   this_table_row <-
     tbi_dict %>%
-    dplyr::filter(variable == variable_row) %>%
-    dplyr::select(which_table) %>%
+    dplyr::filter(.data$variable == variable_row) %>%
+    dplyr::select(.data$which_table) %>%
     unique() %>%
     magrittr::extract2(1)
 
   this_table_col <-
     tbi_dict %>%
-    dplyr::filter(variable == variable_col) %>%
-    dplyr::select(which_table) %>%
+    dplyr::filter(.data$variable == variable_col) %>%
+    dplyr::select(.data$which_table) %>%
     unique() %>%
     magrittr::extract2(1)
 
   # weights are for the columns, so in example, trip weights
   this_weight <-
     tbi_dict %>%
-    dplyr::filter(variable == variable_col) %>%
-    dplyr::select(wt_field) %>%
+    dplyr::filter(.data$variable == variable_col) %>%
+    dplyr::select(.data$wt_field) %>%
     unique() %>%
     magrittr::extract2(1)
 
@@ -95,7 +90,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
   tab_0 <- table_row %>%
     dplyr::inner_join(table_col) %>%
     # get our households:
-    dplyr::filter(hh_id %in% hh_ids) %>%
+    dplyr::filter(.data$hh_id %in% hh_ids) %>%
     # get rid of NA weights:
     dplyr::filter(!is.na(get(this_weight)))
 
@@ -114,7 +109,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
         order_result = TRUE
       )) %>%
       dplyr::select(-rlang::sym(variable_row)) %>%
-      dplyr::rename(!!rlang::enquo(variable_row) := cuts)
+      dplyr::rename(!!rlang::enquo(variable_row) := .data$cuts)
 
 
   } else if (vartype_row == "ITime") {
@@ -131,7 +126,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
         include.lowest = TRUE
       )) %>%
       dplyr::select(-rlang::sym(variable_row)) %>%
-      dplyr::rename(!!rlang::enquo(variable_row) := cuts)
+      dplyr::rename(!!rlang::enquo(variable_row) := .data$cuts)
 
 
   } else {
@@ -152,7 +147,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
         order_result = TRUE
       )) %>%
       dplyr::select(-rlang::sym(variable_col)) %>%
-      dplyr::rename(!!rlang::enquo(variable_col) := cuts)
+      dplyr::rename(!!rlang::enquo(variable_col) := .data$cuts)
 
     # table of median and means for numeric data:
     summary <-
@@ -180,7 +175,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
         include.lowest = TRUE
       )) %>%
       dplyr::select(-rlang::sym(variable_col)) %>%
-      dplyr::rename(!!rlang::enquo(variable_col) := cuts)
+      dplyr::rename(!!rlang::enquo(variable_col) := .data$cuts)
 
     summary <-
       tab_1 %>%
@@ -219,13 +214,14 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
                   total_N_hh = length(unique(hh_id))) %>% # total number of households in sample
     srvyr::as_survey_design(weights = !!this_weight) %>%
     dplyr::group_by(# grouping by number of samples, number of households to keep this info
-      total_N, total_N_hh,
+      .data$total_N,
+      .data$total_N_hh,
       get(variable_row),
       get(variable_col)) %>%
     dplyr::summarize(
-      group_N = length(hh_id),
+      group_N = length(.data$hh_id),
       # raw sample size - number of people, trips, households, days (by group)
-      group_N_hh = length(unique(hh_id)),
+      group_N_hh = length(unique(.data$hh_id)),
       # number of households in sample (by group)
       expanded_total = srvyr::survey_total(),
       # expanded total and SE
@@ -250,27 +246,27 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     dplyr::mutate(dplyr::across(tidyselect:::where(is.numeric),
                                 round, digits = 5)) %>%
     dplyr::mutate(units = !!this_table_row) %>%
-    dplyr::mutate(units = dplyr::case_when(units == "per" ~ "people",
-                                           units == "day" ~ "days",
-                                           units == "hh" ~ "households",
-                                           units == "veh" ~ "vehicles",
-                                           units == "trip" ~ "trips"))
+    dplyr::mutate(units = dplyr::case_when(.data$units == "per" ~ "people",
+                                           .data$units == "day" ~ "days",
+                                           .data$units == "hh" ~ "households",
+                                           .data$units == "veh" ~ "vehicles",
+                                           .data$units == "trip" ~ "trips"))
 
 
 
   # Dictionary -------------
   definition_row <-
     tbi_dict %>%
-    dplyr::filter(variable == variable_row) %>%
-    dplyr::select(variable_label, survey_question,
-                  variable_logic, which_table, category) %>%
+    dplyr::filter(.data$variable == variable_row) %>%
+    dplyr::select(.data$variable_label, .data$survey_question,
+                  .data$variable_logic, .data$which_table, .data$category) %>%
     unique()
 
   definition_col <-
     tbi_dict %>%
-    dplyr::filter(variable == variable_col) %>%
-    dplyr::select(variable_label, survey_question,
-                  variable_logic, which_table, category) %>%
+    dplyr::filter(.data$variable == variable_col) %>%
+    dplyr::select(.data$variable_label, .data$survey_question,
+                  .data$variable_logic, .data$which_table, .data$category) %>%
     unique()
 
   # return -----
