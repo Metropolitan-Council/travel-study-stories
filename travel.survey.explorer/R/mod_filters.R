@@ -74,8 +74,8 @@ mod_filters_server <- function(id) {
       {
         if (!is.null(input$input_counties)) {
           filtered_cities <- tbi_tables$hh %>%
-            dplyr::filter(hh_county %in% input$input_counties) %>%
-            dplyr::select(hh_city) %>%
+            dplyr::filter(.data$hh_county %in% input$input_counties) %>%
+            dplyr::select(.data$hh_city) %>%
             unique() %>%
             na.omit()
 
@@ -88,7 +88,6 @@ mod_filters_server <- function(id) {
           )
         } else {
           selectInput(
-            session = session,
             inputId = ns("input_cities"),
             "Household City/Township",
             choices = unique(na.omit(tbi_tables$hh$hh_city)),
@@ -108,7 +107,7 @@ mod_filters_server <- function(id) {
 
     ## Init HH ID list----
     all_hh_ids <- tbi_tables$hh %>%
-      dplyr::select(hh_id)
+      dplyr::select(.data$hh_id)
 
     observe({
       # using "observe" rather than "observeEvent" - calculating as we go

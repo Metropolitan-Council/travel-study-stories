@@ -27,7 +27,7 @@
 #' create_one_way_table("bike_freq")
 #'
 #' }
-#' @importFrom rlang sym quo_name enquo
+#' @importFrom rlang sym quo_name enquo .data
 #' @importFrom dplyr filter select mutate rename group_by summarize ungroup summarize_all
 #' @importFrom magrittr extract2
 #' @importFrom srvyr survey_total survey_prop
@@ -185,10 +185,10 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
                        median = srvyr::survey_median(get(variable_col))) %>%
       # round to nearest minute:
-      dplyr::mutate(across(where(is.numeric),
+      dplyr::mutate(dplyr::across(where(is.numeric),
                            function(x) (x %/% 60L) * 60L)) %>%
       # make into a time obj:
-      dplyr::mutate(across(where(is.numeric),
+      dplyr::mutate(dplyr::across(where(is.numeric),
                            function(x) data.table::as.ITime(x))) %>%
       dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
 
@@ -209,8 +209,8 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     # clean up:
     droplevels() %>%
     # big N sample size - for the whole data frame:
-    dplyr::mutate(total_N = length(hh_id), # raw sample size - number of people, trips, households, days
-                  total_N_hh = length(unique(hh_id))) %>% # total number of households in sample
+    dplyr::mutate(total_N = length(.data$hh_id), # raw sample size - number of people, trips, households, days
+                  total_N_hh = length(unique(.data$hh_id))) %>% # total number of households in sample
     srvyr::as_survey_design(weights = !!this_weight) %>%
     dplyr::group_by(# grouping by number of samples, number of households to keep this info
       .data$total_N,
