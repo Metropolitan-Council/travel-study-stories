@@ -23,7 +23,6 @@ Imports:
     golem (>= 0.3.1),
     knitr (>= 1.39),
     magrittr (>= 2.0.2),
-    markdown (>= 1.1),
     pkgload (>= 1.2.4),
     plotly (>= 4.10.0),
     processx (>= 3.5.2),
