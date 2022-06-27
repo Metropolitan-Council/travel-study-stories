@@ -13,7 +13,7 @@ mod_input_category_variable_ui(
 )
 }
 \arguments{
-\item{id, input, output, session}{Internal parameters for {shiny}.}
+\item{id}{character, object identifier}
 
 \item{starting_category_choices}{list, category choices. Default is
 \code{unique(tbi_dict$category)}.}
@@ -25,6 +25,8 @@ mod_input_category_variable_ui(
 
 \item{starting_variable_selected}{character, starting variable selection.
 Default is \code{"Age"}}
+
+\item{input, output, session}{Internal parameters for {shiny}.}
 }
 \description{
 A shiny Module.
