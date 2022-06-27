@@ -6,7 +6,7 @@
 \alias{travel.survey.explorer-package}
 \title{travel.survey.explorer: Travel Survey Explorer}
 \description{
-Interactive data visualization for the Metropolitan Council Travel Behavior Inventory
+Interactive data visualization for the Metropolitan Council Travel Behavior Inventory.
 }
 \author{
 \strong{Maintainer}: Liz Roten \email{liz.roten@metc.state.mn.us} (\href{https://orcid.org/0000-0002-5346-3549}{ORCID})
