@@ -17,7 +17,7 @@
 #'            multiply by 100 for percentages.
 #'     - `definition_row` table with row variable contextual information from `tbi_dict`
 #'     - `definition_col` table with column variable contextual information from `tbi_dict`
-#'     - `summary`, table with numeric summary information
+#'     - `summary` table with numeric summary information
 #' @export
 #'
 #' @examples

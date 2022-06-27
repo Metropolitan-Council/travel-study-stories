@@ -7,7 +7,10 @@
 #'     - `dt_data` table data
 #'     - `container` HTML DT container
 #' @export
-#'
+#' @importFrom scales percent
+#' @importFrom dplyr case_when select mutate
+#' @importFrom tidyr pivot_wider
+#' @importFrom tidyselect all_of
 create_datatable_container <- function(twoway_data,
                                        type = c(
                                          "proportion",
@@ -81,8 +84,8 @@ create_datatable_container <- function(twoway_data,
         tr(
           th(class = "dt-center", rowspan = 2, row_label),
           lapply(super_col_headers,
-            th,
-            colspan = length(these_columns)
+                 th,
+                 colspan = length(these_columns)
           ),
         ),
         tr(
