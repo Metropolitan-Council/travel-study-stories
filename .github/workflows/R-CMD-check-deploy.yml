@@ -52,6 +52,7 @@ jobs:
 
 
       - name: Deploy app to shinyappsio
+        working-directory: 'travel.survey.explorer'
         env:
           SHINYAPPSIO_TOKEN: ${{ secrets.SHINYAPPSIO_TOKEN }}
           SHINYAPPSIO_SECRET: ${{ secrets.SHINYAPPSIO_SECRET }}
