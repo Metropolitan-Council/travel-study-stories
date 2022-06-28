@@ -15,7 +15,23 @@ mod_markdown_ui <- function(id) {
     includeMarkdown(system.file(paste0("app/www/",id,".md"),
                                 package = "travel.survey.explorer"
     )),
-    reference_table()
+    reference_table(),
+    tags$footer(
+      "This project is open-source. See our GitHub repository here",
+      tags$a(
+        href = "https://github.com/Metropolitan-Council/travel-study-stories",
+        shiny::icon("external-link-alt", lib = "font-awesome"),
+        target = "_blank"
+      ),
+      #   tags$br(),
+      #   "App last updated ",
+      #   "2022-06-24",
+      style = "font-size: 1.5rem;
+               display: block;
+               text-align: right;
+               padding: 1%;"
+    )
+
   )
 }
 
