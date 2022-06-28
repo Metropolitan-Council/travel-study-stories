@@ -27,13 +27,14 @@ app_ui <- function(request) {
           sidebarPanel = sidebarPanel(
             width = 3,
             h3("How this works"),
-            p("Select a category and variable. The variable input will update when you change the input category. The plot and table to the right will update when you select a new variable."),
+            p("Select a category and variable. The list of variables available to choose from will update when you select a category. The plot and table to the right will update when you select a new variable."),
             mod_input_category_variable_ui("oneway_input_1"),
             h4("Filter households by geography"),
             mod_filters_ui("filters_oneway_1")
           ),
           mainPanel = mainPanel(
             mod_plot_ui("plot_one_way_ui_1"),
+            p("This table shows the estimated proportion of (households, people, weekdays or trips) in each category. Numbers in gray represent estimates with a sample size of less than 30 (households, people, weekdays, or trips)."),
             mod_table_one_way_ui("table_one_way_ui_1")
           )
         )
