@@ -15,14 +15,8 @@ knitr::opts_chunk$set(
 
 # About this tool  
 
-`r shinipsum::random_text(nwords = 200)`
 
 ## A level two heading  
 
-`r shinipsum::random_text(nwords = 200)`
 
-
-```{r}
-shinipsum::random_ggplot()
-```
 

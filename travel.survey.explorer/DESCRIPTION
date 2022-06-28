@@ -32,7 +32,6 @@ Imports:
     rlang (>= 1.0.1),
     rmarkdown (>= 2.13),
     scales (>= 1.2.0),
-    shinipsum (>= 0.1.0),
     shiny (>= 1.7.1),
     srvyr (>= 1.1.1),
     stringr (>= 1.4.0),

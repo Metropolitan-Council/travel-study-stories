@@ -27,8 +27,9 @@ app_ui <- function(request) {
           sidebarPanel = sidebarPanel(
             width = 3,
             h3("How this works"),
-            p(shinipsum::random_text(nwords = 50)),
+            p("Select a category and variable. The variable input will update when you change the input category. The plot and table to the right will update when you select a new variable."),
             mod_input_category_variable_ui("oneway_input_1"),
+            h4("Filter households by geography"),
             mod_filters_ui("filters_oneway_1")
           ),
           mainPanel = mainPanel(
@@ -43,7 +44,7 @@ app_ui <- function(request) {
           column(
             width = 3,
             h3("How this works"),
-            p(shinipsum::random_text(nwords = 50))
+            p("First, select a demographic variable. Then, select another category and variable. Use the tabbed panel below to view the table and plot.")
           ),
           shiny::column(
             width = 3,
@@ -85,6 +86,7 @@ app_ui <- function(request) {
         title = "About",
         mod_markdown_ui("START")
       )
+
     )
   )
 }
