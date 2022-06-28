@@ -48,7 +48,7 @@ jobs:
         with:
           upload-snapshots: true
           error-on: '"error"'
-          working-directory: travel.survey.explorer
+          working-directory: 'travel.survey.explorer'
 
 
       - name: Deploy app to shinyappsio
