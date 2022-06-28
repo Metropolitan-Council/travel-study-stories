@@ -12,6 +12,7 @@
 #' @importFrom tidyr pivot_wider
 #' @importFrom tidyselect all_of
 #' @importFrom rlang .data
+#' @importFrom magrittr extract2
 create_datatable_container <- function(twoway_data,
                                        type = c(
                                          "proportion",
@@ -59,7 +60,7 @@ create_datatable_container <- function(twoway_data,
 
   super_col_headers <- twoway_data$table[2] %>%
     unique() %>%
-    extract2(1)
+    magrittr::extract2(1)
 
 
   sub_col_headers <-
