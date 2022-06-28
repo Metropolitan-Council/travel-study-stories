@@ -194,7 +194,7 @@ create_one_way_table <- function(variable_row, hh_ids) {
   # Dictionary -------------
   definitions <-
     tbi_dict %>%
-    dplyr::filter(variable == variable_row) %>%
+    dplyr::filter(.data$variable == variable_row) %>%
     dplyr::select(.data$variable_label, .data$survey_question,
                   .data$variable_logic, .data$which_table, .data$category) %>%
     unique()
