@@ -1,6 +1,6 @@
 #' @title Formatted DT for dictionary
 #'
-#' @return DT object
+#' @return [DT::datatable()] object
 #' @export
 #' @importFrom dplyr select group_by summarize
 #' @importFrom DT datatable
