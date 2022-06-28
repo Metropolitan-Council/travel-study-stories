@@ -13,6 +13,9 @@
     # create_two_way_table:
     "get(variable_col)",
     "get(variable_row)",
+    "where",
+    "thead",
+    "tr",
 
      "histogram_breaks", "missing_codes", "tbi_dict", "tbi_tables",
 
