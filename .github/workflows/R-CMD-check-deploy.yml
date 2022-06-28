@@ -39,6 +39,8 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+          working-directory: '"./travel.survey.explorer"'
+
 
       - uses: r-lib/actions/check-r-package@v2
         with:
@@ -48,7 +50,6 @@ jobs:
 
 
       - name: Deploy app to shinyappsio
-        working-directory: travel.survey.explorer
         env:
           SHINYAPPSIO_TOKEN: ${{ secrets.SHINYAPPSIO_TOKEN }}
           SHINYAPPSIO_SECRET: ${{ secrets.SHINYAPPSIO_SECRET }}
