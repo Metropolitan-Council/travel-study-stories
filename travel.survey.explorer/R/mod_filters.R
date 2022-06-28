@@ -28,7 +28,7 @@ mod_filters_ui <- function(id) {
       # Checkbox for HHs in MPO ----
       checkboxInput(
         inputId = ns("input_mpo"),
-        label = "Filter to households in Twin Cities region (MPO)",
+        label = "Only show households in the Twin Cities region (MPO)",
         value = FALSE
       ),
 
