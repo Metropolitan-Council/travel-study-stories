@@ -197,25 +197,25 @@ h3 {
 }
 
 h4 {
-    font-size: 18pt;
+    font-size: 16pt;
     line-height: 1.35;
-    letter-spacing: -.08rem;
+    letter-spacing: -.1rem;
 }
 
 h5 {
-    font-size: 16pt;
+    font-size: 14pt;
     line-height: 1.3;
     letter-spacing: -.05rem;
 }
 
 h6 {
-    font-size: 14pt;
+    font-size: 12pt;
     line-height: 1.6;
     letter-spacing: 0;
 }
 
 body {
-    font-size: 13pt;
+    font-size: 12pt;
     line-height: 1.6;
     font-weight: 100;
     font-family: Roman, Helvetica, Tahoma, Geneva, Arial, sans-serif;
@@ -226,7 +226,7 @@ body {
 p {
     margin: 0 auto !important;
     /*0 10px;*/
-    font-size: 13pt;
+    font-size: 12pt;
     max-width: 1200px;
     width: auto;
 }
@@ -264,19 +264,25 @@ hr {
     border-bottom-color: transparent
 }
 
+
 .navbar-default {
     background-color: var(--council-gray);
     border-color: var(--council-gray);
     color: var(--council-blue);
     font-size: 16pt;
     text-transform: uppercase;
-    margin-right: 0px;
-    margin-left: 0px;
+ /*   margin-left: auto;
+    margin-right: auto;*/
+        float:none;
+  display: inline-block;
+  justify-content: center;
+  text-align: center; !important
+    align-items: center !important;
     font-family: Bold-Condensed, "Helvetica", "Tahoma", "Geneva", "Arial Narrow", "Arial", sans-serif;
     height: 95px;
     width: 100%;
-    padding-right: 10%;
-    padding-left: 10%;
+    padding-right: 0%;
+    padding-left: 0%;
 }
 
 .navbar-brand {
@@ -294,27 +300,29 @@ hr {
 .navbar-default .navbar-nav>li>a:focus,
 .navbar-default .navbar-nav>li>a:hover {
     color: var(--council-blue);
-    background-color: var(--council-gray);
+    background-color: #d6d6d6;
 }
-
-
-/* //unclear what this is doing
-.navbar-default .navbar-brand {
-	color: var(--council-blue);//ack);
-}
-*/
 
 .navbar-default .navbar-nav>.active>a,
 .navbar-default .navbar-nav>.active>a:focus,
 .navbar-default .navbar-nav>.active>a:hover {
     color: var(--council-blue);
-    background-color: var(--council-gray);
+    background-color: #d6d6d6;
     height: 95px;
 }
 
 .navbar-collapse {
     background-color: var(--council-gray) !important;
 }
+
+.nav-tabs>li>a {
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    font-size: 16px;
+}
+
 
 .row {
     margin-right: 0px;
@@ -332,7 +340,7 @@ hr {
 
 
 /*
-@media (min-width: 1200px){ 
+@media (min-width: 1200px){
     img, p, h1, h2, ol, ul {
         max-width: 1200px;
     }
@@ -350,13 +358,13 @@ hr {
     }
 }
 
-@media (min-width: 576px, max-width: 767px){ 
+@media (min-width: 576px, max-width: 767px){
     img, p, h1, h2, ol, ul {
         max-width: 576px;
     }
 }
 
-@media (max-width: 575px){ 
+@media (max-width: 575px){
     img, p, h1, h2, ol, ul {
         max-width: 575px;
     }

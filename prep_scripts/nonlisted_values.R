@@ -11,14 +11,14 @@ this.dir <- getwd()
 dir <- "path/to/travel-study-stories/shiny"
 setwd(dir)
 
-variables.lu <- read.xlsx("variables.xlsx") %>% as.data.table()
-values.lu <- read.xlsx("variables_values.xlsx") %>% as.data.table()
+lookup_variables <- read.xlsx("variables.xlsx") %>% as.data.table()
+lookup_values <- read.xlsx("variables_values.xlsx") %>% as.data.table()
 
-fields.with.values <- values.lu[, .(Label), by = Label][["Label"]]
-fields <- variables.lu[["Variables"]]
+fields.with.values <- lookup_values[, .(Label), by = Label][["Label"]]
+fields <- lookup_variables[["Variables"]]
 
 nonlisted <- sort(setdiff(fields, fields.with.values))
 
-variables.lu[Variables %in% nonlisted]
+lookup_variables[Variables %in% nonlisted]
 
 setwd(this.dir)
