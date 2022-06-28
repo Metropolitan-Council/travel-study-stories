@@ -43,7 +43,7 @@
 #'         one of `c("per", "trip", "day", "veh", "hh", "trip_purpose")`
 #'     - `category` character,
 #'         one of  `c("Demographics", "Attitudes toward autonomous vehicles", "Shared mobility",  "Commute", "Trips", "Days without travel", "Delivery & online shopping", "Vehicle")`
-#'     - `variable` character, shortform variable code in snake case
+#'     - `variable` character, short form variable code in snake case
 #'     - `survey_question` character, survey question as it was asked to the respondent
 #'     - `variable_logic` character, any associated logic. Some questions were only asked
 #'         if a respondent had a certain answer to a previous question.

@@ -1,7 +1,6 @@
 #' input_category_variable UI Function
 #'
 #' @param id character, object identifier
-#' @param input,output,session Internal parameters for {shiny}.
 #' @param starting_category_choices list, category choices. Default is
 #'     `unique(tbi_dict$category)`.
 #' @param starting_category_selected character, starting category

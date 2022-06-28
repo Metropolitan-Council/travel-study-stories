@@ -11,7 +11,7 @@ and meta data o
 one of \code{c("per", "trip", "day", "veh", "hh", "trip_purpose")}
 - \code{category} character,
 one of  \code{c("Demographics", "Attitudes toward autonomous vehicles", "Shared mobility",  "Commute", "Trips", "Days without travel", "Delivery & online shopping", "Vehicle")}
-- \code{variable} character, shortform variable code in snake case
+- \code{variable} character, short form variable code in snake case
 - \code{survey_question} character, survey question as it was asked to the respondent
 - \code{variable_logic} character, any associated logic. Some questions were only asked
 if a respondent had a certain answer to a previous question.
