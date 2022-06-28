@@ -57,4 +57,4 @@ jobs:
           SHINYAPPSIO_TOKEN: ${{ secrets.SHINYAPPSIO_TOKEN }}
           SHINYAPPSIO_SECRET: ${{ secrets.SHINYAPPSIO_SECRET }}
         run: |
-         bash ./travel.survey.explorer/deploy.sh
+         bash deploy.sh
