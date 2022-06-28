@@ -2,5 +2,5 @@ fileignoreconfig:
 - filename: .github/workflows/R-CMD-check-deploy.yml
   checksum: def800360683e2fbe9d3bc2f0233a5ea06ead58f69c345922de627a83b237a72
 - filename: travel.survey.explorer/deploy.sh
-  checksum: bb2b38c5d7d35bfff26509a7beee6db5902f7514f1ff0dfe1f746233a5d12042
+  checksum: 48393bf56c398049b5fd16f27b586ecd7243c3d010b4bf30be8a0a6652653d0d
 version: ""
