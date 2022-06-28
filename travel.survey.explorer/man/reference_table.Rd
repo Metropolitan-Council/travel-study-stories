@@ -7,7 +7,7 @@
 reference_table()
 }
 \value{
-DT object
+\code{\link[DT:datatable]{DT::datatable()}} object
 }
 \description{
 Formatted DT for dictionary
