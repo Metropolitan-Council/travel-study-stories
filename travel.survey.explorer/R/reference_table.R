@@ -22,6 +22,6 @@ reference_table <- function(){
                   width = "100%",
                   options = list(
                     dom = "tp",
-                    pageLength = 10
+                    pageLength = 3
                   ))
 }
