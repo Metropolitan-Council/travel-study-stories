@@ -43,8 +43,8 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          error-on: "error"
-          working-directory: "./travel.survey.explorer"
+          error-on: '"error"'
+          working-directory: '"./travel.survey.explorer"'
 
 
       - name: Deploy app to shinyappsio
