@@ -25,7 +25,6 @@ Imports:
     knitr (>= 1.39),
     magrittr (>= 2.0.2),
     markdown (>= 1.1),
-    pkgload (>= 1.2.4),
     plotly (>= 4.10.0),
     processx (>= 3.5.2),
     purrr (>= 0.3.4),
@@ -39,8 +38,10 @@ Imports:
     tidyselect (>= 1.1.2),
     waiter (>= 0.2.5)
 Suggests: 
+    pkgload (>= 1.2.4),
     spelling (>= 2.2),
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble (>= 3.1.7)
 Remotes: 
     Metropolitan-Council/councilR
 Config/testthat/edition: 3
