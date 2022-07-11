@@ -1,6 +1,8 @@
 # Get TBI data from helper -----
 pkgload::load_all()
 load("../../metc.tbi.helper/data/tbi19.rda")
+source("data-raw/slim-survey-data-columns.R")
+
 # Write Data -------------------------
 tbi_tables <- list(
   "day" = tbi19$day,
