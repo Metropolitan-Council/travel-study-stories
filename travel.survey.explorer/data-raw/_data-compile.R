@@ -1,45 +1,14 @@
-# Get TBI survey data from database ---------
-source("data-raw/get-survey-data.R")
-
-# Append geographic boundaries to  household, work, school, and trip -----------
-source("data-raw/add-geographic-boundaries.R")
-
-# Get EPA Efficiency Data -----------
-source("data-raw/get-epa-vehicle-efficiency-data.R")
-
-# Get DPS Vehicle Weight Data -----------
-source("data-raw/get-dps-vehicle-weight-data.R")
-
-# Extra variables ------
-source("data-raw/add-var-person-race.R")
-source("data-raw/add-var-hh-income-easyread.R")
-source("data-raw/add-var-trip-purpose.R")
-source("data-raw/add-var-trip-mode-group.R")
-source("data-raw/add-var-trip-purpose-broad.R")
-source("data-raw/add-var-trip-seasons.R")
-
-# Re-format time
-trip <- trip %>%
-  mutate(
-    depart_time_imputed = as.ITime(depart_time_imputed),
-    arrive_time = as.ITime(arrive_time)
-  )
-
-# Remove PII ------------------
-source("data-raw/remove-pii.R")
-
-# Trim columns down for manageability ----------
-# source("data-raw/slim-survey-data-columns.R")
-
-
+# Get TBI data from helper -----
+pkgload::load_all()
+load("../../metc.tbi.helper/data/tbi19.rda")
 # Write Data -------------------------
 tbi_tables <- list(
-  "day" = day,
-  "per" = per,
-  "hh" = hh,
-  "veh" = veh,
-  "trip" = trip,
-  "trip_purpose" = trip_purpose
+  "day" = tbi19$day,
+  "per" = tbi19$per,
+  "hh" = tbi19$hh,
+  "veh" = tbi19$veh,
+  "trip" = tbi19$trip,
+  "trip_purpose" = tbi19$trip_purpose
 )
 
 usethis::use_data(tbi_tables,
