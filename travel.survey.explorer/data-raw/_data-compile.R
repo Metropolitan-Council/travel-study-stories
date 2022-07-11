@@ -10,9 +10,9 @@ hh <- tbi19$hh
 veh <- tbi19$veh
 trip <- tbi19$trip
 trip_purpose <- tbi19$trip_purpose
+dictionary <- tbi19$dictionary
 
-
-source("data-raw/slim-survey-data-columns.R")
+ # source("data-raw/slim-survey-data-columns.R")
 
 # Write Data -------------------------
 tbi_tables <- list(

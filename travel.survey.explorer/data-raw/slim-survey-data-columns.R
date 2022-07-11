@@ -1,17 +1,17 @@
 # Trip ----------------
-trip <- trip %>%
-  select(
-    trip_id, trip_weight,
-    person_id, hh_id, trip_num, day_num,
-    travel_date, depart_time_imputed, arrive_time,
-    duration_imputed, distance, speed_mph_imputed,
-    leg_num, linked_trip_num,
-    num_travelers,
-    d_purpose_category_imputed, d_purpose_imputed,
-    o_purpose_category_imputed, o_purpose_imputed,
-    vehicle_driver,
-    mode_type, mode_type_detailed, veh_id
-  )
+# trip <- trip %>%
+#   select(
+#     trip_id, trip_weight,
+#     person_id, hh_id, trip_num, day_num,
+#     travel_date, depart_time_imputed, arrive_time,
+#     duration_imputed, distance, speed_mph_imputed,
+#     leg_num, linked_trip_num,
+#     num_travelers,
+#     d_purpose_category_imputed, d_purpose_imputed,
+#     o_purpose_category_imputed, o_purpose_imputed,
+#     vehicle_driver, mode_group, bike_freq,
+#     mode_type, mode_type_detailed, veh_id
+#   )
 
 
 #### Select only relevant columns--------
@@ -27,13 +27,13 @@ hh <- hh %>%
     income_broad, income_detailed
   )
 
-per <- per %>%
-  select(
-    person_id, person_weight, hh_id,
-    age, gender, disability, education, employment_status, student_status,
-    starts_with("ethnicity"),
-    job_type, license, num_jobs
-  )
+# per <- per %>%
+#   select(
+#     person_id, person_weight, hh_id,
+#     age, gender, disability, education, employment_status, student_status,
+#     starts_with("ethnicity"),
+#     job_type, license, num_jobs
+#   )
 
 # veh <- veh %>%
 #   select(hh_id, vehicle_num,
