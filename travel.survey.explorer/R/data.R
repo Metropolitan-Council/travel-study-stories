@@ -1,11 +1,12 @@
 #' @title Histogram breaks
+#' @description Pre-set bistogram breaks
 #'
 #' @format named list
 # histogram_breaks ----
 "histogram_breaks"
 
 #' @title Input list
-#' @format named list of possible inputs
+#' @format named list of possible user inputs
 #' @family data
 # input_list -----
 "input_list"
@@ -18,7 +19,7 @@
 "input_question_list"
 
 
-#' missing_codes
+#' @title Missing data codes
 #'
 #' @format vector, 10 character values indicating that data is missing
 #' @family data
