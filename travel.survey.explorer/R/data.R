@@ -25,6 +25,13 @@
 # missing_codes -----
 "missing_codes"
 
+#' @title Personally identifiable information
+#'
+#' @format vector, 26 character values indicating sensitive data. These data are removed from `tbi_tables`
+#' @family data
+# pii_codes -----
+"pii_codes"
+
 #' @title Plotly formatting
 #' @format nested, named list with specifications for [plotly::layout()]
 #' @family data
