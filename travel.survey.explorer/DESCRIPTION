@@ -39,6 +39,7 @@ Imports:
     tidyselect (>= 1.1.2),
     waiter (>= 0.2.5)
 Suggests: 
+    glue (>= 1.6.2),
     pkgload (>= 1.2.4),
     spelling (>= 2.2),
     testthat (>= 3.0.0),
