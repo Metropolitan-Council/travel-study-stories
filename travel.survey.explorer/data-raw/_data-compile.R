@@ -1,6 +1,7 @@
 # Get TBI data from helper -----
 pkgload::load_all()
 library(data.table)
+library(bit64)
 load("../../metc.tbi.helper/data/tbi19.rda")
 
 
