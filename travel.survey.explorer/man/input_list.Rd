@@ -5,7 +5,7 @@
 \alias{input_list}
 \title{Input list}
 \format{
-named list of possible inputs
+named list of possible user inputs
 }
 \usage{
 input_list
@@ -17,6 +17,7 @@ Input list
 Other data: 
 \code{\link{input_question_list}},
 \code{\link{missing_codes}},
+\code{\link{pii_codes}},
 \code{\link{plotly_layout}},
 \code{\link{tbi_dict}},
 \code{\link{tbi_tables}}

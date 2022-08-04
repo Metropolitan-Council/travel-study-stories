@@ -38,6 +38,5 @@ Create a two-way cross table
 
 library(travel.survey.explorer)
 create_one_way_table("bike_freq")
-
 }
 }

@@ -12,8 +12,8 @@ mod_markdown_ui <- function(id) {
 
   shiny::div(
     id = "notes",
-    includeMarkdown(system.file(paste0("app/www/",id,".md"),
-                                package = "travel.survey.explorer"
+    includeMarkdown(system.file(paste0("app/www/", id, ".md"),
+      package = "travel.survey.explorer"
     )),
     reference_table(),
     tags$footer(
@@ -31,7 +31,6 @@ mod_markdown_ui <- function(id) {
                text-align: right;
                padding: 1%;"
     )
-
   )
 }
 

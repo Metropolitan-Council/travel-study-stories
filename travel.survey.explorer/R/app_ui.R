@@ -87,7 +87,6 @@ app_ui <- function(request) {
         title = "About",
         mod_markdown_ui("START")
       )
-
     )
   )
 }

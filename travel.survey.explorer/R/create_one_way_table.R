@@ -181,7 +181,8 @@ create_one_way_table <- function(variable_row, hh_ids) {
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      dplyr::across(where(is.numeric), round, digits = 5)) %>%
+      dplyr::across(where(is.numeric), round, digits = 5)
+    ) %>%
     dplyr::mutate(units = !!this_table) %>%
     dplyr::mutate(units = dplyr::case_when(
       .data$units == "per" ~ "people",
@@ -195,13 +196,17 @@ create_one_way_table <- function(variable_row, hh_ids) {
   definitions <-
     tbi_dict %>%
     dplyr::filter(.data$variable == variable_row) %>%
-    dplyr::select(.data$variable_label, .data$survey_question,
-                  .data$variable_logic, .data$which_table, .data$category) %>%
+    dplyr::select(
+      .data$variable_label, .data$survey_question,
+      .data$variable_logic, .data$which_table, .data$category
+    ) %>%
     unique()
 
-  one_way_rt_list <- list(table = table,
-                          definitions = definitions,
-                          summary = summary)
+  one_way_rt_list <- list(
+    table = table,
+    definitions = definitions,
+    summary = summary
+  )
 
   return(one_way_rt_list)
 }

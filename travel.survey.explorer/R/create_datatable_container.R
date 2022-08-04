@@ -39,7 +39,7 @@ create_datatable_container <- function(twoway_data,
 
   this_table <- twoway_data$table %>%
     dplyr::mutate(estimated_prop_se = scales::percent(.data$estimated_prop_se,
-                                                      accuracy = 0.1
+      accuracy = 0.1
     )) %>%
     dplyr::select(
       row_var = 1,
@@ -86,8 +86,8 @@ create_datatable_container <- function(twoway_data,
         tr(
           th(class = "dt-center", rowspan = 2, row_label),
           lapply(super_col_headers,
-                 th,
-                 colspan = length(these_columns)
+            th,
+            colspan = length(these_columns)
           ),
         ),
         tr(

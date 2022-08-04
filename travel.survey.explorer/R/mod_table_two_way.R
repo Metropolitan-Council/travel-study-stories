@@ -23,7 +23,6 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
     ns <- session$ns
     w_2way <- waiter::Waiter$new(ns("table_2way"),
       html = waiter::spin_flower()
-
     )
     output$table_2way <- DT::renderDataTable({
       w_2way$show()
@@ -43,8 +42,10 @@ mod_table_two_way_server <- function(id, two_way_table_inputs) {
         data = dt_items$dt_data,
         container = dt_items$container,
         rownames = F,
-        options = list(language = list(emptyTable = "No data here"),
-                       scrollX = TRUE)
+        options = list(
+          language = list(emptyTable = "No data here"),
+          scrollX = TRUE
+        )
       ) %>%
         DT::formatPercentage(
           columns = which(sapply(

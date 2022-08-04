@@ -3,7 +3,7 @@
 \docType{data}
 \name{missing_codes}
 \alias{missing_codes}
-\title{missing_codes}
+\title{Missing data codes}
 \format{
 vector, 10 character values indicating that data is missing
 }
@@ -11,12 +11,13 @@ vector, 10 character values indicating that data is missing
 missing_codes
 }
 \description{
-missing_codes
+Missing data codes
 }
 \seealso{
 Other data: 
 \code{\link{input_list}},
 \code{\link{input_question_list}},
+\code{\link{pii_codes}},
 \code{\link{plotly_layout}},
 \code{\link{tbi_dict}},
 \code{\link{tbi_tables}}

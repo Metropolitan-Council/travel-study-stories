@@ -11,6 +11,6 @@ named list
 histogram_breaks
 }
 \description{
-Histogram breaks
+Pre-set bistogram breaks
 }
 \keyword{datasets}

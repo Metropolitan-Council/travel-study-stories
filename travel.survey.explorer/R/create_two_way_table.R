@@ -25,7 +25,6 @@
 #'
 #' library(travel.survey.explorer)
 #' create_one_way_table("bike_freq")
-#'
 #' }
 #' @importFrom rlang sym quo_name enquo .data
 #' @importFrom dplyr filter select mutate rename group_by summarize ungroup summarize_all
@@ -33,9 +32,8 @@
 #' @importFrom srvyr survey_total survey_prop
 #' @importFrom purrr pluck
 #'
-create_two_way_table <- function(variable_row, variable_col, hh_ids){
-
-  if(variable_row == variable_col){
+create_two_way_table <- function(variable_row, variable_col, hh_ids) {
+  if (variable_row == variable_col) {
     warning("Row and columns variables must be distinct values")
   }
 
@@ -74,17 +72,21 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     purrr::pluck(1)
 
   table_row <- tbi_tables[[this_table_row]] %>%
-    dplyr::select(dplyr::contains("_id"),
-                  dplyr::contains("_num"),
-                  dplyr::contains("weight"),
-                  rlang::sym(variable_row)) %>%
+    dplyr::select(
+      dplyr::contains("_id"),
+      dplyr::contains("_num"),
+      dplyr::contains("weight"),
+      rlang::sym(variable_row)
+    ) %>%
     dplyr::filter(!(get(variable_row) %in% missing_codes))
 
   table_col <- tbi_tables[[this_table_col]] %>%
-    dplyr::select(dplyr::contains("_id"),
-                  dplyr::contains("_num"),
-                  dplyr::contains("weight"),
-                  rlang::sym(variable_col)) %>%
+    dplyr::select(
+      dplyr::contains("_id"),
+      dplyr::contains("_num"),
+      dplyr::contains("weight"),
+      rlang::sym(variable_col)
+    ) %>%
     dplyr::filter(!(get(variable_col) %in% missing_codes))
 
   tab_0 <- table_row %>%
@@ -110,10 +112,7 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       )) %>%
       dplyr::select(-rlang::sym(variable_row)) %>%
       dplyr::rename(!!rlang::enquo(variable_row) := .data$cuts)
-
-
   } else if (vartype_row == "ITime") {
-
     brks <- histogram_breaks[[variable_row]]$breaks
     brks_labs <- histogram_breaks[[variable_row]]$labels
 
@@ -127,8 +126,6 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       )) %>%
       dplyr::select(-rlang::sym(variable_row)) %>%
       dplyr::rename(!!rlang::enquo(variable_row) := .data$cuts)
-
-
   } else {
     tab_1 <- tab_0
   }
@@ -156,11 +153,12 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       dplyr::filter(!get(variable_col) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
       dplyr::group_by(get(variable_row)) %>%
-      dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
-                       median = srvyr::survey_median(get(variable_col))) %>%
+      dplyr::summarize(
+        mean = srvyr::survey_mean(get(variable_col)),
+        median = srvyr::survey_median(get(variable_col))
+      ) %>%
       dplyr::mutate(dplyr::across(where(is.numeric), round, digits = 5)) %>%
       dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
-
   } else if (vartype_col == "ITime") {
     brks <- histogram_breaks[[variable_col]]$breaks
     brks_labs <- histogram_breaks[[variable_col]]$labels
@@ -182,16 +180,21 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       dplyr::filter(!get(variable_col) == Inf) %>%
       srvyr::as_survey_design(weights = !!this_weight) %>%
       dplyr::group_by(get(variable_row)) %>%
-      dplyr::summarize(mean = srvyr::survey_mean(get(variable_col)),
-                       median = srvyr::survey_median(get(variable_col))) %>%
+      dplyr::summarize(
+        mean = srvyr::survey_mean(get(variable_col)),
+        median = srvyr::survey_median(get(variable_col))
+      ) %>%
       # round to nearest minute:
-      dplyr::mutate(dplyr::across(where(is.numeric),
-                           function(x) (x %/% 60L) * 60L)) %>%
+      dplyr::mutate(dplyr::across(
+        where(is.numeric),
+        function(x) (x %/% 60L) * 60L
+      )) %>%
       # make into a time obj:
-      dplyr::mutate(dplyr::across(where(is.numeric),
-                           function(x) data.table::as.ITime(x))) %>%
+      dplyr::mutate(dplyr::across(
+        where(is.numeric),
+        function(x) data.table::as.ITime(x)
+      )) %>%
       dplyr::rename(!!rlang::quo_name(variable_row) := `get(variable_row)`)
-
   } else {
     tab_2 <- tab_1
 
@@ -209,14 +212,17 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
     # clean up:
     droplevels() %>%
     # big N sample size - for the whole data frame:
-    dplyr::mutate(total_N = length(.data$hh_id), # raw sample size - number of people, trips, households, days
-                  total_N_hh = length(unique(.data$hh_id))) %>% # total number of households in sample
+    dplyr::mutate(
+      total_N = length(.data$hh_id), # raw sample size - number of people, trips, households, days
+      total_N_hh = length(unique(.data$hh_id))
+    ) %>% # total number of households in sample
     srvyr::as_survey_design(weights = !!this_weight) %>%
-    dplyr::group_by(# grouping by number of samples, number of households to keep this info
+    dplyr::group_by( # grouping by number of samples, number of households to keep this info
       .data$total_N,
       .data$total_N_hh,
       get(variable_row),
-      get(variable_col)) %>%
+      get(variable_col)
+    ) %>%
     dplyr::summarize(
       group_N = length(.data$hh_id),
       # raw sample size - number of people, trips, households, days (by group)
@@ -243,13 +249,17 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
       "estimated_prop_se"
     ) %>%
     dplyr::mutate(dplyr::across(where(is.numeric),
-                                round, digits = 5)) %>%
+      round,
+      digits = 5
+    )) %>%
     dplyr::mutate(units = !!this_table_row) %>%
-    dplyr::mutate(units = dplyr::case_when(.data$units == "per" ~ "people",
-                                           .data$units == "day" ~ "days",
-                                           .data$units == "hh" ~ "households",
-                                           .data$units == "veh" ~ "vehicles",
-                                           .data$units == "trip" ~ "trips"))
+    dplyr::mutate(units = dplyr::case_when(
+      .data$units == "per" ~ "people",
+      .data$units == "day" ~ "days",
+      .data$units == "hh" ~ "households",
+      .data$units == "veh" ~ "vehicles",
+      .data$units == "trip" ~ "trips"
+    ))
 
 
 
@@ -257,23 +267,28 @@ create_two_way_table <- function(variable_row, variable_col, hh_ids){
   definition_row <-
     tbi_dict %>%
     dplyr::filter(.data$variable == variable_row) %>%
-    dplyr::select(.data$variable_label, .data$survey_question,
-                  .data$variable_logic, .data$which_table, .data$category) %>%
+    dplyr::select(
+      .data$variable_label, .data$survey_question,
+      .data$variable_logic, .data$which_table, .data$category
+    ) %>%
     unique()
 
   definition_col <-
     tbi_dict %>%
     dplyr::filter(.data$variable == variable_col) %>%
-    dplyr::select(.data$variable_label, .data$survey_question,
-                  .data$variable_logic, .data$which_table, .data$category) %>%
+    dplyr::select(
+      .data$variable_label, .data$survey_question,
+      .data$variable_logic, .data$which_table, .data$category
+    ) %>%
     unique()
 
   # return -----
-  two_way_rt_list <- list(table = table,
-                          definition_row = definition_row,
-                          definition_col = definition_col,
-                          summary = summary)
+  two_way_rt_list <- list(
+    table = table,
+    definition_row = definition_row,
+    definition_col = definition_col,
+    summary = summary
+  )
 
   return(two_way_rt_list)
-
 }

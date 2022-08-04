@@ -24,7 +24,6 @@ mod_table_one_way_server <- function(id, one_way_table_inputs) {
     ns <- session$ns
     w_1way <- waiter::Waiter$new(ns("table_1way"),
       html = waiter::spin_flower()
-
     )
 
 
@@ -42,7 +41,7 @@ mod_table_one_way_server <- function(id, one_way_table_inputs) {
           .data$estimated_prop_se,
           .data$group_N
         ) %>%
-      dplyr::mutate(estimated_prop_se = scales::percent(.data$estimated_prop_se,
+        dplyr::mutate(estimated_prop_se = scales::percent(.data$estimated_prop_se,
           accuracy = 0.01
         )),
       options = list(scrollX = TRUE),

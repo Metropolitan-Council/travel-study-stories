@@ -18,9 +18,8 @@ render_guides <- function(.output_dir = "inst/app/www") {
   )
 
   rmarkdown::render("inst/guides/START.Rmd",
-                    output_format = "github_document", # -----
-                    output_file = "START.md",
-                    output_dir = .output_dir
+    output_format = "github_document", # -----
+    output_file = "START.md",
+    output_dir = .output_dir
   )
-
 }

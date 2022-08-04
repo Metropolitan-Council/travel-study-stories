@@ -23,6 +23,7 @@ Other data:
 \code{\link{input_list}},
 \code{\link{input_question_list}},
 \code{\link{missing_codes}},
+\code{\link{pii_codes}},
 \code{\link{tbi_dict}},
 \code{\link{tbi_tables}}
 }
