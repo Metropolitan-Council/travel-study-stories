@@ -2,8 +2,8 @@
 # user inputs.
 # maybe use D
 
+library(bit64)
 library(travel.survey.explorer)
-library(tidyverse)
 pkgload::load_all()
 
 all_hh_ids <- tbi_tables$hh %>%

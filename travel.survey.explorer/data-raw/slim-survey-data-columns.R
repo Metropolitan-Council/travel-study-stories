@@ -13,6 +13,8 @@
 #     mode_type, mode_type_detailed, veh_id
 #   )
 
+pkgload::load_all()
+library(bit64)
 
 #### Select only relevant columns--------
 # Day:

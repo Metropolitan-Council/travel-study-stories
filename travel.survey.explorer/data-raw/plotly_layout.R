@@ -1,5 +1,5 @@
 ## code to prepare `plotly_layout` dataset goes here
-library(councilR)
+pkgload::load_all()
 font_family_list <- "Roman, Helvetica, Tahoma, Geneva, Arial, sans-serif"
 
 plotly_layout <- list(
