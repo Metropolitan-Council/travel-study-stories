@@ -29,7 +29,7 @@ expect_disab_mode_group <-
 purrr::map(
   names(test_disab_mode_group$table)[3:11],
   function(x) {
-    testthat::expect_equal(test_disab_mode_group$table[x], expect_disab_mode_group[x], ignore_attr = TRUE)
+    testthat::expect_equal(test_disab_mode_group$table[x], expect_disab_mode_group[x], tolerance = 2, ignore_attr = TRUE)
   }
 ) %>%
   suppressMessages()
