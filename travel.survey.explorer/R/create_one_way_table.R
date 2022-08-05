@@ -71,7 +71,7 @@ create_one_way_table <- function(variable_row, hh_ids) {
         mean = srvyr::survey_mean(get(variable_row)),
         median = srvyr::survey_median(get(variable_row))
       ) %>%
-      dplyr::mutate(dplyr::across(is.numeric, round, digits = 5))
+      dplyr::mutate(dplyr::across(where(is.numeric), round, digits = 5))
 
 
     # cut into bins:
