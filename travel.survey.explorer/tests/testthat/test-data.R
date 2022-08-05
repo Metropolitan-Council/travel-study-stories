@@ -9,6 +9,8 @@ testthat::test_that("PII removed from data", {
             glue::glue("{names(x)[colnames_present]}")
           )
         )
+      } else {
+        testthat::succeed("No PII present")
       }
     }
   )
