@@ -2,6 +2,7 @@
 pkgload::load_all()
 library(data.table)
 library(bit64)
+
 load("../../metc.tbi.helper/data/tbi19.rda")
 
 # source("data-raw/slim-survey-data-columns.R")
@@ -22,7 +23,6 @@ tbi_tables <- list(
       select(-any_of(pii_codes))
   })
 
-# waldo::compare(travel.survey.explorer::tbi_tables, tbi_tables)
 rm(tbi19)
 
 usethis::use_data(tbi_tables,
@@ -37,3 +37,4 @@ source("data-raw/create-dictionary.R")
 # Create additional outputs for app --------------
 source("data-raw/histogram_breaks.R")
 source("data-raw/input_list.R")
+source("data-raw/plotly_layout.R")
